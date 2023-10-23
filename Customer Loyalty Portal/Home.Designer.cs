@@ -34,11 +34,9 @@
             this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.homeTab = new System.Windows.Forms.TabPage();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.updateMobileButton = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.refreshButton = new System.Windows.Forms.Button();
             this.remove15 = new System.Windows.Forms.Button();
             this.remove10 = new System.Windows.Forms.Button();
             this.remove8 = new System.Windows.Forms.Button();
@@ -138,6 +136,20 @@
             this.label15 = new System.Windows.Forms.Label();
             this.dateLabel = new System.Windows.Forms.Label();
             this.billSearchTab = new System.Windows.Forms.TabPage();
+            this.billExistsLabel = new System.Windows.Forms.Label();
+            this.lastBillAddedLabel = new System.Windows.Forms.Label();
+            this.qty20k = new System.Windows.Forms.NumericUpDown();
+            this.qty15k = new System.Windows.Forms.NumericUpDown();
+            this.qty10k = new System.Windows.Forms.NumericUpDown();
+            this.qty8k = new System.Windows.Forms.NumericUpDown();
+            this.qty5k = new System.Windows.Forms.NumericUpDown();
+            this.qty3k = new System.Windows.Forms.NumericUpDown();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
             this.addBillButton = new System.Windows.Forms.Button();
             this.enterNameLabel = new System.Windows.Forms.Label();
             this.billSourceComboBox = new System.Windows.Forms.ComboBox();
@@ -153,23 +165,13 @@
             this.label35 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label40 = new System.Windows.Forms.Label();
-            this.label41 = new System.Windows.Forms.Label();
-            this.label42 = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
-            this.label44 = new System.Windows.Forms.Label();
-            this.label45 = new System.Windows.Forms.Label();
-            this.qty3k = new System.Windows.Forms.NumericUpDown();
-            this.qty5k = new System.Windows.Forms.NumericUpDown();
-            this.qty8k = new System.Windows.Forms.NumericUpDown();
-            this.qty10k = new System.Windows.Forms.NumericUpDown();
-            this.qty15k = new System.Windows.Forms.NumericUpDown();
-            this.qty20k = new System.Windows.Forms.NumericUpDown();
-            this.lastBillAddedLabel = new System.Windows.Forms.Label();
-            this.billExistsLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.cardInfo = new System.Windows.Forms.PictureBox();
+            this.paytmInfo = new System.Windows.Forms.PictureBox();
+            this.bajajInfo = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
             this.homeTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewJunior)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPH)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -181,12 +183,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.creditGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashGridView)).BeginInit();
             this.billSearchTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.qty3k)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty5k)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty8k)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty10k)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty15k)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty20k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty15k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty10k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty8k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty5k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty3k)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // rectangleShape3
@@ -261,16 +267,6 @@
             this.homeTab.Text = "HOME";
             this.homeTab.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1329, 611);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(26, 26);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 70;
-            this.pictureBox1.TabStop = false;
-            // 
             // updateMobileButton
             // 
             this.updateMobileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -301,20 +297,6 @@
             this.label13.Size = new System.Drawing.Size(51, 24);
             this.label13.TabIndex = 67;
             this.label13.Text = "TPH";
-            // 
-            // refreshButton
-            // 
-            this.refreshButton.BackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatAppearance.BorderSize = 0;
-            this.refreshButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshButton.Image = global::Customer_Loyalty_Portal.Properties.Resources.arrow_refresh_4_icon;
-            this.refreshButton.Location = new System.Drawing.Point(1297, -33);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(35, 31);
-            this.refreshButton.TabIndex = 64;
-            this.refreshButton.UseVisualStyleBackColor = false;
             // 
             // remove15
             // 
@@ -830,6 +812,9 @@
             // 
             // dailyBalanceTab
             // 
+            this.dailyBalanceTab.Controls.Add(this.bajajInfo);
+            this.dailyBalanceTab.Controls.Add(this.paytmInfo);
+            this.dailyBalanceTab.Controls.Add(this.cardInfo);
             this.dailyBalanceTab.Controls.Add(this.crntRecvTextBox);
             this.dailyBalanceTab.Controls.Add(this.label32);
             this.dailyBalanceTab.Controls.Add(this.crntIssuedTextBox);
@@ -930,17 +915,18 @@
             this.bajajTextBox.BackColor = System.Drawing.Color.AliceBlue;
             this.bajajTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.bajajTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bajajTextBox.Location = new System.Drawing.Point(1028, 141);
+            this.bajajTextBox.Location = new System.Drawing.Point(1073, 143);
             this.bajajTextBox.Name = "bajajTextBox";
             this.bajajTextBox.ReadOnly = true;
             this.bajajTextBox.Size = new System.Drawing.Size(119, 23);
             this.bajajTextBox.TabIndex = 40;
+            this.bajajTextBox.MouseHover += new System.EventHandler(this.saleDetails_MouseHover);
             // 
             // label30
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(973, 144);
+            this.label30.Location = new System.Drawing.Point(1018, 146);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(49, 20);
             this.label30.TabIndex = 39;
@@ -956,6 +942,8 @@
             this.paytmTextBox.ReadOnly = true;
             this.paytmTextBox.Size = new System.Drawing.Size(119, 23);
             this.paytmTextBox.TabIndex = 38;
+            this.paytmTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.saleDetails_MouseDoubleClick);
+            this.paytmTextBox.MouseHover += new System.EventHandler(this.saleDetails_MouseHover);
             // 
             // label29
             // 
@@ -1347,6 +1335,7 @@
             this.cardSaleTextBox.ReadOnly = true;
             this.cardSaleTextBox.Size = new System.Drawing.Size(119, 23);
             this.cardSaleTextBox.TabIndex = 6;
+            this.cardSaleTextBox.MouseHover += new System.EventHandler(this.saleDetails_MouseHover);
             // 
             // cashSaleTextBox
             // 
@@ -1447,6 +1436,121 @@
             this.billSearchTab.TabIndex = 3;
             this.billSearchTab.Text = "BILL ADD/EDIT";
             this.billSearchTab.UseVisualStyleBackColor = true;
+            // 
+            // billExistsLabel
+            // 
+            this.billExistsLabel.AutoSize = true;
+            this.billExistsLabel.Location = new System.Drawing.Point(57, 342);
+            this.billExistsLabel.Name = "billExistsLabel";
+            this.billExistsLabel.Size = new System.Drawing.Size(91, 13);
+            this.billExistsLabel.TabIndex = 21;
+            this.billExistsLabel.Text = "Bill Already Exists!";
+            this.billExistsLabel.Visible = false;
+            // 
+            // lastBillAddedLabel
+            // 
+            this.lastBillAddedLabel.AutoSize = true;
+            this.lastBillAddedLabel.Location = new System.Drawing.Point(57, 624);
+            this.lastBillAddedLabel.Name = "lastBillAddedLabel";
+            this.lastBillAddedLabel.Size = new System.Drawing.Size(80, 13);
+            this.lastBillAddedLabel.TabIndex = 20;
+            this.lastBillAddedLabel.Text = "Last Bill Added:";
+            // 
+            // qty20k
+            // 
+            this.qty20k.Location = new System.Drawing.Point(478, 271);
+            this.qty20k.Name = "qty20k";
+            this.qty20k.Size = new System.Drawing.Size(33, 20);
+            this.qty20k.TabIndex = 16;
+            // 
+            // qty15k
+            // 
+            this.qty15k.Location = new System.Drawing.Point(478, 223);
+            this.qty15k.Name = "qty15k";
+            this.qty15k.Size = new System.Drawing.Size(33, 20);
+            this.qty15k.TabIndex = 15;
+            // 
+            // qty10k
+            // 
+            this.qty10k.Location = new System.Drawing.Point(478, 179);
+            this.qty10k.Name = "qty10k";
+            this.qty10k.Size = new System.Drawing.Size(33, 20);
+            this.qty10k.TabIndex = 14;
+            // 
+            // qty8k
+            // 
+            this.qty8k.Location = new System.Drawing.Point(478, 136);
+            this.qty8k.Name = "qty8k";
+            this.qty8k.Size = new System.Drawing.Size(33, 20);
+            this.qty8k.TabIndex = 13;
+            // 
+            // qty5k
+            // 
+            this.qty5k.Location = new System.Drawing.Point(478, 88);
+            this.qty5k.Name = "qty5k";
+            this.qty5k.Size = new System.Drawing.Size(33, 20);
+            this.qty5k.TabIndex = 12;
+            // 
+            // qty3k
+            // 
+            this.qty3k.Location = new System.Drawing.Point(478, 48);
+            this.qty3k.Name = "qty3k";
+            this.qty3k.Size = new System.Drawing.Size(33, 20);
+            this.qty3k.TabIndex = 11;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(431, 274);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(37, 13);
+            this.label45.TabIndex = 19;
+            this.label45.Text = "20000";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(431, 230);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(37, 13);
+            this.label44.TabIndex = 18;
+            this.label44.Text = "15000";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(431, 181);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(37, 13);
+            this.label43.TabIndex = 17;
+            this.label43.Text = "10000";
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(431, 139);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(31, 13);
+            this.label42.TabIndex = 16;
+            this.label42.Text = "8000";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(431, 91);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(31, 13);
+            this.label41.TabIndex = 15;
+            this.label41.Text = "5000";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(431, 50);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(31, 13);
+            this.label40.TabIndex = 14;
+            this.label40.Text = "3000";
             // 
             // addBillButton
             // 
@@ -1580,120 +1684,62 @@
             this.toolTip1.AutomaticDelay = 0;
             this.toolTip1.IsBalloon = true;
             // 
-            // label40
+            // pictureBox1
             // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(431, 50);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(31, 13);
-            this.label40.TabIndex = 14;
-            this.label40.Text = "3000";
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(1329, 611);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(26, 26);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 70;
+            this.pictureBox1.TabStop = false;
             // 
-            // label41
+            // refreshButton
             // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(431, 91);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(31, 13);
-            this.label41.TabIndex = 15;
-            this.label41.Text = "5000";
+            this.refreshButton.BackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatAppearance.BorderSize = 0;
+            this.refreshButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.refreshButton.Image = global::Customer_Loyalty_Portal.Properties.Resources.arrow_refresh_4_icon;
+            this.refreshButton.Location = new System.Drawing.Point(1297, -33);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(35, 31);
+            this.refreshButton.TabIndex = 64;
+            this.refreshButton.UseVisualStyleBackColor = false;
             // 
-            // label42
+            // cardInfo
             // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(431, 139);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(31, 13);
-            this.label42.TabIndex = 16;
-            this.label42.Text = "8000";
+            this.cardInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.cardInfo.Location = new System.Drawing.Point(133, 143);
+            this.cardInfo.Name = "cardInfo";
+            this.cardInfo.Size = new System.Drawing.Size(14, 14);
+            this.cardInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.cardInfo.TabIndex = 45;
+            this.cardInfo.TabStop = false;
+            this.cardInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
             // 
-            // label43
+            // paytmInfo
             // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(431, 181);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(37, 13);
-            this.label43.TabIndex = 17;
-            this.label43.Text = "10000";
+            this.paytmInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.paytmInfo.Location = new System.Drawing.Point(724, 148);
+            this.paytmInfo.Name = "paytmInfo";
+            this.paytmInfo.Size = new System.Drawing.Size(14, 14);
+            this.paytmInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.paytmInfo.TabIndex = 46;
+            this.paytmInfo.TabStop = false;
+            this.paytmInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
             // 
-            // label44
+            // bajajInfo
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(431, 230);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(37, 13);
-            this.label44.TabIndex = 18;
-            this.label44.Text = "15000";
-            // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(431, 274);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(37, 13);
-            this.label45.TabIndex = 19;
-            this.label45.Text = "20000";
-            // 
-            // qty3k
-            // 
-            this.qty3k.Location = new System.Drawing.Point(478, 48);
-            this.qty3k.Name = "qty3k";
-            this.qty3k.Size = new System.Drawing.Size(33, 20);
-            this.qty3k.TabIndex = 11;
-            // 
-            // qty5k
-            // 
-            this.qty5k.Location = new System.Drawing.Point(478, 88);
-            this.qty5k.Name = "qty5k";
-            this.qty5k.Size = new System.Drawing.Size(33, 20);
-            this.qty5k.TabIndex = 12;
-            // 
-            // qty8k
-            // 
-            this.qty8k.Location = new System.Drawing.Point(478, 136);
-            this.qty8k.Name = "qty8k";
-            this.qty8k.Size = new System.Drawing.Size(33, 20);
-            this.qty8k.TabIndex = 13;
-            // 
-            // qty10k
-            // 
-            this.qty10k.Location = new System.Drawing.Point(478, 179);
-            this.qty10k.Name = "qty10k";
-            this.qty10k.Size = new System.Drawing.Size(33, 20);
-            this.qty10k.TabIndex = 14;
-            // 
-            // qty15k
-            // 
-            this.qty15k.Location = new System.Drawing.Point(478, 223);
-            this.qty15k.Name = "qty15k";
-            this.qty15k.Size = new System.Drawing.Size(33, 20);
-            this.qty15k.TabIndex = 15;
-            // 
-            // qty20k
-            // 
-            this.qty20k.Location = new System.Drawing.Point(478, 271);
-            this.qty20k.Name = "qty20k";
-            this.qty20k.Size = new System.Drawing.Size(33, 20);
-            this.qty20k.TabIndex = 16;
-            // 
-            // lastBillAddedLabel
-            // 
-            this.lastBillAddedLabel.AutoSize = true;
-            this.lastBillAddedLabel.Location = new System.Drawing.Point(57, 624);
-            this.lastBillAddedLabel.Name = "lastBillAddedLabel";
-            this.lastBillAddedLabel.Size = new System.Drawing.Size(80, 13);
-            this.lastBillAddedLabel.TabIndex = 20;
-            this.lastBillAddedLabel.Text = "Last Bill Added:";
-            // 
-            // billExistsLabel
-            // 
-            this.billExistsLabel.AutoSize = true;
-            this.billExistsLabel.Location = new System.Drawing.Point(57, 342);
-            this.billExistsLabel.Name = "billExistsLabel";
-            this.billExistsLabel.Size = new System.Drawing.Size(91, 13);
-            this.billExistsLabel.TabIndex = 21;
-            this.billExistsLabel.Text = "Bill Already Exists!";
-            this.billExistsLabel.Visible = false;
+            this.bajajInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.bajajInfo.Location = new System.Drawing.Point(1008, 149);
+            this.bajajInfo.Name = "bajajInfo";
+            this.bajajInfo.Size = new System.Drawing.Size(14, 14);
+            this.bajajInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.bajajInfo.TabIndex = 47;
+            this.bajajInfo.TabStop = false;
+            this.bajajInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
             // 
             // Home
             // 
@@ -1712,7 +1758,6 @@
             this.tabControl1.ResumeLayout(false);
             this.homeTab.ResumeLayout(false);
             this.homeTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewJunior)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPH)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -1728,12 +1773,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.cashGridView)).EndInit();
             this.billSearchTab.ResumeLayout(false);
             this.billSearchTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.qty3k)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty5k)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty8k)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty10k)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qty15k)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty20k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty15k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty10k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty8k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty5k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qty3k)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1877,6 +1926,9 @@
         private System.Windows.Forms.NumericUpDown qty5k;
         private System.Windows.Forms.Label lastBillAddedLabel;
         private System.Windows.Forms.Label billExistsLabel;
+        private System.Windows.Forms.PictureBox cardInfo;
+        private System.Windows.Forms.PictureBox bajajInfo;
+        private System.Windows.Forms.PictureBox paytmInfo;
     }
 }
 

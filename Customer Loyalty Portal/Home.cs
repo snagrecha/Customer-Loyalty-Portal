@@ -75,6 +75,7 @@ namespace Customer_Loyalty_Portal
 
         public string paytmId = "";
         public string bajajId = "";
+        public string cardId = "";
 
         float balance = 0;
 
@@ -749,6 +750,7 @@ namespace Customer_Loyalty_Portal
             {
                 paytmId = "149545";
                 bajajId = "149546";
+                cardId = "165";
             }
 
             //else if (machine.Equals("LENOVO-PC"))
@@ -756,6 +758,7 @@ namespace Customer_Loyalty_Portal
             {
                 paytmId = "219587";
                 bajajId = "219588";
+                cardId = "128";
             }
 
             LogWriter log = new LogWriter("Initializing App! " + DateTime.Now.ToString());
@@ -1560,5 +1563,121 @@ namespace Customer_Loyalty_Portal
         {
             ((TextBox)sender).SelectAll();
         }
+
+        private void paytmTextBox_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saleDetails_MouseHover(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string cardAccountID = "";
+
+            if (textBox.Name.StartsWith("paytm")) cardAccountID = paytmId;
+            else if (textBox.Name.StartsWith("bajaj")) cardAccountID = bajajId;
+            else cardAccountID = cardId;
+
+            ToolTip toolTip = new ToolTip();
+            string toolTipText = "Bill No   \tMobile    \tName      \tCard\tBill\n";
+            DataTable dt = DBHandler.GetDetailedSales(machineServerNameDict[machine], machineDbNameDict[machine], cardAccountID);
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (DataColumn col in dt.Columns)
+                {
+                    string data = row[col].ToString();
+
+                    if (data.Length >= 10) data = data.Substring(0, 10);
+                    else if (data.Length < 10) data = data.PadRight(10, ' ');
+
+                    toolTipText += data + "\t";
+                }
+                toolTipText += "\n";
+            }
+
+            // Set the tooltip text and show the tooltip.
+            toolTip.SetToolTip((TextBox)sender, toolTipText);
+        }
+
+        private void saleDetails_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string cardAccountID = "";
+
+            if (textBox.Name.StartsWith("paytm")) cardAccountID = paytmId;
+            else if (textBox.Name.StartsWith("bajaj")) cardAccountID = bajajId;
+            else cardAccountID = cardId;
+
+            // Create a new form for the pop-up window
+            Form popupForm = new Form();
+            popupForm.Text = "Paytm Pop-Up";
+            //popupForm.Size = new Size(400, 300);
+
+            // Create a DataGridView control on the pop-up form
+            DataGridView saleDetailsDataGridView = new DataGridView();
+            saleDetailsDataGridView.Dock = DockStyle.Fill;
+
+            DataTable dt = DBHandler.GetDetailedSales(machineServerNameDict[machine], machineDbNameDict[machine], cardAccountID);
+
+            // Set the DataSource of the DataGridView to display the DataTable
+            saleDetailsDataGridView.DataSource = dt;
+
+            // Add the DataGridView to the pop-up form
+            popupForm.Controls.Add(saleDetailsDataGridView);
+
+            // Show the pop-up form as a dialog
+            popupForm.ShowDialog();
+        }
+
+      
+
+        private void saleDetailsInfo_Click(object sender, EventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            string cardAccountID = "";
+            string popupTitle = "";
+
+            if (pictureBox.Name.StartsWith("paytm"))
+            {
+                cardAccountID = paytmId;
+                popupTitle = "UPI Details";
+            }
+            else if (pictureBox.Name.StartsWith("bajaj"))
+            {
+                cardAccountID = bajajId;
+                popupTitle = "Bajaj Details";
+            }
+            else
+            {
+                cardAccountID = cardId;
+                popupTitle = "Credit Card Details";
+            }
+
+            // Create a new form for the pop-up window
+            Form popupForm = new Form();
+            popupForm.Text = popupTitle;
+            //popupForm.Size = new Size(400, 300);
+
+            // Create a DataGridView control on the pop-up form
+            DataGridView saleDetailsDataGridView = new DataGridView();
+            saleDetailsDataGridView.Dock = DockStyle.Fill;
+
+            DataTable dt = DBHandler.GetDetailedSales(machineServerNameDict[machine], machineDbNameDict[machine], cardAccountID);
+
+            // Set the DataSource of the DataGridView to display the DataTable
+            saleDetailsDataGridView.DataSource = dt;
+            saleDetailsDataGridView.BackgroundColor = Color.White;
+            saleDetailsDataGridView.ReadOnly = true;
+            saleDetailsDataGridView.RowHeadersVisible = false;
+            saleDetailsDataGridView.AllowUserToAddRows = false;
+
+            // Add the DataGridView to the pop-up form
+            popupForm.Controls.Add(saleDetailsDataGridView);
+            popupForm.Size = new Size(550, 600);
+
+            // Show the pop-up form as a dialog
+            popupForm.ShowDialog();
+        }
     }
+
 }

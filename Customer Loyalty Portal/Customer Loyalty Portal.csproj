@@ -196,6 +196,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="man.ico" />
+    <Content Include="Resources\fichier-info-icon-002-svg---wikip-dia-28.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\fichier-info-icon-002-svg---wikip-dia-281.png" />
     <None Include="Resources\add11.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

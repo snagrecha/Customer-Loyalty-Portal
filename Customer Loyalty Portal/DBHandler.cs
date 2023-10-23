@@ -145,6 +145,36 @@ namespace Customer_Loyalty_Portal
             return totSales;
         }
 
+        public static DataTable GetDetailedSales(String serverName, String dbname, String cardAccountID = "", string date = "")
+        {
+            int totSales = 0;
+
+            string cardAccountIDClause = "";
+
+            if(cardAccountID.Length > 0)
+            {
+                cardAccountIDClause = " AND trnPaymentDetail.CardAccountID = '" + cardAccountID + "' ";
+            }
+
+            SqlConnection con = ConnectToDB(serverName, dbname);
+
+            if (date.Length == 0) date = DateTime.Now.ToString("D");
+
+            //String query = "SELECT BIL_NO, DB_CODE, BIL_DT, CO_YEAR, PHONE, TOT_AMT, AC_NAME FROM SALE_DATA WHERE BIL_NO > '" + billNo + "' AND DB_CODE = '" + dbCode + "' AND CO_YEAR = '" + year + "'";
+            String query = $"SELECT trnSales.VoucherNo, trnSales.MobileNo, trnSales.AccountName, trnPaymentDetail.CardTotAmt, trnSales.NetAmt FROM trnSales INNER JOIN trnPaymentDetail ON trnSales.SalesID = trnPaymentDetail.ModuleID WHERE trnSales.VoucherDate >= '{date}' {cardAccountIDClause} ORDER BY trnSales.VoucherNo DESC";
+
+            LogWriter log = new LogWriter(query);
+            Console.WriteLine(query);
+
+            SqlDataAdapter adapter = new SqlDataAdapter(query, con);
+
+            DataTable dt = new DataTable();
+
+            adapter.Fill(dt);
+
+            return dt;
+        }
+
         public static DataTable GetModifiedBills(String serverName, String dbname)
         {
             DataTable dt = new DataTable();
