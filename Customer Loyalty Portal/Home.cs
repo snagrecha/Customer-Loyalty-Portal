@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Configuration;
 using System.Threading;
 using System.Configuration;
+using System.IO;
 
 namespace Customer_Loyalty_Portal
 {
@@ -741,6 +742,7 @@ namespace Customer_Loyalty_Portal
         {
             InitializeComponent();
 
+            WriteToExcel.workingDirectory = Directory.GetCurrentDirectory() + "\\DailyBalanceExcel\\";
             //if (machine.Equals("SNEH-PC")) machine = jrMachineName;
             //if (machine.Equals("ACER-Laptop")) machine = jrMachineName;
             if (!(machine.Equals(jrMachineName) || machine.Equals(tphMachineName))) machine = jrMachineName;
@@ -1165,6 +1167,8 @@ namespace Customer_Loyalty_Portal
             bajajTextBox.Text = sale.getBajaj().ToString();
             crntIssuedTextBox.Text = sale.getCrntIssued().ToString();
             crntRecvTextBox.Text = sale.getCrntRecv().ToString();
+            startBillTextBox.Text = sale.getStartBill();
+            endBillTextBox.Text = sale.getEndBill();
 
             CheckBalanceMatch();
             UpdateCalculatedBalance();
@@ -1190,6 +1194,8 @@ namespace Customer_Loyalty_Portal
                 bajajTextBox.Text = sale.getBajaj().ToString();
                 crntIssuedTextBox.Text = sale.getCrntIssued().ToString();
                 crntRecvTextBox.Text = sale.getCrntRecv().ToString();
+                startBillTextBox.Text = sale.getStartBill();
+                endBillTextBox.Text = sale.getEndBill();
 
                 CheckBalanceMatch();
                 UpdateCalculatedBalance();
@@ -1373,7 +1379,7 @@ namespace Customer_Loyalty_Portal
         }
 
         private void exportButton_Click(object sender, EventArgs e)
-        {
+        {/*
             // creating Excel Application  
             Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application();
 
@@ -1404,7 +1410,7 @@ namespace Customer_Loyalty_Portal
             workbook.SaveAs("D:\\Customer Loyalty Portal\\CustomerList.xls", Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
             MessageBox.Show("Export Successful");
             // Exit from the application  
-            app.Quit();
+            app.Quit();*/
         }
 
         private void dataGridViewPH_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

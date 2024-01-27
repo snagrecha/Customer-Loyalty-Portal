@@ -18,8 +18,10 @@ namespace Customer_Loyalty_Portal
         int bajaj;
         int crntIssued;
         int crntRecv;
+        string startBillNo;
+        string endBillNo;
 
-        public SaleParameters(int totSale, int cashSale, int cardSale, int debitSale, int balReceived_cash, int balReceived_card, int paytm, int bajaj, int crntIssued, int crntRecv)
+        public SaleParameters(int totSale, int cashSale, int cardSale, int debitSale, int balReceived_cash, int balReceived_card, int paytm, int bajaj, int crntIssued, int crntRecv, string startBillNo, string endBillNo)
         {
             this.totSale = totSale;
             this.cardSale = cardSale;
@@ -31,6 +33,8 @@ namespace Customer_Loyalty_Portal
             this.bajaj = bajaj;
             this.crntIssued = crntIssued;
             this.crntRecv = crntRecv;
+            this.startBillNo = startBillNo;
+            this.endBillNo = endBillNo; 
         }
 
         void setParameters(int totSale, int cashSale, int cardSale, int debitSale, int balReceived_cash, int balReceived_card, int paytm, int bajaj, int crntIssued, int crntRecv)
@@ -95,6 +99,16 @@ namespace Customer_Loyalty_Portal
         public int getCrntRecv()
         {
             return crntRecv;
+        }
+
+        public string getStartBill()
+        {
+            return startBillNo;
+        }
+
+        public string getEndBill()
+        {
+            return endBillNo;
         }
     }
 }

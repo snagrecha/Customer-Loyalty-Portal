@@ -34,9 +34,11 @@
             this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.homeTab = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.updateMobileButton = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.refreshButton = new System.Windows.Forms.Button();
             this.remove15 = new System.Windows.Forms.Button();
             this.remove10 = new System.Windows.Forms.Button();
             this.remove8 = new System.Windows.Forms.Button();
@@ -83,6 +85,9 @@
             this.label33 = new System.Windows.Forms.Label();
             this.sourceListBox = new System.Windows.Forms.CheckedListBox();
             this.dailyBalanceTab = new System.Windows.Forms.TabPage();
+            this.bajajInfo = new System.Windows.Forms.PictureBox();
+            this.paytmInfo = new System.Windows.Forms.PictureBox();
+            this.cardInfo = new System.Windows.Forms.PictureBox();
             this.crntRecvTextBox = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
             this.crntIssuedTextBox = new System.Windows.Forms.TextBox();
@@ -165,13 +170,13 @@
             this.label35 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.refreshButton = new System.Windows.Forms.Button();
-            this.cardInfo = new System.Windows.Forms.PictureBox();
-            this.paytmInfo = new System.Windows.Forms.PictureBox();
-            this.bajajInfo = new System.Windows.Forms.PictureBox();
+            this.endBillTextBox = new System.Windows.Forms.TextBox();
+            this.startBillTextBox = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.label47 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.homeTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewJunior)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPH)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -179,6 +184,9 @@
             this.customerDataTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.customerListDataGrid)).BeginInit();
             this.dailyBalanceTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.debitGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.creditGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashGridView)).BeginInit();
@@ -189,10 +197,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.qty8k)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty5k)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty3k)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // rectangleShape3
@@ -267,6 +271,16 @@
             this.homeTab.Text = "HOME";
             this.homeTab.UseVisualStyleBackColor = true;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(1329, 611);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(26, 26);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 70;
+            this.pictureBox1.TabStop = false;
+            // 
             // updateMobileButton
             // 
             this.updateMobileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -297,6 +311,20 @@
             this.label13.Size = new System.Drawing.Size(51, 24);
             this.label13.TabIndex = 67;
             this.label13.Text = "TPH";
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.BackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatAppearance.BorderSize = 0;
+            this.refreshButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.refreshButton.Image = global::Customer_Loyalty_Portal.Properties.Resources.arrow_refresh_4_icon;
+            this.refreshButton.Location = new System.Drawing.Point(1297, -33);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(35, 31);
+            this.refreshButton.TabIndex = 64;
+            this.refreshButton.UseVisualStyleBackColor = false;
             // 
             // remove15
             // 
@@ -572,7 +600,7 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(352, 16);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(50, 16);
+            this.label4.Size = new System.Drawing.Size(49, 16);
             this.label4.TabIndex = 5;
             this.label4.Text = "Junior";
             this.label4.MouseHover += new System.EventHandler(this.label4_MouseHover);
@@ -627,7 +655,7 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(71, 16);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 16);
+            this.label3.Size = new System.Drawing.Size(28, 16);
             this.label3.TabIndex = 0;
             this.label3.Text = "PH";
             this.label3.MouseHover += new System.EventHandler(this.label3_MouseHover);
@@ -812,6 +840,10 @@
             // 
             // dailyBalanceTab
             // 
+            this.dailyBalanceTab.Controls.Add(this.label47);
+            this.dailyBalanceTab.Controls.Add(this.label46);
+            this.dailyBalanceTab.Controls.Add(this.startBillTextBox);
+            this.dailyBalanceTab.Controls.Add(this.endBillTextBox);
             this.dailyBalanceTab.Controls.Add(this.bajajInfo);
             this.dailyBalanceTab.Controls.Add(this.paytmInfo);
             this.dailyBalanceTab.Controls.Add(this.cardInfo);
@@ -867,6 +899,39 @@
             this.dailyBalanceTab.Text = "DAILY BALANCE";
             this.dailyBalanceTab.UseVisualStyleBackColor = true;
             this.dailyBalanceTab.Click += new System.EventHandler(this.dailyBalanceTab_Click);
+            // 
+            // bajajInfo
+            // 
+            this.bajajInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.bajajInfo.Location = new System.Drawing.Point(1008, 149);
+            this.bajajInfo.Name = "bajajInfo";
+            this.bajajInfo.Size = new System.Drawing.Size(14, 14);
+            this.bajajInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.bajajInfo.TabIndex = 47;
+            this.bajajInfo.TabStop = false;
+            this.bajajInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
+            // 
+            // paytmInfo
+            // 
+            this.paytmInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.paytmInfo.Location = new System.Drawing.Point(724, 148);
+            this.paytmInfo.Name = "paytmInfo";
+            this.paytmInfo.Size = new System.Drawing.Size(14, 14);
+            this.paytmInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.paytmInfo.TabIndex = 46;
+            this.paytmInfo.TabStop = false;
+            this.paytmInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
+            // 
+            // cardInfo
+            // 
+            this.cardInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
+            this.cardInfo.Location = new System.Drawing.Point(133, 143);
+            this.cardInfo.Name = "cardInfo";
+            this.cardInfo.Size = new System.Drawing.Size(14, 14);
+            this.cardInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.cardInfo.TabIndex = 45;
+            this.cardInfo.TabStop = false;
+            this.cardInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
             // 
             // crntRecvTextBox
             // 
@@ -1021,7 +1086,7 @@
             // deleteCreditButton
             // 
             this.deleteCreditButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.deleteCreditButton.Location = new System.Drawing.Point(273, 445);
+            this.deleteCreditButton.Location = new System.Drawing.Point(279, 445);
             this.deleteCreditButton.Name = "deleteCreditButton";
             this.deleteCreditButton.Size = new System.Drawing.Size(75, 23);
             this.deleteCreditButton.TabIndex = 30;
@@ -1033,7 +1098,7 @@
             // 
             this.calculatedBalanceLabel.AutoSize = true;
             this.calculatedBalanceLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.calculatedBalanceLabel.Location = new System.Drawing.Point(983, 518);
+            this.calculatedBalanceLabel.Location = new System.Drawing.Point(1064, 518);
             this.calculatedBalanceLabel.Name = "calculatedBalanceLabel";
             this.calculatedBalanceLabel.Size = new System.Drawing.Size(14, 20);
             this.calculatedBalanceLabel.TabIndex = 29;
@@ -1043,7 +1108,7 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(804, 518);
+            this.label25.Location = new System.Drawing.Point(885, 518);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(169, 20);
             this.label25.TabIndex = 28;
@@ -1052,7 +1117,7 @@
             // submitPrintButton
             // 
             this.submitPrintButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.submitPrintButton.Location = new System.Drawing.Point(479, 575);
+            this.submitPrintButton.Location = new System.Drawing.Point(545, 567);
             this.submitPrintButton.Name = "submitPrintButton";
             this.submitPrintButton.Size = new System.Drawing.Size(172, 47);
             this.submitPrintButton.TabIndex = 27;
@@ -1064,7 +1129,7 @@
             // 
             this.balanceMatchLabel.AutoSize = true;
             this.balanceMatchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.balanceMatchLabel.Location = new System.Drawing.Point(944, 476);
+            this.balanceMatchLabel.Location = new System.Drawing.Point(1025, 476);
             this.balanceMatchLabel.Name = "balanceMatchLabel";
             this.balanceMatchLabel.Size = new System.Drawing.Size(14, 20);
             this.balanceMatchLabel.TabIndex = 26;
@@ -1074,7 +1139,7 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(804, 476);
+            this.label24.Location = new System.Drawing.Point(885, 476);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(133, 20);
             this.label24.TabIndex = 25;
@@ -1083,7 +1148,7 @@
             // addDebitButton
             // 
             this.addDebitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addDebitButton.Location = new System.Drawing.Point(527, 447);
+            this.addDebitButton.Location = new System.Drawing.Point(589, 447);
             this.addDebitButton.Name = "addDebitButton";
             this.addDebitButton.Size = new System.Drawing.Size(75, 23);
             this.addDebitButton.TabIndex = 24;
@@ -1095,7 +1160,7 @@
             // 
             this.debitAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.debitAmount.ForeColor = System.Drawing.Color.Silver;
-            this.debitAmount.Location = new System.Drawing.Point(581, 418);
+            this.debitAmount.Location = new System.Drawing.Point(643, 418);
             this.debitAmount.Name = "debitAmount";
             this.debitAmount.Size = new System.Drawing.Size(84, 20);
             this.debitAmount.TabIndex = 23;
@@ -1106,7 +1171,7 @@
             // 
             this.debitParticular.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.debitParticular.ForeColor = System.Drawing.Color.Silver;
-            this.debitParticular.Location = new System.Drawing.Point(461, 418);
+            this.debitParticular.Location = new System.Drawing.Point(523, 418);
             this.debitParticular.Name = "debitParticular";
             this.debitParticular.Size = new System.Drawing.Size(114, 20);
             this.debitParticular.TabIndex = 22;
@@ -1116,7 +1181,7 @@
             // addCreditButton
             // 
             this.addCreditButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addCreditButton.Location = new System.Drawing.Point(144, 445);
+            this.addCreditButton.Location = new System.Drawing.Point(150, 445);
             this.addCreditButton.Name = "addCreditButton";
             this.addCreditButton.Size = new System.Drawing.Size(75, 23);
             this.addCreditButton.TabIndex = 21;
@@ -1128,7 +1193,7 @@
             // 
             this.creditAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.creditAmount.ForeColor = System.Drawing.Color.Silver;
-            this.creditAmount.Location = new System.Drawing.Point(264, 418);
+            this.creditAmount.Location = new System.Drawing.Point(270, 418);
             this.creditAmount.Name = "creditAmount";
             this.creditAmount.Size = new System.Drawing.Size(84, 20);
             this.creditAmount.TabIndex = 20;
@@ -1139,7 +1204,7 @@
             // 
             this.creditParticular.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.creditParticular.ForeColor = System.Drawing.Color.Silver;
-            this.creditParticular.Location = new System.Drawing.Point(144, 418);
+            this.creditParticular.Location = new System.Drawing.Point(150, 418);
             this.creditParticular.Name = "creditParticular";
             this.creditParticular.Size = new System.Drawing.Size(114, 20);
             this.creditParticular.TabIndex = 19;
@@ -1150,7 +1215,7 @@
             // 
             this.totalDebitLabel.AutoSize = true;
             this.totalDebitLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalDebitLabel.Location = new System.Drawing.Point(571, 476);
+            this.totalDebitLabel.Location = new System.Drawing.Point(633, 476);
             this.totalDebitLabel.Name = "totalDebitLabel";
             this.totalDebitLabel.Size = new System.Drawing.Size(14, 20);
             this.totalDebitLabel.TabIndex = 18;
@@ -1160,7 +1225,7 @@
             // 
             this.totalCreditLabel.AutoSize = true;
             this.totalCreditLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalCreditLabel.Location = new System.Drawing.Point(260, 476);
+            this.totalCreditLabel.Location = new System.Drawing.Point(266, 476);
             this.totalCreditLabel.Name = "totalCreditLabel";
             this.totalCreditLabel.Size = new System.Drawing.Size(14, 20);
             this.totalCreditLabel.TabIndex = 17;
@@ -1170,7 +1235,7 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(459, 476);
+            this.label23.Location = new System.Drawing.Point(521, 476);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(107, 20);
             this.label23.TabIndex = 16;
@@ -1180,7 +1245,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(535, 178);
+            this.label22.Location = new System.Drawing.Point(597, 178);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(52, 20);
             this.label22.TabIndex = 15;
@@ -1196,7 +1261,7 @@
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.debitGridView.GridColor = System.Drawing.SystemColors.ActiveCaption;
-            this.debitGridView.Location = new System.Drawing.Point(461, 211);
+            this.debitGridView.Location = new System.Drawing.Point(523, 211);
             this.debitGridView.Name = "debitGridView";
             this.debitGridView.RowHeadersVisible = false;
             this.debitGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1217,7 +1282,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(140, 476);
+            this.label21.Location = new System.Drawing.Point(146, 476);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(112, 20);
             this.label21.TabIndex = 13;
@@ -1227,7 +1292,7 @@
             // 
             this.totalCashLabel.AutoSize = true;
             this.totalCashLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalCashLabel.Location = new System.Drawing.Point(996, 431);
+            this.totalCashLabel.Location = new System.Drawing.Point(1077, 431);
             this.totalCashLabel.Name = "totalCashLabel";
             this.totalCashLabel.Size = new System.Drawing.Size(14, 20);
             this.totalCashLabel.TabIndex = 12;
@@ -1237,7 +1302,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(804, 431);
+            this.label20.Location = new System.Drawing.Point(885, 431);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(182, 20);
             this.label20.TabIndex = 11;
@@ -1253,7 +1318,7 @@
             this.Particulars,
             this.Amount});
             this.creditGridView.GridColor = System.Drawing.SystemColors.ActiveCaption;
-            this.creditGridView.Location = new System.Drawing.Point(144, 211);
+            this.creditGridView.Location = new System.Drawing.Point(150, 211);
             this.creditGridView.Name = "creditGridView";
             this.creditGridView.RowHeadersVisible = false;
             this.creditGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1274,7 +1339,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(208, 178);
+            this.label19.Location = new System.Drawing.Point(214, 178);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(57, 20);
             this.label19.TabIndex = 9;
@@ -1284,7 +1349,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(912, 178);
+            this.label18.Location = new System.Drawing.Point(993, 178);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(95, 20);
             this.label18.TabIndex = 8;
@@ -1301,7 +1366,7 @@
             this.Nos,
             this.Total});
             this.cashGridView.GridColor = System.Drawing.SystemColors.ActiveCaption;
-            this.cashGridView.Location = new System.Drawing.Point(808, 211);
+            this.cashGridView.Location = new System.Drawing.Point(889, 211);
             this.cashGridView.Name = "cashGridView";
             this.cashGridView.RowHeadersVisible = false;
             this.cashGridView.Size = new System.Drawing.Size(303, 201);
@@ -1393,7 +1458,7 @@
             // 
             this.dateLabel.AutoSize = true;
             this.dateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateLabel.Location = new System.Drawing.Point(458, 2);
+            this.dateLabel.Location = new System.Drawing.Point(494, 11);
             this.dateLabel.Name = "dateLabel";
             this.dateLabel.Size = new System.Drawing.Size(81, 29);
             this.dateLabel.TabIndex = 0;
@@ -1684,62 +1749,49 @@
             this.toolTip1.AutomaticDelay = 0;
             this.toolTip1.IsBalloon = true;
             // 
-            // pictureBox1
+            // endBillTextBox
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1329, 611);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(26, 26);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 70;
-            this.pictureBox1.TabStop = false;
+            this.endBillTextBox.BackColor = System.Drawing.Color.Navy;
+            this.endBillTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.endBillTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.endBillTextBox.ForeColor = System.Drawing.SystemColors.Window;
+            this.endBillTextBox.Location = new System.Drawing.Point(1073, 97);
+            this.endBillTextBox.Name = "endBillTextBox";
+            this.endBillTextBox.ReadOnly = true;
+            this.endBillTextBox.Size = new System.Drawing.Size(119, 23);
+            this.endBillTextBox.TabIndex = 48;
             // 
-            // refreshButton
+            // startBillTextBox
             // 
-            this.refreshButton.BackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatAppearance.BorderSize = 0;
-            this.refreshButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshButton.Image = global::Customer_Loyalty_Portal.Properties.Resources.arrow_refresh_4_icon;
-            this.refreshButton.Location = new System.Drawing.Point(1297, -33);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(35, 31);
-            this.refreshButton.TabIndex = 64;
-            this.refreshButton.UseVisualStyleBackColor = false;
+            this.startBillTextBox.BackColor = System.Drawing.Color.Navy;
+            this.startBillTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.startBillTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startBillTextBox.ForeColor = System.Drawing.SystemColors.Window;
+            this.startBillTextBox.Location = new System.Drawing.Point(1073, 57);
+            this.startBillTextBox.Name = "startBillTextBox";
+            this.startBillTextBox.ReadOnly = true;
+            this.startBillTextBox.Size = new System.Drawing.Size(119, 23);
+            this.startBillTextBox.TabIndex = 49;
             // 
-            // cardInfo
+            // label46
             // 
-            this.cardInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
-            this.cardInfo.Location = new System.Drawing.Point(133, 143);
-            this.cardInfo.Name = "cardInfo";
-            this.cardInfo.Size = new System.Drawing.Size(14, 14);
-            this.cardInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.cardInfo.TabIndex = 45;
-            this.cardInfo.TabStop = false;
-            this.cardInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.Location = new System.Drawing.Point(989, 56);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(78, 20);
+            this.label46.TabIndex = 50;
+            this.label46.Text = "Start Bill";
             // 
-            // paytmInfo
+            // label47
             // 
-            this.paytmInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
-            this.paytmInfo.Location = new System.Drawing.Point(724, 148);
-            this.paytmInfo.Name = "paytmInfo";
-            this.paytmInfo.Size = new System.Drawing.Size(14, 14);
-            this.paytmInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.paytmInfo.TabIndex = 46;
-            this.paytmInfo.TabStop = false;
-            this.paytmInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
-            // 
-            // bajajInfo
-            // 
-            this.bajajInfo.Image = global::Customer_Loyalty_Portal.Properties.Resources.fichier_info_icon_002_svg___wikip_dia_28;
-            this.bajajInfo.Location = new System.Drawing.Point(1008, 149);
-            this.bajajInfo.Name = "bajajInfo";
-            this.bajajInfo.Size = new System.Drawing.Size(14, 14);
-            this.bajajInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.bajajInfo.TabIndex = 47;
-            this.bajajInfo.TabStop = false;
-            this.bajajInfo.Click += new System.EventHandler(this.saleDetailsInfo_Click);
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.Location = new System.Drawing.Point(997, 99);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(70, 20);
+            this.label47.TabIndex = 51;
+            this.label47.Text = "End Bill";
             // 
             // Home
             // 
@@ -1758,6 +1810,7 @@
             this.tabControl1.ResumeLayout(false);
             this.homeTab.ResumeLayout(false);
             this.homeTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewJunior)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPH)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -1768,6 +1821,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.customerListDataGrid)).EndInit();
             this.dailyBalanceTab.ResumeLayout(false);
             this.dailyBalanceTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.debitGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.creditGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashGridView)).EndInit();
@@ -1779,10 +1835,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.qty8k)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty5k)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qty3k)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cardInfo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paytmInfo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bajajInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1929,6 +1981,10 @@
         private System.Windows.Forms.PictureBox cardInfo;
         private System.Windows.Forms.PictureBox bajajInfo;
         private System.Windows.Forms.PictureBox paytmInfo;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Label label46;
+        public System.Windows.Forms.TextBox startBillTextBox;
+        public System.Windows.Forms.TextBox endBillTextBox;
     }
 }
 

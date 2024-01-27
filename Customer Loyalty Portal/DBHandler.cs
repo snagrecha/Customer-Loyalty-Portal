@@ -16,7 +16,7 @@ namespace Customer_Loyalty_Portal
         public static SqlConnection ConnectToDB(String serverName, String dbname)
         {
             SqlConnection con = null;
-            String ConnectionString = "Server=" + serverName + ";Initial Catalog=" + dbname + ";UID=sa;PWD=aa;Pooling=False";
+            String ConnectionString = "Server=" + serverName + ";Initial Catalog=" + dbname + ";UID=cl_admin;PWD=Tph@2015;Pooling=False";
             //String ConnectionString = ConfigurationManager.ConnectionStrings["StockHP"].ConnectionString;
             //String ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Stock"].ToString();
             
@@ -40,12 +40,14 @@ namespace Customer_Loyalty_Portal
             int bajaj = 0;
             int crntIssued = 0;
             int crntRecv = 0;
+            string startBillNo = "";
+            string endBillNo = "";
 
             SqlConnection con = ConnectToDB(serverName, dbname);
 
            
             //String query = "SELECT BIL_NO, DB_CODE, BIL_DT, CO_YEAR, PHONE, TOT_AMT, AC_NAME FROM SALE_DATA WHERE BIL_NO > '" + billNo + "' AND DB_CODE = '" + dbCode + "' AND CO_YEAR = '" + year + "'";
-            String query = "SELECT SUM(NetAmt) AS NetAmt, SUM(CardAmt) AS CardAmt, SUM(CashAmt) AS CashAmt, SUM(OsAmt) AS OsAmt, SUM(CreditNoteIssueAmt) AS CrntIssued, SUM(CreditNoteUseAmt) AS CrntRecv FROM trnSales WHERE VoucherDate = '" + date + "'";
+            String query = "SELECT SUM(NetAmt) AS NetAmt, SUM(CardAmt) AS CardAmt, SUM(CashAmt) AS CashAmt, SUM(OsAmt) AS OsAmt, SUM(CreditNoteIssueAmt) AS CrntIssued, SUM(CreditNoteUseAmt) AS CrntRecv, MIN(VoucherNo) as StartBillNo, MAX(VoucherNo) as EndBillNo FROM trnSales WHERE VoucherDate = '" + date + "'";
             String query2 = "SELECT SUM(CashAmt) AS CashReceiptAmt, SUM(CardAmt) AS CardReceiptAmt FROM trnBillWiseReceiptAcct WHERE AddDate >= '" + date + "'";
             String query3 = "SELECT CardAccountID, SUM(CardAmt) AS AltCardAmt FROM trnPaymentDetail WHERE AddDate >= '" + date + "' AND CardAccountID IN (" + paytmId + "," + bajajId + ") GROUP BY CardAccountID";
 
@@ -78,6 +80,8 @@ namespace Customer_Loyalty_Portal
                 if (dt.Rows[0]["OsAmt"].ToString().Length > 0) debitAmt = int.Parse(dt.Rows[0]["OsAmt"].ToString());
                 if (dt.Rows[0]["CrntIssued"].ToString().Length > 0) crntIssued = int.Parse(dt.Rows[0]["CrntIssued"].ToString());
                 if (dt.Rows[0]["CrntRecv"].ToString().Length > 0) crntRecv = int.Parse(dt.Rows[0]["CrntRecv"].ToString());
+                if (dt.Rows[0]["StartBillNo"].ToString().Length > 0) startBillNo = dt.Rows[0]["StartBillNo"].ToString();
+                if (dt.Rows[0]["EndBillNo"].ToString().Length > 0) endBillNo = dt.Rows[0]["EndBillNo"].ToString();
             }
 
             if (dt2.Rows.Count > 0)
@@ -98,7 +102,7 @@ namespace Customer_Loyalty_Portal
 
             cardAmt = cardAmt - paytm - bajaj;
             
-            SaleParameters sales  = new SaleParameters(netAmt, cashAmt, cardAmt, debitAmt, balReceivedAmt_cash, balReceivedAmt_card, paytm, bajaj, crntIssued, crntRecv);
+            SaleParameters sales  = new SaleParameters(netAmt, cashAmt, cardAmt, debitAmt, balReceivedAmt_cash, balReceivedAmt_card, paytm, bajaj, crntIssued, crntRecv, startBillNo, endBillNo);
 
             return sales;
         }

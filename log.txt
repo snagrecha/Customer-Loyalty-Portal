@@ -15247,3 +15247,11 @@ SELECT SUM(NetAmt) FROM trnSales WHERE VoucherDate = '2017-08-05'
 -------------------------------
 SELECT SUM(NetAmt) FROM trnSales WHERE VoucherDate = '2017-08-05'
 -------------------------------
+Initializing App! 18/11/2023 20:03:00
+-------------------------------
+Updating ItemValueDictionary
+-------------------------------
+Updating Home Grid
+-------------------------------
+SELECT * FROM LastUpdate 
+-------------------------------

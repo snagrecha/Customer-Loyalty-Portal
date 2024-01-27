@@ -1,6 +1,7 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -14,13 +15,16 @@ namespace Customer_Loyalty_Portal
         public static String email = "thepanthouseonline@gmail.com";
         //public static String toEmail = "sneh.nagrecha@gmail.com";
         public static String pwd = "vvinbgaabmrpsstl";
+        public static string workingDirectory = "";
+       
+
 
         public static void drawBorder(Range c1, Range c2, _Worksheet worksheet)
         {
             worksheet.get_Range(c1, c2).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium, XlColorIndex.xlColorIndexAutomatic, XlColorIndex.xlColorIndexAutomatic);
         }
 
-        public static void sendEmail(String toEmail, String source)
+        public static int sendEmail(String toEmail, String source)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace Customer_Loyalty_Portal
                 mail.Body = "PFA Daily Balance details for " + source + " Dated " + DateTime.Now.ToString();
 
                 System.Net.Mail.Attachment attachment;
-                attachment = new System.Net.Mail.Attachment("D:\\Customer Loyalty Portal\\DailyBalanceExcel\\" + source + DateTime.Now.ToString("ddMMyy") + ".xls");
+                attachment = new System.Net.Mail.Attachment(workingDirectory + source + DateTime.Now.ToString("ddMMyy") + ".xls");
                 mail.Attachments.Add(attachment);
 
                 SmtpServer.Port = 587;
@@ -46,7 +50,9 @@ namespace Customer_Loyalty_Portal
             {
                 MessageBox.Show(ex.ToString());
                 Console.WriteLine(ex.ToString());
+                return 0;
             }
+            return 1;
         }
 
         public static void writeToExcel(Home home, String source)
@@ -83,8 +89,8 @@ namespace Customer_Loyalty_Portal
             //Set font to bold for cells
             worksheet.Cells[1, 1].Font.Bold = worksheet.Cells[7, 1].Font.Bold = worksheet.Cells[7, 4].Font.Bold = worksheet.Cells[7, 7].Font.Bold = true;
             //worksheet.Cells[3, 1].Font.Bold = worksheet.Cells[3, 4].Font.Bold = worksheet.Cells[3, 7].Font.Bold = true;
-            worksheet.Range[worksheet.Cells[3, 1], worksheet.Cells[5, 1]].Font.Bold = true;
-            worksheet.Range[worksheet.Cells[3, 4], worksheet.Cells[5, 4]].Font.Bold = true;
+            worksheet.Range[worksheet.Cells[3, 1], worksheet.Cells[6, 1]].Font.Bold = true;
+            worksheet.Range[worksheet.Cells[3, 4], worksheet.Cells[6, 4]].Font.Bold = true;
             worksheet.Range[worksheet.Cells[3, 7], worksheet.Cells[6, 7]].Font.Bold = true;
             
             worksheet.Cells[1, 1] = "Daily Balance Sheet for " + DateTime.Now.ToShortDateString() + " (" + DateTime.Now.ToString("HH:mm:ss") + ")";
@@ -99,6 +105,9 @@ namespace Customer_Loyalty_Portal
             worksheet.Cells[5, 1] = "Cr. Note Recv";
             worksheet.Cells[5, 2] = home.crntRecvTextBox.Text;
 
+            worksheet.Cells[6, 1] = "Start Bill No";
+            worksheet.Cells[6, 2] = home.startBillTextBox.Text;
+
             worksheet.Cells[3, 4] = "Cash Sale";
             worksheet.Cells[3, 5] = home.cashSaleTextBox.Text;
 
@@ -107,6 +116,9 @@ namespace Customer_Loyalty_Portal
 
             worksheet.Cells[5, 4] = "Cr. Note Issued";
             worksheet.Cells[5, 5] = home.crntIssuedTextBox.Text;
+
+            worksheet.Cells[6, 4] = "End Bill No";
+            worksheet.Cells[6, 5] = home.endBillTextBox.Text;
 
             worksheet.Cells[3, 7] = "Card Sale";
             worksheet.Cells[3, 8] = home.cardSaleTextBox.Text;
@@ -189,7 +201,11 @@ namespace Customer_Loyalty_Portal
 
             worksheet.Range[worksheet.Cells[x + home.cashGridView.RowCount + 2, 1], worksheet.Cells[x + home.cashGridView.RowCount + 2, 6]].Merge();
             worksheet.Cells[x + home.cashGridView.RowCount + 2, 1] = "*Calculated cash = Cash Sale + total credit - total debit";
-            /*x = x + max + 2;
+            
+        
+        
+        
+        /*x = x + max + 2;
 
             Range c1 = worksheet.Cells[x, 1];
             Range c2 = worksheet.Cells[x + 3, 1];
@@ -221,7 +237,12 @@ namespace Customer_Loyalty_Portal
             //app.Visible = true;
             //app.ActiveWindow.PrintPreview();
             // save the application  
-            workbook.SaveAs("D:\\Customer Loyalty Portal\\DailyBalanceExcel\\" + source + DateTime.Now.ToString("ddMMyy") + ".xls", Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            if(!Directory.Exists(workingDirectory))
+            {
+                Directory.CreateDirectory(workingDirectory);
+            }
+            app.DisplayAlerts = false;
+            workbook.SaveAs(workingDirectory + source + DateTime.Now.ToString("ddMMyy") + ".xls", Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
             // Exit from the application  
             workbook.Close();
             app.Quit();
