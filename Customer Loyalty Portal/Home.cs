@@ -13,6 +13,11 @@ using System.Configuration;
 using System.Threading;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing.Printing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using Microsoft.VisualBasic.Logging;
 
 namespace Customer_Loyalty_Portal
 {
@@ -28,6 +33,9 @@ namespace Customer_Loyalty_Portal
         //public static string jrServerName = "HP-PC\\SQL2008";
         public static string jrServerName = ConfigurationManager.AppSettings["jrServerName"];
 
+        public static string jrSourceName = ConfigurationManager.AppSettings["jrSourceName"];
+
+        public static string phSourceName = ConfigurationManager.AppSettings["phSourceName"];
 
         //Database Name of CustomerLoyaltyPortal App
         //public static string hostDBName = "CustomerLoyalty";
@@ -82,21 +90,6 @@ namespace Customer_Loyalty_Portal
 
         public void UpdateItemValueDictionary()
         {
-            //itemValue.Add("00450", 3000);
-            //itemValue.Add("00451", 6000);
-            //itemValue.Add("00811", 10000);
-            //itemValue.Add("00837", 5000);
-            //itemValue.Add("00838", 8000);
-            //itemValue.Add("00839", 15000);   
-            //itemValue.Add("00281", 3000);
-            //itemValue.Add("00283", 6000);
-            //itemValue.Add("00310", 10000);
-            //itemValue.Add("00282", 5000);
-            //itemValue.Add("00413", 8000);
-            //itemValue.Add("00414", 15000);
-            //itemValue.Add("00125", 3000);
-            //itemValue.Add("00126", 3000);
-
             itemValue.Add("2450", 3000);
             itemValue.Add("2451", 6000);
             itemValue.Add("2811", 10000);
@@ -199,8 +192,8 @@ namespace Customer_Loyalty_Portal
             foreach (DataRow row in dt.Rows)
             {
                 lastUpdatedList.Add(row["LastUpdated"].ToString());
-                lastUpdatedList.Add(row["PH"].ToString());
-                lastUpdatedList.Add(row["Junior"].ToString());
+                lastUpdatedList.Add(row[phSourceName].ToString());
+                lastUpdatedList.Add(row[jrSourceName].ToString());
                 //MessageBox.Show(row["PH"].ToString() + row["Junior"].ToString());
             }
 
@@ -276,30 +269,6 @@ namespace Customer_Loyalty_Portal
             updationList.Add(temp);
         }
 
-        //public void GetModifiedListFromDT(DataTable dt, String dbname)
-        //{
-        //    //modifiedList.Clear();
-
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        List<String> temp = new List<string>();
-
-        //        temp.Add(row["CO_CODE"].ToString());  //[0]
-        //        temp.Add(row["LC_CODE"].ToString());  //[1]
-        //        temp.Add(row["CO_YEAR"].ToString());  //[2]
-        //        temp.Add(row["DB_CODE"].ToString());  //[3]
-        //        temp.Add(row["TRN_TYPE"].ToString()); //[4]
-        //        temp.Add(row["BIL_NO"].ToString());   //[5]
-        //        temp.Add(row["SR_NO"].ToString());    //[6]
-        //        temp.Add(dbname);                     //[7]
-        //        temp.Add(row["IT_QTY"].ToString());   //[8]
-        //        temp.Add(row["IT_CODE"].ToString());  //[9]
-
-        //        modifiedList.Add(temp);
-        //    }
-            
-        //}
-
         public void GetNewBills()
         {
             int oldListSize = 0;
@@ -312,47 +281,25 @@ namespace Customer_Loyalty_Portal
                 lastUpdatedList[1] = phNewBills.Rows[phNewBills.Rows.Count - 1]["VoucherNo"].ToString();
             }
 
-            // GET EXCHANGE BILLS FROM DAYBOOK CODE 403
-
-            //phNewBills.Merge(DBHandler.GetPendingBills(lastUpdatedList[4], "GRExtreme_PantHouseJ", "403", "2019-2020", "LENOVO-PC\\SQL2008"));
-            /*phNewBills.Merge(DBHandler.GetPendingBills(lastUpdatedList[4], tphDBName, "403", "2019-2020", tphServerName));
-            if (phNewBills.Rows.Count - oldListSize > 0)
-            {
-                lastUpdatedList[4] = phNewBills.Rows[phNewBills.Rows.Count - 1]["VoucherNo"].ToString();
-                //MessageBox.Show("Ph Exch Bill: " + lastUpdatedList[4]);
-            }
-            */
             foreach (DataRow row in phNewBills.Rows)
             {
                 DateTime date = (DateTime)row["VoucherDate"];
                 String voucherDate = date.ToString("MM-dd-yyyy");
-                UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), "PH", row["NetAmt"].ToString(), "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
-                //UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), "PH", "0", "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
-                //MessageBox.Show("PH " + row["AccountName"] + " " + row["VoucherNo"] + " " + row["DayBookID"]);
-            }
+                UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), phSourceName, row["NetAmt"].ToString(), "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
+             }
 
-            //jrNewBills = DBHandler.GetPendingBills(lastUpdatedList[2], "G_PANTHOUSE", "401", "2019-2020", "HP-PC\\SQL2008");
             jrNewBills = DBHandler.GetPendingBills(lastUpdatedList[2], jrDBName, "401", "2019-2020", jrServerName, jrFinYearID);
             if (jrNewBills.Rows.Count > 0)
             {
                 oldListSize = jrNewBills.Rows.Count;
                 lastUpdatedList[2] = jrNewBills.Rows[jrNewBills.Rows.Count - 1]["VoucherNo"].ToString();
             }
-            //jrNewBills.Merge(DBHandler.GetPendingBills(lastUpdatedList[5], "G_PANTHOUSE", "403", "2019-2020", "HP-PC\\SQL2008"));
-            
-            // GET EXCHANGE BILLS FROM DAYBOOK CODE 403
-            /*jrNewBills.Merge(DBHandler.GetPendingBills(lastUpdatedList[5], jrDBName, "403", "2019-2020", jrServerName));
-            if (jrNewBills.Rows.Count - oldListSize > 0)
-            {
-                lastUpdatedList[5] = jrNewBills.Rows[jrNewBills.Rows.Count - 1]["VoucherNo"].ToString();
-            }*/
+
             foreach (DataRow row in jrNewBills.Rows)
             {
                 DateTime date = (DateTime)row["VoucherDate"];
                 String voucherDate = date.ToString("MM-dd-yyyy");
-                UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), "Junior", row["NetAmt"].ToString(), "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
-                //UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), "Junior", "0", "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
-                //MessageBox.Show("Junior " + row["AccountName"] + " " + row["VoucherNo"] + " " + row["DayBookID"]);
+                UpdateListOfBills(row["MobileNo"].ToString(), row["DayBookID"].ToString(), row["VoucherNo"].ToString(), jrSourceName, row["NetAmt"].ToString(), "1", year, "", voucherDate, row["AccountName"].ToString(), "", row["FinYearID"].ToString(), row["SalesID"].ToString());
             }
         }
 
@@ -425,10 +372,11 @@ namespace Customer_Loyalty_Portal
                 if (customerExists)
                 {
                     //DataTable dt = DBHandler.SelectQueryOnTable("Overview", "*", "WHERE Mobile = '" + bill[0] + "'");
-                    DataTable dt = DBHandler.SelectQueryOnTable("BillDetails", "SUM(Points) - SUM(PointsRedeemed) as ActualBalance", "WHERE Mobile = '" + bill[0] + "'");
+                    DataTable dt = DBHandler.SelectQueryOnTable("BillDetails", "SUM(CONVERT(int,Points)) - SUM(CONVERT(int,PointsRedeemed)) as ActualBalance", "WHERE Mobile = '" + bill[0] + "'");
                     foreach (DataRow row in dt.Rows)
                     {
-                        old_bal = int.Parse(row["ActualBalance"].ToString());
+                        //TBD***************************
+                        int.TryParse(row["ActualBalance"].ToString(), out old_bal);
                         break;
                     }
 
@@ -457,15 +405,10 @@ namespace Customer_Loyalty_Portal
         public int UpdateLastUpdated()
         {
             
-            //String phSale = DBHandler.GetLastBill("PH", "401", "HP-PC\\SQLExpress", "CustomerLoyalty", year);
-            //String phExch = DBHandler.GetLastBill("PH", "403", "HP-PC\\SQLExpress", "CustomerLoyalty", year);
-            //String juniorSale = DBHandler.GetLastBill("Junior", "401", "HP-PC\\SQLExpress", "CustomerLoyalty", year);
-            //String juniorExch = DBHandler.GetLastBill("Junior", "403", "HP-PC\\SQLExpress", "CustomerLoyalty", year);
-
-            String phSale = DBHandler.GetLastBill("PH", "401", hostServerName, hostDBName, year);
-            String phExch = DBHandler.GetLastBill("PH", "403", hostServerName, hostDBName, year);
-            String juniorSale = DBHandler.GetLastBill("Junior", "401", hostServerName, hostDBName, year);
-            String juniorExch = DBHandler.GetLastBill("Junior", "403", hostServerName, hostDBName, year);
+            String phSale = DBHandler.GetLastBill(phSourceName, "401", hostServerName, hostDBName, year);
+            String phExch = DBHandler.GetLastBill(phSourceName, "403", hostServerName, hostDBName, year);
+            String juniorSale = DBHandler.GetLastBill(jrSourceName, "401", hostServerName, hostDBName, year);
+            String juniorExch = DBHandler.GetLastBill(jrSourceName, "403", hostServerName, hostDBName, year);
 
             DBHandler.AddTransaction("LastUpdate", machine + "-App", "Updated LastUpdated", "PHSale = " + lastUpdatedList[1] + ", JuniorSale = " + lastUpdatedList[2] + ", PHExch = " + lastUpdatedList[4] + ", JuniorExch = " + lastUpdatedList[5], "PHSale = " + phSale + ", JuniorSale = " + juniorSale + ", PHExch = " + phExch + ", JuniorExch = " + juniorExch, "");
 
@@ -474,66 +417,21 @@ namespace Customer_Loyalty_Portal
             lastUpdatedList[4] = phExch;
             lastUpdatedList[5] = juniorExch;
 
-            DBHandler.UpdateLastUpdated(lastUpdatedList);
+            DBHandler.UpdateLastUpdated(lastUpdatedList, phSourceName, jrSourceName);
 
             return 1;
         }
 
-        //public void GetNewBags()
-        //{
-        //    DataTable dt = DBHandler.GetModifiedBills("THEPANTNEW");
-        //    GetModifiedListFromDT(dt, "THEPANTNEW");
-
-        //    dt = DBHandler.GetModifiedBills("PHOUSE_JUNIOUR");
-        //    GetModifiedListFromDT(dt, "PHOUSE_JUNIOUR");           
-        //}
-
-        //public void UpdateNewBags()
-        //{
-        //    foreach (List<String> bill in modifiedList)
-        //    {
-        //        //GET MOBILE OF THE CUSTOMER WHOSE BILL IS BEING UPDATED
-        //        String mobile = DBHandler.GetCustomerMobile(bill[5], bill[3], bill[2], bill[7]);
-                
-        //        //GET CURRENT BALANCE OF THE CUSTOMER
-        //        int old_bal = DBHandler.GetBalance(mobile);
-
-        //        //GET NEW BALANCE OF THE CUSTOMER
-        //        int new_bal = old_bal - (int.Parse(bill[8]) * itemValue[bill[9]]);
-
-        //        //UPDATE BALANCE OF CUSTOMER IN DB
-        //        DBHandler.UpdateBalance(mobile, new_bal.ToString());
-
-        //        //UPDATE THE BagsGiven COLUMN OF BillDetails TABLE
-        //        DataTable dt = DBHandler.GetBagsGiven(bill[5], bill[7], bill[3], bill[2]);
-        //        String bagsGiven = "";
-        //        foreach (DataRow row in dt.Rows)
-        //        {
-        //            bagsGiven += row["IT_QTY"].ToString() + "x" + itemValue[row["IT_CODE"].ToString()] + " ";
-        //        }
-        //        bagsGiven += bill[8] + "x" + itemValue[bill[9]];
-        //        String year = bill[2].Substring(2,2) + bill[2].Substring(7);
-        //        DBHandler.UpdateBagsGiven(mobile, bill[3], bill[5], dbnameReverseDict[bill[7]], year, bagsGiven); 
-
-        //        //SET Altr to 'N' SO THAT THE BAG DOESN'T GET SCANNED NEXT TIME THE PROGRAM IS RUN
-        //        DBHandler.RemoveModifiedFlag(bill[0], bill[1], bill[2], bill[3], bill[4], bill[5], bill[6], bill[7]);
-        //    }
-        //}
-
-
-        
-
-
         //public Home(SplashScreen splashScreen)
         public void UpdateCashGrid()
         {
-            int opCash = 0;
             cashGridView.Rows.Clear();
             int x2000 = 0, x500 = 0, x200 = 0, x100 = 0, x50 = 0, x20 = 0, x10 = 0, x5 = 0;
 
             //Replace HP-PC with machine****************************
             //DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + DateTime.Now.Date.ToString("yyyy-MM-dd").ToString() + "' AND Machine = 'HP-PC' AND Initialised = '1'");
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + DateTime.Now.Date.ToString("yyyy-MM-dd").ToString() + "' AND Machine = '" + machine + "' AND Initialised = '1'");
+            //DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + DateTime.Now.Date.ToString("yyyy-MM-dd").ToString() + "' AND Machine = '" + machine + "' AND Initialised = '1'"); // FIXME CHANGE DateTime.Now to dynamic date
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd").ToString() + "' AND Machine = '" + machine + "' AND Initialised = '1'"); // FIXME CHANGE DateTime.Now to dynamic date
 
             if (dt.Rows.Count > 0)
             {
@@ -567,9 +465,7 @@ namespace Customer_Loyalty_Portal
             List<String> crAmount = new List<string>();
             creditGridView.Rows.Clear();
 
-            //Replace HP-PC with machine****************************
-            //DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = 'HP-PC' AND Type = 'CR'");
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'CR'");
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'CR' AND TransactionDate = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'"); //FIXME
 
             if (dt.Rows.Count > 0)
             {
@@ -586,9 +482,7 @@ namespace Customer_Loyalty_Portal
             List<String> crAmount = new List<string>();
             debitGridView.Rows.Clear();
 
-            //Replace HP-PC with machine****************************
-            //DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = 'HP-PC' AND Type = 'DR'");
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'DR'");
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'DR' AND TransactionDate = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'"); // FIXME
 
             if (dt.Rows.Count > 0)
             {
@@ -718,7 +612,7 @@ namespace Customer_Loyalty_Portal
                 //DBHandler.InitializeDailyCash(DateTime.Now.Date.ToString("yyyy-MM-dd").ToString(), "HP-PC", "0");
                 //DBHandler.ClearDailyTransactions("HP-PC");
                 DBHandler.InitializeDailyCash(DateTime.Now.Date.ToString("yyyy-MM-dd").ToString(), machine, "0");
-                DBHandler.ClearDailyTransactions(machine);
+                // DBHandler.ClearDailyTransactions(machine);
 
                 OpeningCashDialog cashDialog = new OpeningCashDialog();
                 
@@ -728,11 +622,8 @@ namespace Customer_Loyalty_Portal
                     creditGridView.Rows.Add("Opening Balance", cashDialog.opBalDialogText.Text.ToString());
                     creditGridView.Rows[0].ReadOnly = true;
 
-                    //Replace HP-PC with machine****************************
-                    //DBHandler.InitializeDailyCash(DateTime.Now.Date.ToString("yyyy-MM-dd").ToString(), "HP-PC", "1");
-                    //DBHandler.AddDailyTransactions("HP-PC", "CR", "Opening Balance", openingCash);
                     DBHandler.InitializeDailyCash(DateTime.Now.Date.ToString("yyyy-MM-dd").ToString(), machine, "1");
-                    DBHandler.AddDailyTransactions(machine, "CR", "Opening Balance", openingCash); 
+                    DBHandler.AddDailyTransactions(machine, "CR", "Opening Balance", openingCash, DateTime.Now.ToString("yyyy-MM-dd")); // FIXME CHANGE TO CURRENT DATE
                 }
             }
         }
@@ -766,10 +657,10 @@ namespace Customer_Loyalty_Portal
             LogWriter log = new LogWriter("Initializing App! " + DateTime.Now.ToString());
 
             //dbnameDict.Add("PH", "GRExtreme_PantHouseJ");
-            dbnameDict.Add("PH", tphDBName);
+            dbnameDict.Add(phSourceName, tphDBName);
 
             //dbnameDict.Add("Junior", "G_PANTHOUSE");
-            dbnameDict.Add("Junior", jrDBName);
+            dbnameDict.Add(jrSourceName, jrDBName);
 
             //machineDbNameDict.Add("LENOVO-PC", "GRExtreme_PantHouseJ");
             machineDbNameDict.Add(tphMachineName, tphDBName);
@@ -780,14 +671,14 @@ namespace Customer_Loyalty_Portal
             machineServerNameDict.Add(jrMachineName, jrServerName);
 
             //dbnameReverseDict.Add("GRExtreme_PantHouseJ", "PH");
-            dbnameReverseDict.Add(tphMachineName, "PH");
+            dbnameReverseDict.Add(tphMachineName, phSourceName);
             //dbnameReverseDict.Add("G_PANTHOUSE", "Junior");
-            dbnameReverseDict.Add(jrMachineName, "Junior");
+            dbnameReverseDict.Add(jrMachineName, jrSourceName);
 
             //servernameDict.Add("PH", "LENOVO-PC\\SQL2008");
-            servernameDict.Add("PH", tphServerName);
+            servernameDict.Add(phSourceName, tphServerName);
             //servernameDict.Add("Junior", "HP-PC\\SQL2008");
-            servernameDict.Add("Junior", jrServerName);
+            servernameDict.Add(jrSourceName, jrServerName);
 
             dateLabel.Text = dateLabel.Text.ToString() + DateTime.Now.ToShortDateString();
 
@@ -817,26 +708,6 @@ namespace Customer_Loyalty_Portal
 
             UpdateCalculatedBalance();
             log.LogWrite("Updated Calculated Balance");
-            //SqlConnection con = DBHandler.ConnectToDB("LENOVO-PC\\SQL2008", "GRetailExtreme_THEPANTHOUSEE");
-            //try
-            //{
-            //    con.Open();
-            //}
-            //catch (Exception exception)
-            //{
-            //    MessageBox.Show("Unable to Connect to Server LENOVO-PC\\SQL2008");
-            //}
-            //if (con.State == ConnectionState.Open)
-            //    label3.ForeColor = Color.Green;
-            //con.Close();
-
-            //SqlConnection con2 = DBHandler.ConnectToDB("HP-PC\\SQL2008", "GRetailExtreme_PANTHOUSE");
-            //con2.Open();
-            //if (con2.State == ConnectionState.Open)
-            //    label4.ForeColor =Color.Green;
-            //con2.Close();
-
-
         
             RefreshLastUpdated();
             GetNewBills();
@@ -1155,7 +1026,7 @@ namespace Customer_Loyalty_Portal
             //Replace HP-PC with machine****************************
             //SaleParameters sale = DBHandler.getDailySales("HP-PC" + "\\SQL2008", machineDbNameDict["HP-PC"], DateTime.Now.Date.ToString("yyyy-MM-dd"));
             //SaleParameters sale = DBHandler.getDailySales(machine + "\\SQL2008", machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId);
-            SaleParameters sale = DBHandler.getDailySales(machineServerNameDict[machine], machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId);
+            SaleParameters sale = DBHandler.getDailySales(machineServerNameDict[machine], machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId);  // FIXME
 
             totalSaleTextBox.Text = sale.getTotSale().ToString();
             cashSaleTextBox.Text = sale.getCashSale().ToString();
@@ -1182,7 +1053,8 @@ namespace Customer_Loyalty_Portal
             try
             {
                 //SaleParameters sale = DBHandler.getDailySales(machine + "\\SQL2008", machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId);
-                SaleParameters sale = DBHandler.getDailySales(machineServerNameDict[machine], machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId);
+                // SaleParameters sale = DBHandler.getDailySales(machineServerNameDict[machine], machineDbNameDict[machine], DateTime.Now.Date.ToString("yyyy-MM-dd"), paytmId, bajajId); // FIXME DateTime.Now to currentBillDate
+                SaleParameters sale = DBHandler.getDailySales(machineServerNameDict[machine], machineDbNameDict[machine], dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd"), paytmId, bajajId); // FIXME DateTime.Now to currentBillDate
 
                 totalSaleTextBox.Text = sale.getTotSale().ToString();
                 cashSaleTextBox.Text = sale.getCashSale().ToString();
@@ -1232,7 +1104,7 @@ namespace Customer_Loyalty_Portal
 
             //Replace HP-PC with machine****************************
             //DBHandler.AddDailyTransactions("HP-PC", "CR", particular, amount);
-            DBHandler.AddDailyTransactions(machine, "CR", particular, amount);
+            DBHandler.AddDailyTransactions(machine, "CR", particular, amount, DateTime.Now.ToString("yyyy-MM-dd")); //FIXME
             
             UpdateCreditGrid();
             UpdateTotalCredit();
@@ -1250,7 +1122,7 @@ namespace Customer_Loyalty_Portal
 
             //Replace HP-PC with machine****************************
             //DBHandler.AddDailyTransactions("HP-PC", "DR", particular, amount);
-            DBHandler.AddDailyTransactions(machine, "DR", particular, amount);
+            DBHandler.AddDailyTransactions(machine, "DR", particular, amount, DateTime.Now.ToString("yyyy-MM-dd")); // FIXME
             
             UpdateDebitGrid();
             UpdateTotalDebit();
@@ -1279,12 +1151,12 @@ namespace Customer_Loyalty_Portal
             if (machine == jrMachineName)
             {
                 toEmail = "sneh.nagrecha@gmail.com";
-                source = "Junior";
+                source = jrSourceName;
             }
             else
             {
                 toEmail = "kishor.nagrecha@gmail.com";
-                source = "PH";
+                source = phSourceName;
             }
 
             WriteToExcel.writeToExcel(this, source);
@@ -1635,8 +1507,6 @@ namespace Customer_Loyalty_Portal
             popupForm.ShowDialog();
         }
 
-      
-
         private void saleDetailsInfo_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox = (PictureBox)sender;
@@ -1684,6 +1554,236 @@ namespace Customer_Loyalty_Portal
             // Show the pop-up form as a dialog
             popupForm.ShowDialog();
         }
-    }
 
+        private void comissionDateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            string dbName = "";
+            string serverName = "";
+            if (machine == tphMachineName)
+            {
+                dbName = tphDBName;
+                serverName = tphServerName;
+            }
+            else if (machine == jrMachineName)
+            {
+                dbName = jrDBName;
+                serverName = jrServerName;
+            }
+
+            string currentDate = comissionDateTimePicker.Value.ToString("MM-dd-yyyy");
+
+            DataTable dt_sales = DBHandler.SelectQueryOnTable("trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID", "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission", $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND a.SalesTypeSR = 'S' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName", serverName, dbName);
+            DataTable dt_return = DBHandler.SelectQueryOnTable("trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID", "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission", $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND a.SalesTypeSR = 'R' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName", serverName, dbName);
+            //DataTable dt_return = DBHandler.SelectQueryOnTable("trnSalesItem", "SalesmanID as Salesman, COUNT(SalesTypeSR)*-1 as Qty, ROUND(SUM(TaxableAmt), 0)*-1 as TaxableAmt, ROUND(SUM(TaxableAmt) * 0.01, 0)*-1 as Comission", $"WHERE SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND SalesTypeSR = 'R' GROUP BY SalesmanID", serverName, dbName);
+
+            // Create a new DataTable for the combined results.
+            DataTable dt_combined = new DataTable();
+            dt_combined.Columns.Add("SalesmanNo", typeof(string));
+            dt_combined.Columns.Add("Salesman", typeof(string));
+            dt_combined.Columns.Add("Qty", typeof(int));
+            dt_combined.Columns.Add("TaxableAmt", typeof(decimal));
+            dt_combined.Columns.Add("Comission", typeof(decimal));
+
+            // Combine rows from both DataTables.
+            var allRows = dt_sales.AsEnumerable()
+                .Concat(dt_return.AsEnumerable());
+
+            // Group by Salesman and calculate aggregated values.
+            var groupedData = allRows
+                .GroupBy(row => new
+                {
+                    Salesman = row.Field<string>("Salesman"),
+                    SalesmanNo = row.Field<string>("SalesmanNo")
+                })
+                .Select(group => new
+                {
+                    SalesmanNo = group.Key.SalesmanNo,
+                    Salesman = group.Key.Salesman,
+                    Qty = group.Sum(row => row.Field<int>("Qty")),
+                    TaxableAmt = group.Sum(row => row.Field<double>("TaxableAmt")),
+                    Comission = group.Sum(row => row.Field<double>("Comission"))
+                });
+
+            // Populate the combined DataTable.
+            foreach (var item in groupedData)
+            {
+                dt_combined.Rows.Add(item.SalesmanNo, item.Salesman, item.Qty, item.TaxableAmt, item.Comission);
+            }
+            comissionDataGrid.DataSource = dt_combined;
+
+            chartQty.ChartAreas.Clear();
+            chartQty.Titles.Clear();
+            chartQty.Series.Clear();
+            // Prepare Chart 1: Qty (Sales and Returns).
+            chartQty.ChartAreas.Add(new ChartArea("QtyChartArea"));
+            chartQty.Titles.Add("Qty Sold by Salesman");
+
+            Series salesSeries = new Series("Sales")
+            {
+                ChartType = SeriesChartType.Column,
+                Color = System.Drawing.Color.Blue
+            };
+
+            Series returnSeries = new Series("Returns")
+            {
+                ChartType = SeriesChartType.Column,
+                Color = System.Drawing.Color.Red
+            };
+
+            foreach (DataRow row in dt_sales.Rows)
+            {
+                string salesman = row["Salesman"].ToString();
+                int qty = Convert.ToInt32(row["Qty"]);
+                salesSeries.Points.AddXY(salesman, qty);
+            }
+
+            foreach (DataRow row in dt_return.Rows)
+            {
+                string salesman = row["Salesman"].ToString();
+                int qty = Convert.ToInt32(row["Qty"]);
+                returnSeries.Points.AddXY(salesman, qty);
+            }
+
+            chartQty.Series.Add(salesSeries);
+            chartQty.Series.Add(returnSeries);
+
+            chartCommission.ChartAreas.Clear();
+            chartCommission.Titles.Clear();
+            chartCommission.Series.Clear();
+            // Prepare Chart 2: Commission.
+            chartCommission.ChartAreas.Add(new ChartArea("CommissionChartArea"));
+            chartCommission.Titles.Add("Commission by Salesman");
+
+            Series commissionSeries = new Series("Commission")
+            {
+                ChartType = SeriesChartType.Column,
+                Color = System.Drawing.Color.Green
+            };
+
+            // Combine sales and returns for commissions.
+            foreach (DataRow row in dt_sales.Rows)
+            {
+                string salesman = row["Salesman"].ToString();
+                decimal commission = Convert.ToDecimal(row["Comission"]);
+                commissionSeries.Points.AddXY(salesman, commission);
+            }
+
+            chartCommission.Series.Add(commissionSeries);
+
+        }
+        private void printCommissionButton_Click(object sender, EventArgs e)
+        {
+            PrintDialog printDialog = new PrintDialog();
+            PrintDocument printDocument = new PrintDocument();
+            PaperSize a5Paper = new PaperSize("A5", 583, 827); // A5 size in hundredths of an inch (5.83" x 8.27")
+            printDocument.DefaultPageSettings.PaperSize = a5Paper; printDocument.PrintPage += PrintDocument_PrintPage;
+
+            printDialog.Document = printDocument;
+
+            if (printDialog.ShowDialog() == DialogResult.OK)
+            {
+                printDocument.Print();
+            }
+        }
+
+        private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            DataTable dt_combined = new DataTable();
+            dt_combined = (DataTable)comissionDataGrid.DataSource;
+
+            Console.WriteLine(dt_combined.Rows.Count);
+
+            Graphics graphics = e.Graphics;
+            int y = 10; // Start printing at the top
+
+            // Print Title
+            Font titleFont = new Font("Arial", 14, FontStyle.Bold);
+            graphics.DrawString($"{machine} Commission Report - {comissionDateTimePicker.Value.ToString("dd-MM-yyyy")}", titleFont, Brushes.Black, 10, y);
+            y += 30;
+
+            // Print Table Header
+            Font headerFont = new Font("Arial", 10, FontStyle.Bold);
+            Pen borderPen = new Pen(Color.Black, 1); // Pen for borders
+
+            int cellHeight = 20; // Height of each row
+            int headerY = y;     // Starting Y position for the header
+            int tableX = 10;     // Starting X position for the table
+            int[] columnWidths = { 40, 150, 100, 100, 100 }; // Column widths for "No", "Salesman", "Qty", "TaxableAmt", "Comission"
+
+            // Draw header cells
+            graphics.DrawRectangle(borderPen, tableX, headerY, columnWidths[0], cellHeight); // "No" cell
+            graphics.DrawRectangle(borderPen, tableX + columnWidths[0], headerY, columnWidths[1], cellHeight); // "Salesman" cell
+            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1], headerY, columnWidths[2], cellHeight); // "Qty" cell
+            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], headerY, columnWidths[3], cellHeight); // "TaxableAmt" cell
+            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], headerY, columnWidths[4], cellHeight); // "Comission" cell
+
+            graphics.DrawString("No", headerFont, Brushes.Black, tableX + 5, headerY + 5);
+            graphics.DrawString("Salesman", headerFont, Brushes.Black, tableX + columnWidths[0] + 5, headerY + 5);
+            graphics.DrawString("Qty", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + 5, headerY + 5);
+            graphics.DrawString("TaxableAmt", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + 5, headerY + 5);
+            graphics.DrawString("Comission", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 5, headerY + 5);
+
+            // Update Y position after header
+            y += cellHeight;
+
+            // Print Table Rows
+            Font rowFont = new Font("Arial", 10);
+            foreach (DataRow row in dt_combined.Rows)
+            {
+                int rowY = y;
+
+                // Draw borders for each cell in the row
+                graphics.DrawRectangle(borderPen, tableX, rowY, columnWidths[0], cellHeight); // "No" cell
+                graphics.DrawRectangle(borderPen, tableX + columnWidths[0], rowY, columnWidths[1], cellHeight); // "Salesman" cell
+                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1], rowY, columnWidths[2], cellHeight); // "Qty" cell
+                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], rowY, columnWidths[3], cellHeight); // "TaxableAmt" cell
+                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], rowY, columnWidths[4], cellHeight); // "Comission" cell
+
+                // Print row data
+                graphics.DrawString(row["SalesmanNo"].ToString(), rowFont, Brushes.Black, tableX + 5, rowY + 5);
+                graphics.DrawString(row["Salesman"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + 5, rowY + 5);
+                graphics.DrawString(row["Qty"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + 5, rowY + 5);
+                graphics.DrawString(row["TaxableAmt"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + 5, rowY + 5);
+                graphics.DrawString(row["Comission"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 5, rowY + 5);
+
+                y += cellHeight; // Move to the next row
+            }
+
+            // Optionally Print Graphs
+            y += 30; // Add some space before printing graphs
+            // UNCOMMENT TO PRINT GRAPHS
+            /*
+            if (chartQty != null)
+            {
+                Bitmap chartBitmap = new Bitmap(chartQty.Width, chartQty.Height);
+                chartQty.DrawToBitmap(chartBitmap, new Rectangle(0, 0, chartQty.Width, chartQty.Height));
+                graphics.DrawImage(chartBitmap, 10, y);
+                y += chartQty.Height + 20;
+            }
+
+            if (chartCommission != null)
+            {
+                Bitmap chartBitmap = new Bitmap(chartCommission.Width, chartCommission.Height);
+                chartCommission.DrawToBitmap(chartBitmap, new Rectangle(0, 0, chartCommission.Width, chartCommission.Height));
+                graphics.DrawImage(chartBitmap, 10, y);
+                y += chartCommission.Height + 20;
+            }*/
+
+            e.HasMorePages = false; // Indicate no more pages
+        }
+
+        private void dailyBalanceDateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCashGrid();
+            UpdateTotalCash();
+
+            UpdateCreditGrid();
+            UpdateTotalCredit();
+
+            UpdateDebitGrid();
+            UpdateTotalDebit();
+
+            dailyBalanceTab_Click(sender, e);
+        }
+    }
 }

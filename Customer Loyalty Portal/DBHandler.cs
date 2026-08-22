@@ -47,9 +47,9 @@ namespace Customer_Loyalty_Portal
 
            
             //String query = "SELECT BIL_NO, DB_CODE, BIL_DT, CO_YEAR, PHONE, TOT_AMT, AC_NAME FROM SALE_DATA WHERE BIL_NO > '" + billNo + "' AND DB_CODE = '" + dbCode + "' AND CO_YEAR = '" + year + "'";
-            String query = "SELECT SUM(NetAmt) AS NetAmt, SUM(CardAmt) AS CardAmt, SUM(CashAmt) AS CashAmt, SUM(OsAmt) AS OsAmt, SUM(CreditNoteIssueAmt) AS CrntIssued, SUM(CreditNoteUseAmt) AS CrntRecv, MIN(VoucherNo) as StartBillNo, MAX(VoucherNo) as EndBillNo FROM trnSales WHERE VoucherDate = '" + date + "'";
-            String query2 = "SELECT SUM(CashAmt) AS CashReceiptAmt, SUM(CardAmt) AS CardReceiptAmt FROM trnBillWiseReceiptAcct WHERE AddDate >= '" + date + "'";
-            String query3 = "SELECT CardAccountID, SUM(CardAmt) AS AltCardAmt FROM trnPaymentDetail WHERE AddDate >= '" + date + "' AND CardAccountID IN (" + paytmId + "," + bajajId + ") GROUP BY CardAccountID";
+            String query = "SELECT CEILING(SUM(NetAmt)) AS NetAmt, CEILING(SUM(CardAmt)) AS CardAmt, CEILING(SUM(CashAmt)) AS CashAmt, CEILING(SUM(OsAmt)) AS OsAmt, CEILING(SUM(CreditNoteIssueAmt)) AS CrntIssued, CEILING(SUM(CreditNoteUseAmt)) AS CrntRecv, MIN(VoucherNo) as StartBillNo, MAX(VoucherNo) as EndBillNo FROM trnSales WHERE VoucherDate = '" + date + "'";
+            String query2 = "SELECT CEILING(SUM(CashAmt)) AS CashReceiptAmt, CEILING(SUM(CardAmt)) AS CardReceiptAmt FROM trnBillWiseReceiptAcct WHERE CAST (AddDate AS DATE) = '" + date + "'";
+            String query3 = "SELECT CardAccountID, CEILING(SUM(CardAmt)) AS AltCardAmt FROM trnPaymentDetail WHERE CAST (AddDate AS DATE) = '" + date + "' AND CardAccountID IN (" + paytmId + "," + bajajId + ") GROUP BY CardAccountID";
 
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
@@ -112,16 +112,17 @@ namespace Customer_Loyalty_Portal
             //SqlConnection con = ConnectToDB("HP-PC\\SQLExpress", "CustomerLoyalty");
             SqlConnection con = ConnectToDB(hostServerName, hostDBName);
 
-            String query = "INSERT INTO Transactions VALUES('" + tableName + "', '" + source + "', '" + transaction + "', '" + oldValue + "', '" + newValue + "', CURRENT_TIMESTAMP, '" + mobile + "')";
+            //String query = "INSERT INTO Transactions VALUES('" + tableName + "', '" + source + "', '" + transaction + "', '" + oldValue + "', '" + newValue + "', CURRENT_TIMESTAMP, '" + mobile + "')";
             //InsertIntoTable("Transactions", "", "'" + table + "', 'Added New Record', '', '" + values + "', CURRENT_TIMESTAMP");
-            LogWriter log = new LogWriter(query);
-            Console.WriteLine(query);
+            
+            //LogWriter log = new LogWriter(query);
+            //Console.WriteLine(query);
 
-            SqlCommand cmd = new SqlCommand(query, con);
+            //SqlCommand cmd = new SqlCommand(query, con);
 
             con.Open();
 
-             cmd.ExecuteNonQuery();
+            //cmd.ExecuteNonQuery();
 
             con.Close();
         }
@@ -296,17 +297,17 @@ namespace Customer_Loyalty_Portal
         }
 
         //public static int UpdateLastUpdated(List<string> lastUpdatedList, String serverName = "HP-PC\\SQLExpress")
-        public static int UpdateLastUpdated(List<string> lastUpdatedList, String serverName = "")
+        public static int UpdateLastUpdated(List<string> lastUpdatedList, String ph_source, String jr_source, String serverName = "")
         {
             if (serverName == "") serverName = hostServerName;
             SqlConnection con = ConnectToDB(serverName, hostDBName);
 
-            String query = "UPDATE LastUpdate SET LastUpdated = CURRENT_TIMESTAMP, PH = '" + lastUpdatedList[1] + "', Junior = '" + lastUpdatedList[2] + "' WHERE BookCode = '401'";
+            String query = "UPDATE LastUpdate SET LastUpdated = CURRENT_TIMESTAMP, " + ph_source + " = '" + lastUpdatedList[1] + "', " + jr_source + " = '" + lastUpdatedList[2] + "' WHERE BookCode = '401'";
             //DBHandler.InsertIntoTable("Transactions", "", "'LastUpdate', 'Updated Record of Last Update', '', 'PH=" + lastUpdatedList[1] + " Junior=" + lastUpdatedList[2] + "', CURRENT_TIMESTAMP");
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
 
-            String query2 = "UPDATE LastUpdate SET LastUpdated = CURRENT_TIMESTAMP, PH = '" + lastUpdatedList[4] + "', Junior = '" + lastUpdatedList[5] + "' WHERE BookCode = '403'";
+            String query2 = "UPDATE LastUpdate SET LastUpdated = CURRENT_TIMESTAMP, " + ph_source + " = '" + lastUpdatedList[4] + "', "+ jr_source + " = '" + lastUpdatedList[5] + "' WHERE BookCode = '403'";
             //DBHandler.InsertIntoTable("Transactions", "", "'LastUpdate', 'Updated Record of Last Update', '', 'PH=" + lastUpdatedList[4] + " Junior=" + lastUpdatedList[5] + "', CURRENT_TIMESTAMP");
 
             LogWriter log2 = new LogWriter(query2);
@@ -514,12 +515,13 @@ namespace Customer_Loyalty_Portal
         }
 
         //public static DataTable SelectQueryOnTable(String table, String item = "*", String clause = "", String serverName = "HP-PC\\SQLExpress")
-        public static DataTable SelectQueryOnTable(String table, String item = "*", String clause = "", String serverName = "")
+        public static DataTable SelectQueryOnTable(String table, String item = "*", String clause = "", String serverName = "", String dbName = "")
         {
             DataTable dt = new DataTable();
 
             if (serverName == "") serverName = hostServerName;
-            SqlConnection con = ConnectToDB(serverName, hostDBName);
+            if (dbName == "") dbName = hostDBName;
+            SqlConnection con = ConnectToDB(serverName, dbName);
 
             String query = "SELECT " + item + " FROM " + table + " " + clause;
 
@@ -540,12 +542,12 @@ namespace Customer_Loyalty_Portal
             return dt;
         }
 
-        public static int AddDailyTransactions(String machine, String type, String particular, String amount)
+        public static int AddDailyTransactions(String machine, String type, String particular, String amount, String date)
         {
             //SqlConnection con = ConnectToDB("HP-PC\\SQLExpress", "CustomerLoyalty");
             SqlConnection con = ConnectToDB(hostServerName, hostDBName);
 
-            String query = "INSERT INTO DailyTransactions VALUES('" + machine + "', '" + type + "', '" + particular + "', " + amount + ")";
+            String query = "INSERT INTO DailyTransactions VALUES('" + machine + "', '" + type + "', '" + particular + "', " + amount + ", '" + date + "')";
             //InsertIntoTable("Transactions", "", "'" + table + "', 'Added New Record', '', '" + values + "', CURRENT_TIMESTAMP");
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
@@ -567,8 +569,8 @@ namespace Customer_Loyalty_Portal
             if (serverName == "") serverName = hostServerName;
             SqlConnection con = ConnectToDB(serverName, hostDBName);
 
-            String query = "UPDATE DailyCash SET Date = '" + date + "', x2000 = 0, x500 = 0, x200 = 0, x100 = 0, x50 = 0, x20 = 0, x10 = 0, x5 = 0 , verified = 0, initialised = " + initialised + " WHERE Machine = '" + machine + "'";
-
+            // String query = "UPDATE DailyCash SET Date = '" + date + "', x2000 = 0, x500 = 0, x200 = 0, x100 = 0, x50 = 0, x20 = 0, x10 = 0, x5 = 0 , verified = 0, initialised = " + initialised + " WHERE Machine = '" + machine + "'";
+            String query = $"INSERT INTO DailyCash VALUES('{machine}', '{date}', '0', '0', '0', '0', '0', '0', '0', '0' , '0', '{initialised}')";
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
 
@@ -602,6 +604,8 @@ namespace Customer_Loyalty_Portal
 
             con.Close();        
         }
+
+
 
         //public static int UpdateDenomination(string denomination, string nos, string machine, string serverName = "HP-PC\\SQLExpress")
         public static int UpdateDenomination(string denomination, string nos, string machine, string serverName = "")
