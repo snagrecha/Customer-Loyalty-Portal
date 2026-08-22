@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -225,7 +225,7 @@ namespace Customer_Loyalty_Portal
             DataTable dt = new DataTable();
 
             //String query = "SELECT BIL_NO, DB_CODE, BIL_DT, CO_YEAR, PHONE, TOT_AMT, AC_NAME FROM SALE_DATA WHERE BIL_NO > '" + billNo + "' AND DB_CODE = '" + dbCode + "' AND CO_YEAR = '" + year + "'";
-            String query = "SELECT SalesID, VoucherNo, DayBookID, VoucherDate, FinYearID, MobileNo, NetAmt, AccountName FROM trnSales WHERE VoucherNo > '" + voucherNo + "' AND DayBookID = '" + dbCode + "' AND FinYearID = '" + finYearID + "'";
+            String query = "SELECT SalesID, VoucherNo, DayBookID, VoucherDate, AddDate, FinYearID, MobileNo, NetAmt, AccountName FROM trnSales WHERE VoucherNo > '" + voucherNo + "' AND DayBookID = '" + dbCode + "' AND FinYearID = '" + finYearID + "'";
 
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
@@ -482,7 +482,7 @@ namespace Customer_Loyalty_Portal
 
             SqlConnection con = ConnectToDB(serverName, dbname);
 
-            String query = "SELECT TOP " + no_of_bills + " SalesID, VoucherNo, DayBookID, VoucherDate, MobileNo, NetAmt, AccountName FROM trnSales WHERE FinYearID = '" + finYearId + "' AND DayBookID = 401 ORDER BY VoucherNo DESC";
+            String query = "SELECT TOP " + no_of_bills + " SalesID, VoucherNo, DayBookID, VoucherDate, AddDate, MobileNo, NetAmt, AccountName FROM trnSales WHERE FinYearID = '" + finYearId + "' AND DayBookID = 401 ORDER BY VoucherNo DESC";
             //String query2 = "SELECT TOP " + no_of_bills + " SalesID, VoucherNo, DayBookID, VoucherDate, MobileNo, NetAmt, AccountName FROM trnSales WHERE DayBookID = 403 ORDER BY VoucherNo DESC";
 
             LogWriter log = new LogWriter(query);
@@ -547,7 +547,7 @@ namespace Customer_Loyalty_Portal
             //SqlConnection con = ConnectToDB("HP-PC\\SQLExpress", "CustomerLoyalty");
             SqlConnection con = ConnectToDB(hostServerName, hostDBName);
 
-            String query = "INSERT INTO DailyTransactions VALUES('" + machine + "', '" + type + "', '" + particular + "', " + amount + ", '" + date + "')";
+            String query = "INSERT INTO DailyTransactions VALUES('" + machine + "', '" + type + "', '" + particular.Replace("'", "''") + "', " + amount + ", '" + date + "')";
             //InsertIntoTable("Transactions", "", "'" + table + "', 'Added New Record', '', '" + values + "', CURRENT_TIMESTAMP");
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
@@ -569,8 +569,11 @@ namespace Customer_Loyalty_Portal
             if (serverName == "") serverName = hostServerName;
             SqlConnection con = ConnectToDB(serverName, hostDBName);
 
-            // String query = "UPDATE DailyCash SET Date = '" + date + "', x2000 = 0, x500 = 0, x200 = 0, x100 = 0, x50 = 0, x20 = 0, x10 = 0, x5 = 0 , verified = 0, initialised = " + initialised + " WHERE Machine = '" + machine + "'";
-            String query = $"INSERT INTO DailyCash VALUES('{machine}', '{date}', '0', '0', '0', '0', '0', '0', '0', '0' , '0', '{initialised}')";
+            String query = $@"IF EXISTS (SELECT 1 FROM DailyCash WHERE Machine = '{machine}' AND CAST(Date AS DATE) = '{date}')
+    UPDATE DailyCash SET Initialised = '{initialised}' WHERE Machine = '{machine}' AND CAST(Date AS DATE) = '{date}'
+ELSE
+    INSERT INTO DailyCash (Machine, Date, x2000, x500, x200, x100, x50, x20, x10, x5, verified, Initialised)
+    VALUES('{machine}', '{date}', 0, 0, 0, 0, 0, 0, 0, 0, 0, '{initialised}')";
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);
 
@@ -605,15 +608,41 @@ namespace Customer_Loyalty_Portal
             con.Close();        
         }
 
+        public static int DeleteDailyTransaction(string machine, string type, string particular, string amount, string date, string serverName = "")
+        {
+            if (serverName == "") serverName = hostServerName;
+            SqlConnection con = ConnectToDB(serverName, hostDBName);
 
+            String query = $"DELETE FROM DailyTransactions WHERE Machine = '{machine}' AND Type = '{type}' AND Particular = '{particular.Replace("'", "''")}' AND Amount = {amount} AND CAST(TransactionDate AS DATE) = '{date}'";
+
+            LogWriter log = new LogWriter(query);
+            Console.WriteLine(query);
+
+            SqlCommand cmd = new SqlCommand(query, con);
+
+            con.Open();
+
+            int res = cmd.ExecuteNonQuery();
+
+            con.Close();
+
+            return res;
+        }
 
         //public static int UpdateDenomination(string denomination, string nos, string machine, string serverName = "HP-PC\\SQLExpress")
-        public static int UpdateDenomination(string denomination, string nos, string machine, string serverName = "")
+        public static int UpdateDenomination(string denomination, string nos, string machine, string date, string serverName = "")
         {
             if (serverName == "") serverName = hostServerName;
             SqlConnection con = ConnectToDB(serverName, hostDBName);
             
-            String query = "UPDATE DailyCash SET x" + denomination + " = " + nos + " WHERE Machine = '" + machine + "'";
+            String query = $@"IF EXISTS (SELECT 1 FROM DailyCash WHERE Machine = '{machine}' AND CAST(Date AS DATE) = '{date}')
+    UPDATE DailyCash SET x{denomination} = {nos} WHERE Machine = '{machine}' AND CAST(Date AS DATE) = '{date}'
+ELSE
+    BEGIN
+        INSERT INTO DailyCash (Machine, Date, x2000, x500, x200, x100, x50, x20, x10, x5, verified, Initialised)
+        VALUES ('{machine}', '{date}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+        UPDATE DailyCash SET x{denomination} = {nos} WHERE Machine = '{machine}' AND CAST(Date AS DATE) = '{date}';
+    END";
 
             LogWriter log = new LogWriter(query);
             Console.WriteLine(query);

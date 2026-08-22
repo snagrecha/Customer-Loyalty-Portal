@@ -1,4 +1,4 @@
-﻿
+
 namespace Customer_Loyalty_Portal
 {
     partial class UpdatePointsDialog
@@ -41,79 +41,86 @@ namespace Customer_Loyalty_Portal
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(71, 47);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label1.Location = new System.Drawing.Point(85, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 24);
+            this.label1.Size = new System.Drawing.Size(78, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "Old Points";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(62, 106);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label2.Location = new System.Drawing.Point(78, 95);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(115, 24);
+            this.label2.Size = new System.Drawing.Size(85, 19);
             this.label2.TabIndex = 1;
             this.label2.Text = "New Points";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(123, 168);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label3.Location = new System.Drawing.Point(121, 145);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 24);
+            this.label3.Size = new System.Drawing.Size(42, 19);
             this.label3.TabIndex = 2;
             this.label3.Text = "Note";
             // 
             // oldPointsTextBox
             // 
-            this.oldPointsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oldPointsTextBox.Location = new System.Drawing.Point(219, 47);
+            this.oldPointsTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oldPointsTextBox.Location = new System.Drawing.Point(195, 42);
             this.oldPointsTextBox.Name = "oldPointsTextBox";
             this.oldPointsTextBox.ReadOnly = true;
-            this.oldPointsTextBox.Size = new System.Drawing.Size(100, 26);
+            this.oldPointsTextBox.Size = new System.Drawing.Size(120, 25);
             this.oldPointsTextBox.TabIndex = 3;
             this.oldPointsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // newPointsTextBox
             // 
-            this.newPointsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newPointsTextBox.Location = new System.Drawing.Point(219, 104);
+            this.newPointsTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.newPointsTextBox.Location = new System.Drawing.Point(195, 92);
             this.newPointsTextBox.Name = "newPointsTextBox";
-            this.newPointsTextBox.Size = new System.Drawing.Size(100, 26);
+            this.newPointsTextBox.Size = new System.Drawing.Size(120, 25);
             this.newPointsTextBox.TabIndex = 1;
             this.newPointsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // noteTextBox
             // 
-            this.noteTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.noteTextBox.Location = new System.Drawing.Point(219, 166);
+            this.noteTextBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.noteTextBox.Location = new System.Drawing.Point(195, 142);
             this.noteTextBox.Multiline = true;
             this.noteTextBox.Name = "noteTextBox";
-            this.noteTextBox.Size = new System.Drawing.Size(220, 82);
+            this.noteTextBox.Size = new System.Drawing.Size(240, 80);
             this.noteTextBox.TabIndex = 2;
-            this.noteTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // saveButton
             // 
+            this.saveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.saveButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.saveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.saveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.saveButton.Location = new System.Drawing.Point(158, 274);
+            this.saveButton.FlatAppearance.BorderSize = 0;
+            this.saveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveButton.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveButton.ForeColor = System.Drawing.Color.White;
+            this.saveButton.Location = new System.Drawing.Point(195, 245);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(127, 49);
+            this.saveButton.Size = new System.Drawing.Size(120, 38);
             this.saveButton.TabIndex = 3;
             this.saveButton.Text = "Save";
-            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.UseVisualStyleBackColor = false;
             // 
             // UpdatePointsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ClientSize = new System.Drawing.Size(536, 348);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(480, 310);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.noteTextBox);
             this.Controls.Add(this.newPointsTextBox);
@@ -121,8 +128,11 @@ namespace Customer_Loyalty_Portal
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "UpdatePointsDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update Points";
             this.Load += new System.EventHandler(this.UpdatePoints_Load);
             this.ResumeLayout(false);

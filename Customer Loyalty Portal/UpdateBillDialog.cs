@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +17,30 @@ namespace Customer_Loyalty_Portal
         public UpdateBillDialog()
         {
             InitializeComponent();
+            StyleGrid();
+        }
+
+        private void StyleGrid()
+        {
+            dataGridView1.EnableHeadersVisualStyles = false;
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(41, 60, 90);
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.ColumnHeadersHeight = 30;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            dataGridView1.DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular);
+            dataGridView1.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);
+            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.FromArgb(204, 229, 255);
+            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dataGridView1.RowTemplate.Height = 24;
+
+            dataGridView1.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(246, 249, 252);
+            dataGridView1.BackgroundColor = Color.White;
+            dataGridView1.BorderStyle = BorderStyle.FixedSingle;
+            dataGridView1.GridColor = Color.FromArgb(222, 226, 230);
+            dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
         }
 
         public string CreateClause()
@@ -57,17 +81,32 @@ namespace Customer_Loyalty_Portal
             dataGridView1.ColumnCount = 8;
             dataGridView1.Columns[0].Name = "Bill No";
             dataGridView1.Columns[1].Name = "Mobile";
-            //dataGridView1.Columns[0].Name = "Name";
             dataGridView1.Columns[2].Name = "Bill Date";
             dataGridView1.Columns[3].Name = "Points";
             dataGridView1.Columns[4].Name = "Source";
             dataGridView1.Columns[5].Name = "Points Redeemed";
             dataGridView1.Columns[6].Name = "Year";
             dataGridView1.Columns[7].Name = "Daybook";
-            //dataGridView1.Columns[6].Name = "Match";
             
             dataGridView1.Columns[6].Visible = false;
             dataGridView1.Columns[7].Visible = false;
+
+            dataGridView1.Columns[0].Width = 85;
+            dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[1].Width = 100;
+            dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[2].Width = 100;
+            dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[3].Width = 85;
+            dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[3].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+            dataGridView1.Columns[4].Width = 80;
+            dataGridView1.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 8, 0);
+
+            StyleGrid();
 
             foreach (DataRow row in dt.Rows)
             {

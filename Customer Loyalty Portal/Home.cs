@@ -1,4 +1,4 @@
-﻿//using MetroFramework.Forms;
+//using MetroFramework.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,8 +16,6 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing.Printing;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
-using Microsoft.VisualBasic.Logging;
 
 namespace Customer_Loyalty_Portal
 {
@@ -157,11 +155,28 @@ namespace Customer_Loyalty_Portal
             dataGridView1.Columns[3].ReadOnly = true;
             dataGridView1.Columns[4].ReadOnly = true;
 
+            dataGridView1.Columns[0].Width = 85;
+            dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[1].Width = 95;
+            dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[2].Width = 80;
+            dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns[2].DefaultCellStyle.Padding = new Padding(8, 0, 0, 0);
+            dataGridView1.Columns[3].Width = 75;
+            dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns[4].DefaultCellStyle.Padding = new Padding(8, 0, 0, 0);
+
             DataGridViewCheckBoxColumn chk = new DataGridViewCheckBoxColumn();
             chk.Name = "Update";
-            chk.Width = 50;
+            chk.Width = 55;
             chk.ReadOnly = false;         
             dataGridView1.Columns.Add(chk);
+
+            StyleGridCommon(dataGridView1);
+            dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
 
             if (mobile.Length == 10)
             {
@@ -210,40 +225,96 @@ namespace Customer_Loyalty_Portal
         {
             dataGridViewPH.Rows.Clear();
 
-            dataGridViewPH.ColumnCount = 5;
+            dataGridViewPH.ColumnCount = 6;
             dataGridViewPH.Columns[0].Name = "Date";
-            dataGridViewPH.Columns[1].Name = "Bill No";
-            dataGridViewPH.Columns[2].Name = "Mobile";
-            dataGridViewPH.Columns[3].Name = "Name";
-            dataGridViewPH.Columns[4].Name = "Amount";
-            //dataGridViewPH.Columns[5].Name = "Add Bag";
+            dataGridViewPH.Columns[1].Name = "Time";
+            dataGridViewPH.Columns[2].Name = "Bill No";
+            dataGridViewPH.Columns[3].Name = "Mobile";
+            dataGridViewPH.Columns[4].Name = "Name";
+            dataGridViewPH.Columns[5].Name = "Amount";
 
-            dataGridViewPH.Columns[0].Width = 90;
-            dataGridViewPH.Columns[1].Width = 80;
-            dataGridViewPH.Columns[4].Width = 80;
+            dataGridViewPH.Columns[0].Width = 80;
+            dataGridViewPH.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewPH.Columns[1].Width = 72;
+            dataGridViewPH.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewPH.Columns[2].Width = 70;
+            dataGridViewPH.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewPH.Columns[3].Width = 90;
+            dataGridViewPH.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewPH.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewPH.Columns[5].Width = 80;
+            dataGridViewPH.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewPH.Columns[5].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            dataGridViewPH.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+
+            StyleGridCommon(dataGridViewPH);
 
             foreach(DataRow row in dt.Rows)
             {
-                dataGridViewPH.Rows.Add(((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy"), row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
+                string timeStr = "";
+                if (row.Table.Columns.Contains("AddDate") && row["AddDate"] != DBNull.Value && row["AddDate"] != null)
+                {
+                    DateTime dtVal = Convert.ToDateTime(row["AddDate"]);
+                    timeStr = dtVal.ToString("hh:mm tt");
+                }
+                else if (row["VoucherDate"] != DBNull.Value && row["VoucherDate"] != null)
+                {
+                    DateTime dtVal = Convert.ToDateTime(row["VoucherDate"]);
+                    if (dtVal.TimeOfDay.TotalSeconds > 0)
+                    {
+                        timeStr = dtVal.ToString("hh:mm tt");
+                    }
+                }
+                string dateStr = ((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy");
+
+                dataGridViewPH.Rows.Add(dateStr, timeStr, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
             }
 
             dataGridViewJunior.Rows.Clear();
 
-            dataGridViewJunior.ColumnCount = 5;
+            dataGridViewJunior.ColumnCount = 6;
             dataGridViewJunior.Columns[0].Name = "Date";
-            dataGridViewJunior.Columns[1].Name = "Bill No";
-            dataGridViewJunior.Columns[2].Name = "Mobile";
-            dataGridViewJunior.Columns[3].Name = "Name";
-            dataGridViewJunior.Columns[4].Name = "Amount";
-            //dataGridViewJunior.Columns[5].Name = "Add Bag";
+            dataGridViewJunior.Columns[1].Name = "Time";
+            dataGridViewJunior.Columns[2].Name = "Bill No";
+            dataGridViewJunior.Columns[3].Name = "Mobile";
+            dataGridViewJunior.Columns[4].Name = "Name";
+            dataGridViewJunior.Columns[5].Name = "Amount";
 
-            dataGridViewJunior.Columns[0].Width = 90;
-            dataGridViewJunior.Columns[1].Width = 80;
-            dataGridViewJunior.Columns[4].Width = 80;
+            dataGridViewJunior.Columns[0].Width = 80;
+            dataGridViewJunior.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewJunior.Columns[1].Width = 72;
+            dataGridViewJunior.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewJunior.Columns[2].Width = 70;
+            dataGridViewJunior.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewJunior.Columns[3].Width = 90;
+            dataGridViewJunior.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewJunior.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewJunior.Columns[5].Width = 80;
+            dataGridViewJunior.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewJunior.Columns[5].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            dataGridViewJunior.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+
+            StyleGridCommon(dataGridViewJunior);
 
             foreach (DataRow row in dt2.Rows)
             {
-                dataGridViewJunior.Rows.Add(((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy"), row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
+                string timeStr2 = "";
+                if (row.Table.Columns.Contains("AddDate") && row["AddDate"] != DBNull.Value && row["AddDate"] != null)
+                {
+                    DateTime dtVal = Convert.ToDateTime(row["AddDate"]);
+                    timeStr2 = dtVal.ToString("hh:mm tt");
+                }
+                else if (row["VoucherDate"] != DBNull.Value && row["VoucherDate"] != null)
+                {
+                    DateTime dtVal = Convert.ToDateTime(row["VoucherDate"]);
+                    if (dtVal.TimeOfDay.TotalSeconds > 0)
+                    {
+                        timeStr2 = dtVal.ToString("hh:mm tt");
+                    }
+                }
+                string dateStr2 = ((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy");
+
+                dataGridViewJunior.Rows.Add(dateStr2, timeStr2, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
             }
             return 1;
         }
@@ -428,44 +499,36 @@ namespace Customer_Loyalty_Portal
             cashGridView.Rows.Clear();
             int x2000 = 0, x500 = 0, x200 = 0, x100 = 0, x50 = 0, x20 = 0, x10 = 0, x5 = 0;
 
-            //Replace HP-PC with machine****************************
-            //DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + DateTime.Now.Date.ToString("yyyy-MM-dd").ToString() + "' AND Machine = 'HP-PC' AND Initialised = '1'");
-            //DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + DateTime.Now.Date.ToString("yyyy-MM-dd").ToString() + "' AND Machine = '" + machine + "' AND Initialised = '1'"); // FIXME CHANGE DateTime.Now to dynamic date
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE Date = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd").ToString() + "' AND Machine = '" + machine + "' AND Initialised = '1'"); // FIXME CHANGE DateTime.Now to dynamic date
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyCash", "*", "WHERE CAST(Date AS DATE) = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "' AND Machine = '" + machine + "'");
 
             if (dt.Rows.Count > 0)
             {
-                foreach (DataRow row in dt.Rows)
-                {
-                    int.TryParse(row["x2000"].ToString(), out x2000);
-                    int.TryParse(row["x500"].ToString(), out x500);
-                    int.TryParse(row["x200"].ToString(), out x200);
-                    int.TryParse(row["x100"].ToString(), out x100);
-                    int.TryParse(row["x50"].ToString(), out x50);
-                    int.TryParse(row["x20"].ToString(), out x20);
-                    int.TryParse(row["x10"].ToString(), out x10);
-                    int.TryParse(row["x5"].ToString(), out x5);
-                }
-
-                cashGridView.Rows.Add("2000", x2000.ToString(), (2000 * x2000).ToString());
-                cashGridView.Rows.Add("500", x500.ToString(), (500 * x500).ToString());
-                cashGridView.Rows.Add("200", x200.ToString(), (200 * x200).ToString());
-                cashGridView.Rows.Add("100", x100.ToString(), (100 * x100).ToString());
-                cashGridView.Rows.Add("50", x50.ToString(), (50 * x50).ToString());
-                cashGridView.Rows.Add("20", x20.ToString(), (20 * x20).ToString());
-                cashGridView.Rows.Add("10", x10.ToString(), (10 * x10).ToString());
-                cashGridView.Rows.Add("5", x5.ToString(), (5 * x5).ToString());
-
+                DataRow row = dt.Rows[dt.Rows.Count - 1];
+                int.TryParse(row["x2000"].ToString(), out x2000);
+                int.TryParse(row["x500"].ToString(), out x500);
+                int.TryParse(row["x200"].ToString(), out x200);
+                int.TryParse(row["x100"].ToString(), out x100);
+                int.TryParse(row["x50"].ToString(), out x50);
+                int.TryParse(row["x20"].ToString(), out x20);
+                int.TryParse(row["x10"].ToString(), out x10);
+                int.TryParse(row["x5"].ToString(), out x5);
             }
+
+            cashGridView.Rows.Add("2000", x2000.ToString(), (2000 * x2000).ToString());
+            cashGridView.Rows.Add("500", x500.ToString(), (500 * x500).ToString());
+            cashGridView.Rows.Add("200", x200.ToString(), (200 * x200).ToString());
+            cashGridView.Rows.Add("100", x100.ToString(), (100 * x100).ToString());
+            cashGridView.Rows.Add("50", x50.ToString(), (50 * x50).ToString());
+            cashGridView.Rows.Add("20", x20.ToString(), (20 * x20).ToString());
+            cashGridView.Rows.Add("10", x10.ToString(), (10 * x10).ToString());
+            cashGridView.Rows.Add("5", x5.ToString(), (5 * x5).ToString());
         }
 
         public void UpdateCreditGrid()
         {
-            List<String> crParticular = new List<string>();
-            List<String> crAmount = new List<string>();
             creditGridView.Rows.Clear();
 
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'CR' AND TransactionDate = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'"); //FIXME
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'CR' AND CAST(TransactionDate AS DATE) = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'");
 
             if (dt.Rows.Count > 0)
             {
@@ -478,11 +541,9 @@ namespace Customer_Loyalty_Portal
 
         public void UpdateDebitGrid()
         {
-            List<String> crParticular = new List<string>();
-            List<String> crAmount = new List<string>();
             debitGridView.Rows.Clear();
 
-            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'DR' AND TransactionDate = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'"); // FIXME
+            DataTable dt = DBHandler.SelectQueryOnTable("DailyTransactions", "*", "WHERE Machine = '" + machine + "' AND Type = 'DR' AND CAST(TransactionDate AS DATE) = '" + dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd") + "'");
 
             if (dt.Rows.Count > 0)
             {
@@ -496,12 +557,14 @@ namespace Customer_Loyalty_Portal
         public int UpdateTotalCredit()
         {
             int total = 0;
-            for(int i=0; i<creditGridView.Rows.Count; i++)
+            for (int i = 0; i < creditGridView.Rows.Count; i++)
             {
-                int value = 0;
-                value = int.Parse(creditGridView.Rows[i].Cells[1].Value.ToString());
-                total += value;
-                
+                if (creditGridView.Rows[i].Cells[1].Value != null)
+                {
+                    int value = 0;
+                    int.TryParse(creditGridView.Rows[i].Cells[1].Value.ToString(), out value);
+                    total += value;
+                }
             }
             totalCreditLabel.Text = total.ToString();
             return total;
@@ -512,9 +575,12 @@ namespace Customer_Loyalty_Portal
             int total = 0;
             for (int i = 0; i < debitGridView.Rows.Count; i++)
             {
-                int value = 0;
-                value = int.Parse(debitGridView.Rows[i].Cells[1].Value.ToString());
-                total += value;
+                if (debitGridView.Rows[i].Cells[1].Value != null)
+                {
+                    int value = 0;
+                    int.TryParse(debitGridView.Rows[i].Cells[1].Value.ToString(), out value);
+                    total += value;
+                }
             }
             totalDebitLabel.Text = total.ToString();
             return total;
@@ -568,18 +634,17 @@ namespace Customer_Loyalty_Portal
             int totalCash = UpdateTotalCash();
             int calculatedBalance = UpdateCalculatedBalance();
 
-            int difference = calculatedBalance - totalCash;
+            int difference = totalCash - calculatedBalance;
 
             if (difference == 0)
             {
-                balanceMatchLabel.Text = "Yes";
-                balanceMatchLabel.ForeColor = Color.Green;
+                balanceMatchLabel.Text = "MATCHED ✓";
+                balanceMatchLabel.ForeColor = Color.FromArgb(25, 135, 84);
             }
-
             else
             {
-                balanceMatchLabel.Text = difference.ToString();
-                balanceMatchLabel.ForeColor = Color.Red;
+                balanceMatchLabel.Text = "Diff: " + difference.ToString("+#,##0;-#,##0;0");
+                balanceMatchLabel.ForeColor = Color.FromArgb(220, 53, 69);
             }
         }
 
@@ -680,7 +745,8 @@ namespace Customer_Loyalty_Portal
             //servernameDict.Add("Junior", "HP-PC\\SQL2008");
             servernameDict.Add(jrSourceName, jrServerName);
 
-            dateLabel.Text = dateLabel.Text.ToString() + DateTime.Now.ToShortDateString();
+            UpdateDateLabel();
+            StyleDailyBalanceGrids();
 
             UpdateItemValueDictionary();
             log.LogWrite("Updating ItemValueDictionary");
@@ -1088,9 +1154,8 @@ namespace Customer_Loyalty_Portal
             int.TryParse(row.Cells["Nos"].Value.ToString(), out nos);
             int.TryParse(row.Cells["Denomination"].Value.ToString(), out denomination);
 
-            //Replace HP-PC with machine****************************
-            //int denominationUpdated = DBHandler.UpdateDenomination(denomination.ToString(), nos.ToString(), "HP-PC");
-            int denominationUpdated = DBHandler.UpdateDenomination(denomination.ToString(), nos.ToString(), machine);
+            string date = dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd");
+            int denominationUpdated = DBHandler.UpdateDenomination(denomination.ToString(), nos.ToString(), machine, date);
 
             row.Cells["Total"].Value = (nos * denomination).ToString();
             CheckBalanceMatch();
@@ -1099,12 +1164,23 @@ namespace Customer_Loyalty_Portal
 
         private void addCreditButton_Click(object sender, EventArgs e)
         {
-            String particular = creditParticular.Text.ToString();
-            String amount = creditAmount.Text.ToString();
+            string particular = creditParticular.Text.ToString().Trim();
+            string amount = creditAmount.Text.ToString().Trim();
 
-            //Replace HP-PC with machine****************************
-            //DBHandler.AddDailyTransactions("HP-PC", "CR", particular, amount);
-            DBHandler.AddDailyTransactions(machine, "CR", particular, amount, DateTime.Now.ToString("yyyy-MM-dd")); //FIXME
+            if (string.IsNullOrEmpty(particular) || particular == "Enter details...")
+            {
+                MessageBox.Show("Please enter credit particulars.");
+                return;
+            }
+
+            int parsedAmount;
+            if (!int.TryParse(amount, out parsedAmount) || parsedAmount <= 0)
+            {
+                MessageBox.Show("Please enter a valid credit amount.");
+                return;
+            }
+
+            DBHandler.AddDailyTransactions(machine, "CR", particular, parsedAmount.ToString(), dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd"));
             
             UpdateCreditGrid();
             UpdateTotalCredit();
@@ -1117,12 +1193,23 @@ namespace Customer_Loyalty_Portal
 
         private void addDebitButton_Click(object sender, EventArgs e)
         {
-            String particular = debitParticular.Text.ToString();
-            String amount = debitAmount.Text.ToString();
+            string particular = debitParticular.Text.ToString().Trim();
+            string amount = debitAmount.Text.ToString().Trim();
 
-            //Replace HP-PC with machine****************************
-            //DBHandler.AddDailyTransactions("HP-PC", "DR", particular, amount);
-            DBHandler.AddDailyTransactions(machine, "DR", particular, amount, DateTime.Now.ToString("yyyy-MM-dd")); // FIXME
+            if (string.IsNullOrEmpty(particular) || particular == "Enter details...")
+            {
+                MessageBox.Show("Please enter debit particulars.");
+                return;
+            }
+
+            int parsedAmount;
+            if (!int.TryParse(amount, out parsedAmount) || parsedAmount <= 0)
+            {
+                MessageBox.Show("Please enter a valid debit amount.");
+                return;
+            }
+
+            DBHandler.AddDailyTransactions(machine, "DR", particular, parsedAmount.ToString(), dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd"));
             
             UpdateDebitGrid();
             UpdateTotalDebit();
@@ -1159,25 +1246,59 @@ namespace Customer_Loyalty_Portal
                 source = phSourceName;
             }
 
-            WriteToExcel.writeToExcel(this, source);
+            DateTime date = dailyBalanceDateTimePicker.Value;
 
-            WriteToExcel.sendEmail(toEmail, source);
+            WriteToExcel.writeToExcel(this, source, date);
+
+            WriteToExcel.sendEmail(toEmail, source, date);
 
             MessageBox.Show("Daily Balance Submitted Successfully!");
         }
 
         private void deleteCreditButton_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in creditGridView.Rows)
+            if (creditGridView.SelectedRows.Count > 0)
             {
-                if (Convert.ToBoolean(row.Cells["Delete"].Value))
+                string date = dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd");
+                List<DataGridViewRow> rowsToDelete = creditGridView.SelectedRows.Cast<DataGridViewRow>().ToList();
+                foreach (DataGridViewRow row in rowsToDelete)
                 {
-                    //MessageBox.Show(row.Cells["Particulars"].Value.ToString() + " Selected");
-                    creditGridView.Rows.RemoveAt(row.Index);
+                    if (row.Cells[0].Value != null && row.Cells[1].Value != null)
+                    {
+                        string particular = row.Cells[0].Value.ToString();
+                        string amount = row.Cells[1].Value.ToString();
+                        DBHandler.DeleteDailyTransaction(machine, "CR", particular, amount, date);
+                        creditGridView.Rows.Remove(row);
+                    }
                 }
             }
 
+            UpdateTotalCredit();
             CheckBalanceMatch();
+            UpdateCalculatedBalance();
+        }
+
+        private void deleteDebitButton_Click(object sender, EventArgs e)
+        {
+            if (debitGridView.SelectedRows.Count > 0)
+            {
+                string date = dailyBalanceDateTimePicker.Value.ToString("yyyy-MM-dd");
+                List<DataGridViewRow> rowsToDelete = debitGridView.SelectedRows.Cast<DataGridViewRow>().ToList();
+                foreach (DataGridViewRow row in rowsToDelete)
+                {
+                    if (row.Cells[0].Value != null && row.Cells[1].Value != null)
+                    {
+                        string particular = row.Cells[0].Value.ToString();
+                        string amount = row.Cells[1].Value.ToString();
+                        DBHandler.DeleteDailyTransaction(machine, "DR", particular, amount, date);
+                        debitGridView.Rows.Remove(row);
+                    }
+                }
+            }
+
+            UpdateTotalDebit();
+            CheckBalanceMatch();
+            UpdateCalculatedBalance();
         }
 
         private void updateMobileButton_Click(object sender, EventArgs e)
@@ -1245,6 +1366,7 @@ namespace Customer_Loyalty_Portal
             dt = DBHandler.GetCustomerList(hostServerName, hostDBName);
 
             customerListDataGrid.DataSource = dt;
+            StyleGridCommon(customerListDataGrid);
 
             totalAccountsLabel.Text = "Total Accounts: " + customerListDataGrid.Rows.Count;
 
@@ -1307,7 +1429,8 @@ namespace Customer_Loyalty_Portal
                 {
                     string newPoints = updatePointsDialog.newPointsTextBox.Text.ToString();
 
-                    bool isNumeric = int.TryParse(newPoints, out int newPointsInt);
+                    int newPointsInt;
+                    bool isNumeric = int.TryParse(newPoints, out newPointsInt);
 
                     if (isNumeric)
                     {
@@ -1610,6 +1733,7 @@ namespace Customer_Loyalty_Portal
                 dt_combined.Rows.Add(item.SalesmanNo, item.Salesman, item.Qty, item.TaxableAmt, item.Comission);
             }
             comissionDataGrid.DataSource = dt_combined;
+            StyleGridCommon(comissionDataGrid);
 
             chartQty.ChartAreas.Clear();
             chartQty.Titles.Clear();
@@ -1772,8 +1896,16 @@ namespace Customer_Loyalty_Portal
             e.HasMorePages = false; // Indicate no more pages
         }
 
+        public void UpdateDateLabel()
+        {
+            DateTime selectedDate = dailyBalanceDateTimePicker.Value;
+            dateLabel.Text = "Date: " + selectedDate.ToString("dd-MM-yyyy") + " (" + selectedDate.ToString("dddd") + ")";
+        }
+
         private void dailyBalanceDateTimePicker_ValueChanged(object sender, EventArgs e)
         {
+            UpdateDateLabel();
+
             UpdateCashGrid();
             UpdateTotalCash();
 
@@ -1784,6 +1916,107 @@ namespace Customer_Loyalty_Portal
             UpdateTotalDebit();
 
             dailyBalanceTab_Click(sender, e);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StyleAllDataGrids();
+
+            if (tabControl1.SelectedTab == dailyBalanceTab)
+            {
+                UpdateDateLabel();
+
+                UpdateCashGrid();
+                UpdateTotalCash();
+
+                UpdateCreditGrid();
+                UpdateTotalCredit();
+
+                UpdateDebitGrid();
+                UpdateTotalDebit();
+
+                dailyBalanceTab_Click(sender, e);
+            }
+        }
+
+        public void StyleGridCommon(DataGridView grid)
+        {
+            if (grid == null) return;
+            grid.EnableHeadersVisualStyles = false;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(41, 60, 90);
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            grid.ColumnHeadersHeight = 30;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            grid.DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular);
+            grid.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(204, 229, 255);
+            grid.DefaultCellStyle.SelectionForeColor = Color.Black;
+            grid.RowTemplate.Height = 24;
+
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(246, 249, 252);
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.FixedSingle;
+            grid.GridColor = Color.FromArgb(222, 226, 230);
+            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
+        public void StyleDailyBalanceGrids()
+        {
+            StyleAllDataGrids();
+        }
+
+        public void StyleAllDataGrids()
+        {
+            DataGridView[] grids = { creditGridView, debitGridView, cashGridView, dataGridView1, dataGridViewPH, dataGridViewJunior, customerListDataGrid, comissionDataGrid };
+            foreach (var grid in grids)
+            {
+                StyleGridCommon(grid);
+            }
+
+            dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+
+            if (creditGridView.Columns.Count > 1)
+            {
+                creditGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                creditGridView.Columns[1].Width = 85;
+                creditGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                creditGridView.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 8, 0);
+            }
+
+            if (debitGridView.Columns.Count > 1)
+            {
+                debitGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                debitGridView.Columns[1].Width = 85;
+                debitGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                debitGridView.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 8, 0);
+            }
+
+            if (cashGridView.Columns.Count > 2)
+            {
+                cashGridView.ScrollBars = ScrollBars.None;
+                cashGridView.Columns[0].Width = 110;
+                cashGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                cashGridView.Columns[1].Width = 80;
+                cashGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                cashGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                cashGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                cashGridView.Columns[2].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+                cashGridView.Columns[2].DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
+            }
+        }
+
+        private void prevDateButton_Click(object sender, EventArgs e)
+        {
+            dailyBalanceDateTimePicker.Value = dailyBalanceDateTimePicker.Value.AddDays(-1);
+        }
+
+        private void nextDateButton_Click(object sender, EventArgs e)
+        {
+            dailyBalanceDateTimePicker.Value = dailyBalanceDateTimePicker.Value.AddDays(1);
         }
     }
 }
