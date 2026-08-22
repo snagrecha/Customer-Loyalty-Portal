@@ -224,6 +224,7 @@ namespace Customer_Loyalty_Portal
         public int UpdateBillDataGrid(DataTable dt, DataTable dt2)
         {
             dataGridViewPH.Rows.Clear();
+            dataGridViewPH.Columns.Clear();
 
             dataGridViewPH.ColumnCount = 6;
             dataGridViewPH.Columns[0].Name = "Date";
@@ -233,21 +234,43 @@ namespace Customer_Loyalty_Portal
             dataGridViewPH.Columns[4].Name = "Name";
             dataGridViewPH.Columns[5].Name = "Amount";
 
-            dataGridViewPH.Columns[0].Width = 80;
+            DataGridViewLinkColumn phLinkCol = new DataGridViewLinkColumn();
+            phLinkCol.Name = "Action";
+            phLinkCol.HeaderText = "Bill";
+            phLinkCol.Text = "View";
+            phLinkCol.UseColumnTextForLinkValue = true;
+            phLinkCol.LinkColor = Color.FromArgb(13, 110, 253);
+            phLinkCol.ActiveLinkColor = Color.FromArgb(11, 94, 215);
+            phLinkCol.VisitedLinkColor = Color.FromArgb(13, 110, 253);
+            phLinkCol.LinkBehavior = LinkBehavior.HoverUnderline;
+            phLinkCol.TrackVisitedState = false;
+            phLinkCol.Width = 48;
+            phLinkCol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            phLinkCol.DefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewPH.Columns.Add(phLinkCol);
+
+            DataGridViewTextBoxColumn phSalesIdCol = new DataGridViewTextBoxColumn();
+            phSalesIdCol.Name = "SalesID";
+            phSalesIdCol.Visible = false;
+            dataGridViewPH.Columns.Add(phSalesIdCol);
+
+            dataGridViewPH.Columns[0].Width = 75;
             dataGridViewPH.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewPH.Columns[1].Width = 72;
+            dataGridViewPH.Columns[1].Width = 68;
             dataGridViewPH.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewPH.Columns[2].Width = 70;
+            dataGridViewPH.Columns[2].Width = 65;
             dataGridViewPH.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewPH.Columns[3].Width = 90;
+            dataGridViewPH.Columns[3].Width = 88;
             dataGridViewPH.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewPH.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewPH.Columns[5].Width = 80;
+            dataGridViewPH.Columns[5].Width = 75;
             dataGridViewPH.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridViewPH.Columns[5].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             dataGridViewPH.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
 
             StyleGridCommon(dataGridViewPH);
+            dataGridViewPH.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dataGridViewPH.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
 
             foreach(DataRow row in dt.Rows)
             {
@@ -266,11 +289,13 @@ namespace Customer_Loyalty_Portal
                     }
                 }
                 string dateStr = ((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy");
+                string salesID = row.Table.Columns.Contains("SalesID") ? row["SalesID"].ToString() : "";
 
-                dataGridViewPH.Rows.Add(dateStr, timeStr, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
+                dataGridViewPH.Rows.Add(dateStr, timeStr, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"], "View", salesID);
             }
 
             dataGridViewJunior.Rows.Clear();
+            dataGridViewJunior.Columns.Clear();
 
             dataGridViewJunior.ColumnCount = 6;
             dataGridViewJunior.Columns[0].Name = "Date";
@@ -280,21 +305,43 @@ namespace Customer_Loyalty_Portal
             dataGridViewJunior.Columns[4].Name = "Name";
             dataGridViewJunior.Columns[5].Name = "Amount";
 
-            dataGridViewJunior.Columns[0].Width = 80;
+            DataGridViewLinkColumn jrLinkCol = new DataGridViewLinkColumn();
+            jrLinkCol.Name = "Action";
+            jrLinkCol.HeaderText = "Bill";
+            jrLinkCol.Text = "View";
+            jrLinkCol.UseColumnTextForLinkValue = true;
+            jrLinkCol.LinkColor = Color.FromArgb(13, 110, 253);
+            jrLinkCol.ActiveLinkColor = Color.FromArgb(11, 94, 215);
+            jrLinkCol.VisitedLinkColor = Color.FromArgb(13, 110, 253);
+            jrLinkCol.LinkBehavior = LinkBehavior.HoverUnderline;
+            jrLinkCol.TrackVisitedState = false;
+            jrLinkCol.Width = 48;
+            jrLinkCol.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            jrLinkCol.DefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewJunior.Columns.Add(jrLinkCol);
+
+            DataGridViewTextBoxColumn jrSalesIdCol = new DataGridViewTextBoxColumn();
+            jrSalesIdCol.Name = "SalesID";
+            jrSalesIdCol.Visible = false;
+            dataGridViewJunior.Columns.Add(jrSalesIdCol);
+
+            dataGridViewJunior.Columns[0].Width = 75;
             dataGridViewJunior.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewJunior.Columns[1].Width = 72;
+            dataGridViewJunior.Columns[1].Width = 68;
             dataGridViewJunior.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewJunior.Columns[2].Width = 70;
+            dataGridViewJunior.Columns[2].Width = 65;
             dataGridViewJunior.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewJunior.Columns[3].Width = 90;
+            dataGridViewJunior.Columns[3].Width = 88;
             dataGridViewJunior.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewJunior.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewJunior.Columns[5].Width = 80;
+            dataGridViewJunior.Columns[5].Width = 75;
             dataGridViewJunior.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridViewJunior.Columns[5].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             dataGridViewJunior.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
 
             StyleGridCommon(dataGridViewJunior);
+            dataGridViewJunior.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dataGridViewJunior.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
 
             foreach (DataRow row in dt2.Rows)
             {
@@ -313,8 +360,9 @@ namespace Customer_Loyalty_Portal
                     }
                 }
                 string dateStr2 = ((DateTime)row["VoucherDate"]).ToString("dd-MM-yyyy");
+                string salesID2 = row.Table.Columns.Contains("SalesID") ? row["SalesID"].ToString() : "";
 
-                dataGridViewJunior.Rows.Add(dateStr2, timeStr2, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"]);
+                dataGridViewJunior.Rows.Add(dateStr2, timeStr2, row["VoucherNo"], row["MobileNo"], row["AccountName"], row["NetAmt"], "View", salesID2);
             }
             return 1;
         }
@@ -747,6 +795,7 @@ namespace Customer_Loyalty_Portal
 
             UpdateDateLabel();
             StyleDailyBalanceGrids();
+            SetupBagButtonStates();
 
             UpdateItemValueDictionary();
             log.LogWrite("Updating ItemValueDictionary");
@@ -887,14 +936,36 @@ namespace Customer_Loyalty_Portal
 
         private void dataGridViewPH_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            String mobile = dataGridViewPH.Rows[e.RowIndex].Cells["Mobile"].Value.ToString();
-            textBox1.Text = mobile;
+            if (e.RowIndex < 0) return;
+
+            if (e.ColumnIndex >= 0 && dataGridViewPH.Columns[e.ColumnIndex].Name == "Action")
+            {
+                ShowBillDetail(dataGridViewPH, tphServerName, tphDBName, "TPH", e.RowIndex);
+                return;
+            }
+
+            if (dataGridViewPH.Rows[e.RowIndex].Cells["Mobile"].Value != null)
+            {
+                String mobile = dataGridViewPH.Rows[e.RowIndex].Cells["Mobile"].Value.ToString();
+                textBox1.Text = mobile;
+            }
         }
 
         private void dataGridViewJunior_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            String mobile = dataGridViewJunior.Rows[e.RowIndex].Cells["Mobile"].Value.ToString();
-            textBox1.Text = mobile;
+            if (e.RowIndex < 0) return;
+
+            if (e.ColumnIndex >= 0 && dataGridViewJunior.Columns[e.ColumnIndex].Name == "Action")
+            {
+                ShowBillDetail(dataGridViewJunior, jrServerName, jrDBName, "Junior", e.RowIndex);
+                return;
+            }
+
+            if (dataGridViewJunior.Rows[e.RowIndex].Cells["Mobile"].Value != null)
+            {
+                String mobile = dataGridViewJunior.Rows[e.RowIndex].Cells["Mobile"].Value.ToString();
+                textBox1.Text = mobile;
+            }
         }
 
         private void AddButtonClick(object sender, EventArgs e)
@@ -1407,9 +1478,88 @@ namespace Customer_Loyalty_Portal
             app.Quit();*/
         }
 
+        private void ShowBillDetail(DataGridView grid, string serverName, string dbname, string sourceName, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= grid.Rows.Count) return;
+            DataGridViewRow row = grid.Rows[rowIndex];
+            string dateStr = row.Cells["Date"].Value != null ? row.Cells["Date"].Value.ToString() : "";
+            string timeStr = row.Cells["Time"].Value != null ? row.Cells["Time"].Value.ToString() : "";
+            string voucherNo = row.Cells["Bill No"].Value != null ? row.Cells["Bill No"].Value.ToString() : "";
+            string mobile = row.Cells["Mobile"].Value != null ? row.Cells["Mobile"].Value.ToString() : "";
+            string customerName = row.Cells["Name"].Value != null ? row.Cells["Name"].Value.ToString() : "";
+            string salesID = (grid.Columns.Contains("SalesID") && row.Cells["SalesID"].Value != null) ? row.Cells["SalesID"].Value.ToString() : "";
+
+            BillDetailDialog dlg = new BillDetailDialog(serverName, dbname, sourceName, salesID, voucherNo, customerName, mobile, dateStr, timeStr);
+            dlg.ShowDialog(this);
+        }
+
         private void dataGridViewPH_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.RowIndex >= 0)
+            {
+                ShowBillDetail(dataGridViewPH, tphServerName, tphDBName, "TPH", e.RowIndex);
+            }
+        }
 
+        private void dataGridViewJunior_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                ShowBillDetail(dataGridViewJunior, jrServerName, jrDBName, "Junior", e.RowIndex);
+            }
+        }
+
+        public void SetupBagButtonStates()
+        {
+            Button[] addButtons = { button3, button5, button8, button10, button15 };
+            foreach (var btn in addButtons)
+            {
+                btn.EnabledChanged += AddBagButton_EnabledChanged;
+                AddBagButton_EnabledChanged(btn, EventArgs.Empty);
+            }
+
+            Button[] removeButtons = { remove3, remove5, remove8, remove10, remove15 };
+            foreach (var btn in removeButtons)
+            {
+                btn.EnabledChanged += RemoveBagButton_EnabledChanged;
+                RemoveBagButton_EnabledChanged(btn, EventArgs.Empty);
+            }
+        }
+
+        private void AddBagButton_EnabledChanged(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn == null) return;
+            if (btn.Enabled)
+            {
+                btn.BackColor = Color.FromArgb(40, 167, 69);
+                btn.ForeColor = Color.White;
+                btn.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                btn.BackColor = Color.FromArgb(233, 236, 239);
+                btn.ForeColor = Color.FromArgb(173, 181, 189);
+                btn.Cursor = Cursors.Default;
+            }
+        }
+
+        private void RemoveBagButton_EnabledChanged(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn == null) return;
+            if (btn.Enabled)
+            {
+                btn.BackColor = Color.FromArgb(220, 53, 69);
+                btn.ForeColor = Color.White;
+                btn.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                btn.BackColor = Color.FromArgb(233, 236, 239);
+                btn.ForeColor = Color.FromArgb(173, 181, 189);
+                btn.Cursor = Cursors.Default;
+            }
         }
 
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)

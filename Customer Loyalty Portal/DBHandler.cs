@@ -858,6 +858,47 @@ ELSE
             return dt;
         }
 
+        public static DataSet GetDetailedBill(string serverName, string dbname, string salesID)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlConnection con = ConnectToDB(serverName, dbname);
+                string headerQuery = "SELECT SalesID, VoucherNo, VoucherDate, AddDate, AccountName, MobileNo, TotalQty, NetAmt, CashAmt, CardAmt, DiscAmt, TaxAmt FROM trnSales WHERE SalesID = " + salesID;
+                string itemsQuery = @"SELECT 
+                                        si.SrNo, 
+                                        si.Barcode, 
+                                        ISNULL(mi.ItemName, '') AS ItemName,
+                                        si.Size1 AS Size, 
+                                        si.Qty, 
+                                        si.MRP, 
+                                        si.DiscPrc, 
+                                        si.DiscAmt, 
+                                        si.NetAmt,
+                                        ISNULL(ms.SalesmanName, CAST(si.SalesmanID AS VARCHAR)) AS Salesman
+                                    FROM trnSalesItem si
+                                    LEFT JOIN mstItem mi ON si.ItemID = mi.ItemID
+                                    LEFT JOIN mstSalesman ms ON si.SalesmanID = ms.SalesmanID
+                                    WHERE si.SalesID = " + salesID + @"
+                                    ORDER BY si.SrNo";
+
+                SqlDataAdapter adapterHeader = new SqlDataAdapter(headerQuery, con);
+                DataTable dtHeader = new DataTable("Header");
+                adapterHeader.Fill(dtHeader);
+                ds.Tables.Add(dtHeader);
+
+                SqlDataAdapter adapterItems = new SqlDataAdapter(itemsQuery, con);
+                DataTable dtItems = new DataTable("Items");
+                adapterItems.Fill(dtItems);
+                ds.Tables.Add(dtItems);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error getting detailed bill: " + ex.Message);
+            }
+            return ds;
+        }
+
         public static int UpdatePoints(String mobile, String newPoints, String billDate, String billNo, String source, String serverName = "")
         {
             if (serverName == "") serverName = hostServerName;

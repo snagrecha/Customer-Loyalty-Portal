@@ -1741,22 +1741,11 @@ namespace Customer_Loyalty_Portal
             this.dataGridViewJunior.Location = new System.Drawing.Point(690, 352);
             this.dataGridViewJunior.Name = "dataGridViewJunior";
             this.dataGridViewJunior.RowHeadersVisible = false;
+            this.dataGridViewJunior.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewJunior.Size = new System.Drawing.Size(566, 179);
             this.dataGridViewJunior.TabIndex = 48;
             this.dataGridViewJunior.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewJunior_CellClick);
-            // 
-            // dataGridViewPH
-            // 
-            this.dataGridViewPH.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewPH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewPH.Location = new System.Drawing.Point(690, 65);
-            this.dataGridViewPH.Name = "dataGridViewPH";
-            this.dataGridViewPH.RowHeadersVisible = false;
-            this.dataGridViewPH.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridViewPH.Size = new System.Drawing.Size(566, 179);
-            this.dataGridViewPH.TabIndex = 47;
-            this.dataGridViewPH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPH_CellClick);
-            this.dataGridViewPH.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewPH_CellMouseDoubleClick);
+            this.dataGridViewJunior.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewJunior_CellMouseDoubleClick);
             // 
             // label5
             // 
@@ -1768,6 +1757,19 @@ namespace Customer_Loyalty_Portal
             this.label5.Size = new System.Drawing.Size(96, 23);
             this.label5.TabIndex = 46;
             this.label5.Text = "Latest Bills";
+            // 
+            // dataGridViewPH
+            // 
+            this.dataGridViewPH.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewPH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPH.Location = new System.Drawing.Point(690, 65);
+            this.dataGridViewPH.Name = "dataGridViewPH";
+            this.dataGridViewPH.RowHeadersVisible = false;
+            this.dataGridViewPH.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewPH.Size = new System.Drawing.Size(566, 179);
+            this.dataGridViewPH.TabIndex = 47;
+            this.dataGridViewPH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPH_CellClick);
+            this.dataGridViewPH.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewPH_CellMouseDoubleClick);
             // 
             // groupBox1
             // 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -82,6 +82,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BillDetailDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BillDetailDialog.Designer.cs">
+      <DependentUpon>BillDetailDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomerLoyaltyDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -140,6 +146,9 @@
     </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="WriteToExcel.cs" />
+    <EmbeddedResource Include="BillDetailDialog.resx">
+      <DependentUpon>BillDetailDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
     </EmbeddedResource>
