@@ -36,8 +36,11 @@ namespace Customer_Loyalty_Portal
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.rectangleShape3 = new Microsoft.VisualBasic.PowerPacks.RectangleShape();
-            this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
+            this.customTitleBar = new System.Windows.Forms.Panel();
+            this.titleLabel = new System.Windows.Forms.Label();
+            this.minWindowButton = new System.Windows.Forms.Button();
+            this.maxWindowButton = new System.Windows.Forms.Button();
+            this.closeWindowButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.billSearchTab = new System.Windows.Forms.TabPage();
             this.billExistsLabel = new System.Windows.Forms.Label();
@@ -157,7 +160,6 @@ namespace Customer_Loyalty_Portal
             this.button5 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.addBagLabel = new System.Windows.Forms.Label();
-            this.closeButton = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.dataGridViewJunior = new System.Windows.Forms.DataGridView();
             this.dataGridViewPH = new System.Windows.Forms.DataGridView();
@@ -219,25 +221,90 @@ namespace Customer_Loyalty_Portal
             ((System.ComponentModel.ISupportInitialize)(this.chartQty)).BeginInit();
             this.SuspendLayout();
             // 
-            // rectangleShape3
+            // customTitleBar
             // 
-            this.rectangleShape3.BorderColor = System.Drawing.Color.DeepSkyBlue;
-            this.rectangleShape3.BorderWidth = 5;
-            this.rectangleShape3.Location = new System.Drawing.Point(2, 3);
-            this.rectangleShape3.Name = "rectangleShape3";
-            this.rectangleShape3.Size = new System.Drawing.Size(1394, 694);
-            this.rectangleShape3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.rectangleShape3_MouseDown);
+            this.customTitleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
+            this.customTitleBar.Controls.Add(this.titleLabel);
+            this.customTitleBar.Controls.Add(this.minWindowButton);
+            this.customTitleBar.Controls.Add(this.maxWindowButton);
+            this.customTitleBar.Controls.Add(this.closeWindowButton);
+            this.customTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.customTitleBar.Location = new System.Drawing.Point(0, 0);
+            this.customTitleBar.Name = "customTitleBar";
+            this.customTitleBar.Size = new System.Drawing.Size(1390, 36);
+            this.customTitleBar.TabIndex = 0;
+            this.customTitleBar.DoubleClick += new System.EventHandler(this.customTitleBar_DoubleClick);
+            this.customTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTitleBar_MouseDown);
             // 
-            // shapeContainer1
+            // titleLabel
             // 
-            this.shapeContainer1.Location = new System.Drawing.Point(0, 0);
-            this.shapeContainer1.Margin = new System.Windows.Forms.Padding(0);
-            this.shapeContainer1.Name = "shapeContainer1";
-            this.shapeContainer1.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
-            this.rectangleShape3});
-            this.shapeContainer1.Size = new System.Drawing.Size(1390, 681);
-            this.shapeContainer1.TabIndex = 8;
-            this.shapeContainer1.TabStop = false;
+            this.titleLabel.AutoSize = true;
+            this.titleLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleLabel.ForeColor = System.Drawing.Color.White;
+            this.titleLabel.Location = new System.Drawing.Point(14, 8);
+            this.titleLabel.Name = "titleLabel";
+            this.titleLabel.Size = new System.Drawing.Size(170, 19);
+            this.titleLabel.TabIndex = 0;
+            this.titleLabel.Text = "Customer Loyalty Portal";
+            this.titleLabel.DoubleClick += new System.EventHandler(this.customTitleBar_DoubleClick);
+            this.titleLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTitleBar_MouseDown);
+            // 
+            // minWindowButton
+            // 
+            this.minWindowButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
+            this.minWindowButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.minWindowButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.minWindowButton.FlatAppearance.BorderSize = 0;
+            this.minWindowButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.minWindowButton.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.minWindowButton.ForeColor = System.Drawing.Color.White;
+            this.minWindowButton.Location = new System.Drawing.Point(1252, 0);
+            this.minWindowButton.Name = "minWindowButton";
+            this.minWindowButton.Size = new System.Drawing.Size(46, 36);
+            this.minWindowButton.TabIndex = 3;
+            this.minWindowButton.Text = "—";
+            this.minWindowButton.UseVisualStyleBackColor = false;
+            this.minWindowButton.Click += new System.EventHandler(this.minWindowButton_Click);
+            this.minWindowButton.MouseEnter += new System.EventHandler(this.navButton_MouseEnter);
+            this.minWindowButton.MouseLeave += new System.EventHandler(this.navButton_MouseLeave);
+            // 
+            // maxWindowButton
+            // 
+            this.maxWindowButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
+            this.maxWindowButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.maxWindowButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.maxWindowButton.FlatAppearance.BorderSize = 0;
+            this.maxWindowButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.maxWindowButton.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maxWindowButton.ForeColor = System.Drawing.Color.White;
+            this.maxWindowButton.Location = new System.Drawing.Point(1298, 0);
+            this.maxWindowButton.Name = "maxWindowButton";
+            this.maxWindowButton.Size = new System.Drawing.Size(46, 36);
+            this.maxWindowButton.TabIndex = 2;
+            this.maxWindowButton.Text = "🗖";
+            this.maxWindowButton.UseVisualStyleBackColor = false;
+            this.maxWindowButton.Click += new System.EventHandler(this.maxWindowButton_Click);
+            this.maxWindowButton.MouseEnter += new System.EventHandler(this.navButton_MouseEnter);
+            this.maxWindowButton.MouseLeave += new System.EventHandler(this.navButton_MouseLeave);
+            // 
+            // closeWindowButton
+            // 
+            this.closeWindowButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
+            this.closeWindowButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.closeWindowButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.closeWindowButton.FlatAppearance.BorderSize = 0;
+            this.closeWindowButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.closeWindowButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.closeWindowButton.ForeColor = System.Drawing.Color.White;
+            this.closeWindowButton.Location = new System.Drawing.Point(1344, 0);
+            this.closeWindowButton.Name = "closeWindowButton";
+            this.closeWindowButton.Size = new System.Drawing.Size(46, 36);
+            this.closeWindowButton.TabIndex = 1;
+            this.closeWindowButton.Text = "✕";
+            this.closeWindowButton.UseVisualStyleBackColor = false;
+            this.closeWindowButton.Click += new System.EventHandler(this.closeWindowButton_Click);
+            this.closeWindowButton.MouseEnter += new System.EventHandler(this.closeWindowButton_MouseEnter);
+            this.closeWindowButton.MouseLeave += new System.EventHandler(this.closeWindowButton_MouseLeave);
             // 
             // toolTip1
             // 
@@ -1433,7 +1500,6 @@ namespace Customer_Loyalty_Portal
             this.homeTab.Controls.Add(this.button5);
             this.homeTab.Controls.Add(this.button3);
             this.homeTab.Controls.Add(this.addBagLabel);
-            this.homeTab.Controls.Add(this.closeButton);
             this.homeTab.Controls.Add(this.label10);
             this.homeTab.Controls.Add(this.dataGridViewJunior);
             this.homeTab.Controls.Add(this.dataGridViewPH);
@@ -1709,19 +1775,7 @@ namespace Customer_Loyalty_Portal
             this.addBagLabel.TabIndex = 52;
             this.addBagLabel.Text = "Add Bag:";
             this.addBagLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // closeButton
-            // 
-            this.closeButton.BackColor = System.Drawing.Color.Red;
-            this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeButton.ForeColor = System.Drawing.Color.White;
-            this.closeButton.Location = new System.Drawing.Point(1336, -32);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(26, 30);
-            this.closeButton.TabIndex = 51;
-            this.closeButton.Text = "X";
-            this.closeButton.UseVisualStyleBackColor = false;
+
             // 
             // label10
             // 
@@ -2022,10 +2076,14 @@ namespace Customer_Loyalty_Portal
             this.tabControl1.Controls.Add(this.dailyBalanceTab);
             this.tabControl1.Controls.Add(this.billSearchTab);
             this.tabControl1.Controls.Add(this.commissionTab);
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.Location = new System.Drawing.Point(12, 44);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1366, 666);
+            this.tabControl1.Size = new System.Drawing.Size(1366, 670);
             this.tabControl1.TabIndex = 9;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -2159,11 +2217,11 @@ namespace Customer_Loyalty_Portal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ClientSize = new System.Drawing.Size(1390, 681);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
+            this.ClientSize = new System.Drawing.Size(1390, 725);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.shapeContainer1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Controls.Add(this.customTitleBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Home";
@@ -2207,8 +2265,11 @@ namespace Customer_Loyalty_Portal
 
         #endregion
 
-        private Microsoft.VisualBasic.PowerPacks.RectangleShape rectangleShape3;
-        private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer1;
+        private System.Windows.Forms.Panel customTitleBar;
+        private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Button minWindowButton;
+        private System.Windows.Forms.Button maxWindowButton;
+        private System.Windows.Forms.Button closeWindowButton;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TabPage billSearchTab;
         private System.Windows.Forms.Label billExistsLabel;
@@ -2326,7 +2387,6 @@ namespace Customer_Loyalty_Portal
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label addBagLabel;
-        private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView dataGridViewJunior;
         private System.Windows.Forms.DataGridView dataGridViewPH;

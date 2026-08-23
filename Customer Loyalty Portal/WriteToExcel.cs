@@ -32,7 +32,7 @@ namespace Customer_Loyalty_Portal
                 mail.From = new MailAddress(email);
                 mail.To.Add(toEmail);
                 mail.Subject = "Daily Balance Sheet for " + source + " Dated " + date.ToString("dd-MM-yyyy");
-                mail.Body = "PFA Daily Balance details for " + source + " Dated " + date.ToString("dd-MM-yyyy") + " (Generated " + DateTime.Now.ToString() + ")";
+                mail.Body = "PFA Daily Balance details for " + source + " Dated " + date.ToString("dd-MM-yyyy") + " (Generated: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm tt") + ")";
 
                 string filePath = workingDirectory + source + "_" + date.ToString("ddMMyy") + ".xls";
                 if (File.Exists(filePath))
@@ -90,7 +90,7 @@ namespace Customer_Loyalty_Portal
                 worksheet.Range[worksheet.Cells[3, 4], worksheet.Cells[6, 4]].Font.Bold = true;
                 worksheet.Range[worksheet.Cells[3, 7], worksheet.Cells[6, 7]].Font.Bold = true;
                 
-                worksheet.Cells[1, 1] = "Daily Balance Sheet for " + source + " - " + date.ToString("dd-MM-yyyy") + " (Generated: " + DateTime.Now.ToString("HH:mm:ss") + ")";
+                worksheet.Cells[1, 1] = "Daily Balance Sheet for " + source + " - " + date.ToString("dd-MM-yyyy");
                 worksheet.Cells[1, 1].Font.Size = 16;
 
                 worksheet.Cells[3, 1] = "Total Sale";
@@ -199,6 +199,16 @@ namespace Customer_Loyalty_Portal
                 worksheet.Range[worksheet.Cells[x + home.cashGridView.RowCount + 2, 1], worksheet.Cells[x + home.cashGridView.RowCount + 2, 6]].Merge();
                 worksheet.Cells[x + home.cashGridView.RowCount + 2, 1] = "*Calculated cash = Cash Sale + total credit - total debit";
 
+                // Subtle report generation note at bottom
+                int maxRows = Math.Max(home.cashGridView.RowCount, Math.Max(home.creditGridView.RowCount, home.debitGridView.RowCount));
+                int genRow = x + maxRows + 4;
+                worksheet.Range[worksheet.Cells[genRow, 1], worksheet.Cells[genRow, 9]].Merge();
+                worksheet.Cells[genRow, 1] = "Report Generated: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm tt");
+                worksheet.Cells[genRow, 1].Font.Size = 9;
+                worksheet.Cells[genRow, 1].Font.Italic = true;
+                worksheet.Cells[genRow, 1].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Gray);
+                worksheet.Cells[genRow, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
+
                 //Draw borders around Tables
                 drawBorder(worksheet.Cells[x, 1], worksheet.Cells[x + home.creditGridView.RowCount, 2], worksheet);
                 drawBorder(worksheet.Cells[x, 4], worksheet.Cells[x + home.debitGridView.RowCount, 5], worksheet);
@@ -206,6 +216,7 @@ namespace Customer_Loyalty_Portal
 
                 worksheet.PageSetup.Orientation = XlPageOrientation.xlLandscape;
                 worksheet.PageSetup.PrintGridlines = true;
+                worksheet.PageSetup.RightFooter = "&8Generated: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm tt");
                 
                 try
                 {

@@ -793,6 +793,7 @@ namespace Customer_Loyalty_Portal
             //servernameDict.Add("Junior", "HP-PC\\SQL2008");
             servernameDict.Add(jrSourceName, jrServerName);
 
+            this.MaximizedBounds = Screen.PrimaryScreen.WorkingArea;
             UpdateDateLabel();
             StyleDailyBalanceGrids();
             SetupBagButtonStates();
@@ -929,9 +930,69 @@ namespace Customer_Loyalty_Portal
             toolTip1.SetToolTip(label4, DBHandler.GetSales(jrServerName, jrDBName, DateTime.Now.Date.ToString("yyyy-MM-dd")).ToString());
         }
 
-        private void closeButton_Click(object sender, EventArgs e)
+        private void closeWindowButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void minWindowButton_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void maxWindowButton_Click(object sender, EventArgs e)
+        {
+            ToggleMaximize();
+        }
+
+        private void customTitleBar_DoubleClick(object sender, EventArgs e)
+        {
+            ToggleMaximize();
+        }
+
+        private void ToggleMaximize()
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                maxWindowButton.Text = "🗖";
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Maximized;
+                maxWindowButton.Text = "❐";
+            }
+        }
+
+        private void customTitleBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void closeWindowButton_MouseEnter(object sender, EventArgs e)
+        {
+            closeWindowButton.BackColor = Color.FromArgb(220, 53, 69);
+        }
+
+        private void closeWindowButton_MouseLeave(object sender, EventArgs e)
+        {
+            closeWindowButton.BackColor = Color.FromArgb(24, 43, 73);
+        }
+
+        private void navButton_MouseEnter(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn != null) btn.BackColor = Color.FromArgb(41, 60, 90);
+        }
+
+        private void navButton_MouseLeave(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn != null) btn.BackColor = Color.FromArgb(24, 43, 73);
         }
 
         private void dataGridViewPH_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -1109,13 +1170,41 @@ namespace Customer_Loyalty_Portal
         [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        private void rectangleShape3_MouseDown(object sender, MouseEventArgs e)
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTLEFT = 10;
+        private const int HTRIGHT = 11;
+        private const int HTTOP = 12;
+        private const int HTTOPLEFT = 13;
+        private const int HTTOPRIGHT = 14;
+        private const int HTBOTTOM = 15;
+        private const int HTBOTTOMLEFT = 16;
+        private const int HTBOTTOMRIGHT = 17;
+
+        protected override void WndProc(ref Message m)
         {
-                if (e.Button == MouseButtons.Left)
-                {
-                    ReleaseCapture();
-                    SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-                }
+            base.WndProc(ref m);
+            if (m.Msg == WM_NCHITTEST && (int)m.Result == 1)
+            {
+                Point pos = PointToClient(new Point(m.LParam.ToInt32()));
+                const int resizeBorder = 8;
+
+                if (pos.X >= ClientSize.Width - resizeBorder && pos.Y >= ClientSize.Height - resizeBorder)
+                    m.Result = (IntPtr)HTBOTTOMRIGHT;
+                else if (pos.X <= resizeBorder && pos.Y >= ClientSize.Height - resizeBorder)
+                    m.Result = (IntPtr)HTBOTTOMLEFT;
+                else if (pos.X <= resizeBorder && pos.Y <= resizeBorder)
+                    m.Result = (IntPtr)HTTOPLEFT;
+                else if (pos.X >= ClientSize.Width - resizeBorder && pos.Y <= resizeBorder)
+                    m.Result = (IntPtr)HTTOPRIGHT;
+                else if (pos.X <= resizeBorder)
+                    m.Result = (IntPtr)HTLEFT;
+                else if (pos.X >= ClientSize.Width - resizeBorder)
+                    m.Result = (IntPtr)HTRIGHT;
+                else if (pos.Y <= resizeBorder)
+                    m.Result = (IntPtr)HTTOP;
+                else if (pos.Y >= ClientSize.Height - resizeBorder)
+                    m.Result = (IntPtr)HTBOTTOM;
+            }
         }
 
         private void refreshButton_Click(object sender, EventArgs e)
