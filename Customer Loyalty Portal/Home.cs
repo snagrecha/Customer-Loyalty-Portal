@@ -850,6 +850,9 @@ namespace Customer_Loyalty_Portal
 
             EmailQueueManager.InitializeAndStartWorker();
             log.LogWrite("Initialized EmailQueueManager background worker");
+
+            BackupManager.InitializeAndStartWorker();
+            log.LogWrite("Initialized BackupManager automated background scheduler");
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
