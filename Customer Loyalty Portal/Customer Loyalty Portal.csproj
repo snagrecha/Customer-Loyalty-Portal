@@ -105,6 +105,12 @@
     <Compile Include="Home.Designer.cs">
       <DependentUpon>Home.cs</DependentUpon>
     </Compile>
+    <Compile Include="IncentiveConfigDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IncentiveConfigDialog.Designer.cs">
+      <DependentUpon>IncentiveConfigDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogWriter.cs" />
     <Compile Include="NewMobileDialog.cs">
       <SubType>Form</SubType>
