@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Threading;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -73,6 +72,7 @@ namespace Customer_Loyalty_Portal
         Dictionary<String, String> machineServerNameDict = new Dictionary<string, string>();
 
         List<String> lastUpdatedList = new List<string>();
+        Dictionary<string, SalesmanCommissionData> currentCommissionStats = new Dictionary<string, SalesmanCommissionData>();
         DataTable phNewBills = new DataTable();
         DataTable jrNewBills = new DataTable();
         List<List<String>> updationList= new List<List<String>>();
@@ -1917,8 +1917,19 @@ namespace Customer_Loyalty_Portal
             popupForm.ShowDialog();
         }
 
-        private void comissionDateTimePicker_ValueChanged(object sender, EventArgs e)
+        private void UpdateCommissionDateLabel()
         {
+            DateTime selectedDate = comissionDateTimePicker.Value;
+            if (dateCommissionLabel != null)
+            {
+                dateCommissionLabel.Text = "Date: " + selectedDate.ToString("dd-MM-yyyy") + " (" + selectedDate.ToString("dddd") + ")";
+            }
+        }
+
+        public void UpdateCommissionData()
+        {
+            UpdateCommissionDateLabel();
+
             string dbName = "";
             string serverName = "";
             if (machine == tphMachineName)
@@ -1931,115 +1942,393 @@ namespace Customer_Loyalty_Portal
                 dbName = jrDBName;
                 serverName = jrServerName;
             }
+            else
+            {
+                if (machineDbNameDict.ContainsKey(machine))
+                    dbName = machineDbNameDict[machine];
+                if (machineServerNameDict.ContainsKey(machine))
+                    serverName = machineServerNameDict[machine];
+            }
 
-            string currentDate = comissionDateTimePicker.Value.ToString("MM-dd-yyyy");
+            string currentDate = comissionDateTimePicker.Value.ToString("yyyy-MM-dd");
 
-            DataTable dt_sales = DBHandler.SelectQueryOnTable("trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID", "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission", $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND a.SalesTypeSR = 'S' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName", serverName, dbName);
-            DataTable dt_return = DBHandler.SelectQueryOnTable("trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID", "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission", $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND a.SalesTypeSR = 'R' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName", serverName, dbName);
-            //DataTable dt_return = DBHandler.SelectQueryOnTable("trnSalesItem", "SalesmanID as Salesman, COUNT(SalesTypeSR)*-1 as Qty, ROUND(SUM(TaxableAmt), 0)*-1 as TaxableAmt, ROUND(SUM(TaxableAmt) * 0.01, 0)*-1 as Comission", $"WHERE SalesId IN (SELECT SalesID FROM trnSales WHERE VoucherDate = '{currentDate}') AND SalesTypeSR = 'R' GROUP BY SalesmanID", serverName, dbName);
+            // 1. Query Sales Items
+            DataTable dt_sales = DBHandler.SelectQueryOnTable(
+                "trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID",
+                "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission",
+                $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE CAST(VoucherDate AS DATE) = '{currentDate}') AND a.SalesTypeSR = 'S' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName",
+                serverName, dbName);
 
-            // Create a new DataTable for the combined results.
+            // 2. Query Return Items
+            DataTable dt_return = DBHandler.SelectQueryOnTable(
+                "trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID",
+                "b.ShortName as SalesmanNo, b.SalesmanName as Salesman, COUNT(a.SalesTypeSR) as Qty, ROUND(SUM(a.TaxableAmt), 0) as TaxableAmt, ROUND(SUM(a.TaxableAmt) * 0.01, 0) as Comission",
+                $"WHERE a.SalesId IN (SELECT SalesID FROM trnSales WHERE CAST(VoucherDate AS DATE) = '{currentDate}') AND a.SalesTypeSR = 'R' GROUP BY a.SalesmanID, b.SalesmanName, b.ShortName",
+                serverName, dbName);
+
+            // 3. Query Per-Bill Sales with VoucherNo, MobileNo, AccountName for single-customer bill incentive calculations
+            DataTable dt_bill_sales = DBHandler.SelectQueryOnTable(
+                "trnSalesItem as a INNER JOIN mstSalesman as b ON a.SalesmanID = b.SalesmanID INNER JOIN trnSales as s ON a.SalesId = s.SalesID",
+                "a.SalesId, s.VoucherNo, s.MobileNo, s.AccountName, a.SalesmanID, b.ShortName as SalesmanNo, b.SalesmanName as Salesman, ROUND(SUM(a.NetAmt), 0) as BillNetAmt, ROUND(SUM(a.TaxableAmt), 0) as BillTaxableAmt",
+                $"WHERE CAST(s.VoucherDate AS DATE) = '{currentDate}' AND a.SalesTypeSR = 'S' GROUP BY a.SalesId, s.VoucherNo, s.MobileNo, s.AccountName, a.SalesmanID, b.SalesmanName, b.ShortName",
+                serverName, dbName);
+
+            Dictionary<string, SalesmanCommissionData> stats = new Dictionary<string, SalesmanCommissionData>();
+
+            if (dt_sales != null)
+            {
+                foreach (DataRow row in dt_sales.Rows)
+                {
+                    string salesmanNo = row["SalesmanNo"] != DBNull.Value ? row["SalesmanNo"].ToString().Trim() : "";
+                    string salesmanName = row["Salesman"] != DBNull.Value ? row["Salesman"].ToString().Trim() : "";
+                    string key = salesmanNo + "|" + salesmanName;
+
+                    if (!stats.ContainsKey(key))
+                    {
+                        stats[key] = new SalesmanCommissionData
+                        {
+                            SalesmanNo = salesmanNo,
+                            SalesmanName = salesmanName
+                        };
+                    }
+
+                    int qty = row["Qty"] != DBNull.Value ? Convert.ToInt32(row["Qty"]) : 0;
+                    decimal taxableAmt = row["TaxableAmt"] != DBNull.Value ? Convert.ToDecimal(row["TaxableAmt"]) : 0m;
+
+                    stats[key].SalesQty += qty;
+                    stats[key].SalesTaxableAmt += taxableAmt;
+                }
+            }
+
+            if (dt_return != null)
+            {
+                foreach (DataRow row in dt_return.Rows)
+                {
+                    string salesmanNo = row["SalesmanNo"] != DBNull.Value ? row["SalesmanNo"].ToString().Trim() : "";
+                    string salesmanName = row["Salesman"] != DBNull.Value ? row["Salesman"].ToString().Trim() : "";
+                    string key = salesmanNo + "|" + salesmanName;
+
+                    if (!stats.ContainsKey(key))
+                    {
+                        stats[key] = new SalesmanCommissionData
+                        {
+                            SalesmanNo = salesmanNo,
+                            SalesmanName = salesmanName
+                        };
+                    }
+
+                    int qty = row["Qty"] != DBNull.Value ? Convert.ToInt32(row["Qty"]) : 0;
+                    decimal taxableAmt = row["TaxableAmt"] != DBNull.Value ? Convert.ToDecimal(row["TaxableAmt"]) : 0m;
+
+                    stats[key].ReturnQty += qty;
+                    stats[key].ReturnTaxableAmt += taxableAmt;
+                }
+            }
+
+            // Calculate Bill Amount Incentives (combining same-day bills for the same customer)
+            if (dt_bill_sales != null && IncentiveManager.Enabled)
+            {
+                // Group sales per customer per salesman
+                Dictionary<string, Dictionary<string, CustomerSalesSummary>> salesmanCustomerSales = new Dictionary<string, Dictionary<string, CustomerSalesSummary>>();
+
+                foreach (DataRow row in dt_bill_sales.Rows)
+                {
+                    string salesmanNo = row["SalesmanNo"] != DBNull.Value ? row["SalesmanNo"].ToString().Trim() : "";
+                    string salesmanName = row["Salesman"] != DBNull.Value ? row["Salesman"].ToString().Trim() : "";
+                    string key = salesmanNo + "|" + salesmanName;
+
+                    if (!stats.ContainsKey(key)) continue;
+
+                    string voucherNo = row.Table.Columns.Contains("VoucherNo") && row["VoucherNo"] != DBNull.Value ? row["VoucherNo"].ToString().Trim() : "";
+                    string mobile = row.Table.Columns.Contains("MobileNo") && row["MobileNo"] != DBNull.Value ? row["MobileNo"].ToString().Trim() : "";
+                    string accName = row.Table.Columns.Contains("AccountName") && row["AccountName"] != DBNull.Value ? row["AccountName"].ToString().Trim() : "";
+                    string salesId = row["SalesId"] != DBNull.Value ? row["SalesId"].ToString() : "";
+
+                    // Identify customer (by mobile number if valid, or account name, or per-bill for anonymous walk-in)
+                    string custKey;
+                    string custDisplay;
+                    if (!string.IsNullOrEmpty(mobile) && mobile != "0" && mobile.Length >= 6 && mobile != "9999999999")
+                    {
+                        custKey = "MOB:" + mobile;
+                        custDisplay = mobile;
+                    }
+                    else if (!string.IsNullOrEmpty(accName) && 
+                             !accName.Equals("cash", StringComparison.OrdinalIgnoreCase) && 
+                             !accName.Equals("walk-in", StringComparison.OrdinalIgnoreCase) && 
+                             !accName.Equals("walk in", StringComparison.OrdinalIgnoreCase) &&
+                             !accName.Equals("retail customer", StringComparison.OrdinalIgnoreCase))
+                    {
+                        custKey = "ACC:" + accName.ToUpperInvariant();
+                        custDisplay = accName;
+                    }
+                    else
+                    {
+                        custKey = "BILL:" + salesId;
+                        custDisplay = "";
+                    }
+
+                    if (!salesmanCustomerSales.ContainsKey(key))
+                    {
+                        salesmanCustomerSales[key] = new Dictionary<string, CustomerSalesSummary>();
+                    }
+
+                    if (!salesmanCustomerSales[key].ContainsKey(custKey))
+                    {
+                        salesmanCustomerSales[key][custKey] = new CustomerSalesSummary
+                        {
+                            CustomerKey = custKey,
+                            CustomerDisplay = custDisplay
+                        };
+                    }
+
+                    decimal billNet = row["BillNetAmt"] != DBNull.Value ? Convert.ToDecimal(row["BillNetAmt"]) : 0m;
+                    decimal billTaxable = row["BillTaxableAmt"] != DBNull.Value ? Convert.ToDecimal(row["BillTaxableAmt"]) : 0m;
+                    decimal billAmt = billNet > 0 ? billNet : billTaxable;
+
+                    salesmanCustomerSales[key][custKey].TotalAmount += billAmt;
+                    if (!string.IsNullOrEmpty(voucherNo) && !salesmanCustomerSales[key][custKey].VoucherNumbers.Contains(voucherNo))
+                    {
+                        salesmanCustomerSales[key][custKey].VoucherNumbers.Add(voucherNo);
+                    }
+                }
+
+                // Apply incentive slabs on combined customer sales totals
+                foreach (var sPair in salesmanCustomerSales)
+                {
+                    string salesmanKey = sPair.Key;
+                    var custDict = sPair.Value;
+
+                    foreach (var cPair in custDict)
+                    {
+                        CustomerSalesSummary summary = cPair.Value;
+                        decimal matchedThreshold;
+                        decimal inc = IncentiveManager.CalculateBillIncentiveWithThreshold(summary.TotalAmount, out matchedThreshold);
+
+                        if (inc > 0)
+                        {
+                            stats[salesmanKey].Incentive += inc;
+                            stats[salesmanKey].IncentiveBillCount += summary.VoucherNumbers.Count;
+                            stats[salesmanKey].QualifyingBills.Add(new BillIncentiveDetail
+                            {
+                                VoucherNumbers = summary.VoucherNumbers,
+                                CustomerDisplay = summary.CustomerDisplay,
+                                BillAmount = summary.TotalAmount,
+                                IncentiveAmount = inc,
+                                SlabThreshold = matchedThreshold
+                            });
+                        }
+                    }
+                }
+            }
+
+            currentCommissionStats = stats;
+            var sortedData = stats.Values.OrderBy(s => s.SalesmanNo).ToList();
+
             DataTable dt_combined = new DataTable();
             dt_combined.Columns.Add("SalesmanNo", typeof(string));
             dt_combined.Columns.Add("Salesman", typeof(string));
             dt_combined.Columns.Add("Qty", typeof(int));
             dt_combined.Columns.Add("TaxableAmt", typeof(decimal));
             dt_combined.Columns.Add("Comission", typeof(decimal));
+            dt_combined.Columns.Add("Incentive", typeof(decimal));
+            dt_combined.Columns.Add("TotalPayable", typeof(decimal));
 
-            // Combine rows from both DataTables.
-            var allRows = dt_sales.AsEnumerable()
-                .Concat(dt_return.AsEnumerable());
+            int totalQty = 0;
+            decimal totalTaxable = 0m;
+            decimal totalCommission = 0m;
+            decimal totalIncentive = 0m;
+            decimal totalPayable = 0m;
 
-            // Group by Salesman and calculate aggregated values.
-            var groupedData = allRows
-                .GroupBy(row => new
-                {
-                    Salesman = row.Field<string>("Salesman"),
-                    SalesmanNo = row.Field<string>("SalesmanNo")
-                })
-                .Select(group => new
-                {
-                    SalesmanNo = group.Key.SalesmanNo,
-                    Salesman = group.Key.Salesman,
-                    Qty = group.Sum(row => row.Field<int>("Qty")),
-                    TaxableAmt = group.Sum(row => row.Field<double>("TaxableAmt")),
-                    Comission = group.Sum(row => row.Field<double>("Comission"))
-                });
-
-            // Populate the combined DataTable.
-            foreach (var item in groupedData)
+            foreach (var item in sortedData)
             {
-                dt_combined.Rows.Add(item.SalesmanNo, item.Salesman, item.Qty, item.TaxableAmt, item.Comission);
+                dt_combined.Rows.Add(item.SalesmanNo, item.SalesmanName, item.NetQty, item.NetTaxableAmt, item.NetCommission, item.Incentive, item.TotalPayable);
+                totalQty += item.NetQty;
+                totalTaxable += item.NetTaxableAmt;
+                totalCommission += item.NetCommission;
+                totalIncentive += item.Incentive;
+                totalPayable += item.TotalPayable;
             }
+
             comissionDataGrid.DataSource = dt_combined;
             StyleGridCommon(comissionDataGrid);
+            StyleAllDataGrids();
 
+            // Update KPI Cards
+            if (lblTotalCommQty != null) lblTotalCommQty.Text = totalQty.ToString("N0") + " pcs";
+            if (lblTotalCommSales != null) lblTotalCommSales.Text = "₹ " + totalTaxable.ToString("N0");
+            if (lblTotalCommAmt != null) lblTotalCommAmt.Text = "₹ " + totalCommission.ToString("N0");
+            if (lblTotalCommTotal != null) lblTotalCommTotal.Text = "₹ " + totalPayable.ToString("N0");
+
+            // Chart 1: Qty (Sales vs Returns)
             chartQty.ChartAreas.Clear();
             chartQty.Titles.Clear();
             chartQty.Series.Clear();
-            // Prepare Chart 1: Qty (Sales and Returns).
-            chartQty.ChartAreas.Add(new ChartArea("QtyChartArea"));
-            chartQty.Titles.Add("Qty Sold by Salesman");
+            chartQty.Legends.Clear();
 
-            Series salesSeries = new Series("Sales")
+            ChartArea qtyArea = new ChartArea("QtyChartArea");
+            qtyArea.AxisX.Interval = 1;
+            qtyArea.AxisX.LabelStyle.Font = new Font("Segoe UI", 8F);
+            qtyArea.AxisX.MajorGrid.LineColor = Color.FromArgb(235, 238, 242);
+            qtyArea.AxisY.MajorGrid.LineColor = Color.FromArgb(235, 238, 242);
+            qtyArea.AxisY.LabelStyle.Font = new Font("Segoe UI", 8F);
+            chartQty.ChartAreas.Add(qtyArea);
+
+            Title qtyTitle = new Title("Sales & Returns Qty by Salesman", Docking.Top, new Font("Segoe UI", 10.5F, FontStyle.Bold), Color.FromArgb(41, 60, 90));
+            chartQty.Titles.Add(qtyTitle);
+
+            Legend qtyLegend = new Legend("Legend1")
+            {
+                Docking = Docking.Top,
+                Alignment = StringAlignment.Far,
+                Font = new Font("Segoe UI", 8.5F)
+            };
+            chartQty.Legends.Add(qtyLegend);
+
+            Series salesSeries = new Series("Sales Qty")
             {
                 ChartType = SeriesChartType.Column,
-                Color = System.Drawing.Color.Blue
+                Color = Color.FromArgb(13, 110, 253),
+                IsValueShownAsLabel = true,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
             };
 
-            Series returnSeries = new Series("Returns")
+            Series returnSeries = new Series("Return Qty")
             {
                 ChartType = SeriesChartType.Column,
-                Color = System.Drawing.Color.Red
+                Color = Color.FromArgb(220, 53, 69),
+                IsValueShownAsLabel = true,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
             };
 
-            foreach (DataRow row in dt_sales.Rows)
+            foreach (var item in sortedData)
             {
-                string salesman = row["Salesman"].ToString();
-                int qty = Convert.ToInt32(row["Qty"]);
-                salesSeries.Points.AddXY(salesman, qty);
-            }
-
-            foreach (DataRow row in dt_return.Rows)
-            {
-                string salesman = row["Salesman"].ToString();
-                int qty = Convert.ToInt32(row["Qty"]);
-                returnSeries.Points.AddXY(salesman, qty);
+                salesSeries.Points.AddXY(item.SalesmanName, item.SalesQty);
+                returnSeries.Points.AddXY(item.SalesmanName, item.ReturnQty);
             }
 
             chartQty.Series.Add(salesSeries);
             chartQty.Series.Add(returnSeries);
 
+            // Chart 2: Commission & Incentive by Salesman
             chartCommission.ChartAreas.Clear();
             chartCommission.Titles.Clear();
             chartCommission.Series.Clear();
-            // Prepare Chart 2: Commission.
-            chartCommission.ChartAreas.Add(new ChartArea("CommissionChartArea"));
-            chartCommission.Titles.Add("Commission by Salesman");
+            chartCommission.Legends.Clear();
+
+            ChartArea commArea = new ChartArea("CommissionChartArea");
+            commArea.AxisX.Interval = 1;
+            commArea.AxisX.LabelStyle.Font = new Font("Segoe UI", 8F);
+            commArea.AxisX.MajorGrid.LineColor = Color.FromArgb(235, 238, 242);
+            commArea.AxisY.MajorGrid.LineColor = Color.FromArgb(235, 238, 242);
+            commArea.AxisY.LabelStyle.Font = new Font("Segoe UI", 8F);
+            chartCommission.ChartAreas.Add(commArea);
+
+            Title commTitle = new Title("Commission & Incentive by Salesman (₹)", Docking.Top, new Font("Segoe UI", 10.5F, FontStyle.Bold), Color.FromArgb(41, 60, 90));
+            chartCommission.Titles.Add(commTitle);
+
+            Legend commLegend = new Legend("Legend2")
+            {
+                Docking = Docking.Top,
+                Alignment = StringAlignment.Far,
+                Font = new Font("Segoe UI", 8.5F)
+            };
+            chartCommission.Legends.Add(commLegend);
 
             Series commissionSeries = new Series("Commission")
             {
                 ChartType = SeriesChartType.Column,
-                Color = System.Drawing.Color.Green
+                Color = Color.FromArgb(40, 167, 69),
+                IsValueShownAsLabel = true,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
             };
 
-            // Combine sales and returns for commissions.
-            foreach (DataRow row in dt_sales.Rows)
+            Series incentiveSeries = new Series("Incentive")
             {
-                string salesman = row["Salesman"].ToString();
-                decimal commission = Convert.ToDecimal(row["Comission"]);
-                commissionSeries.Points.AddXY(salesman, commission);
+                ChartType = SeriesChartType.Column,
+                Color = Color.FromArgb(245, 158, 11), // Warm Amber
+                IsValueShownAsLabel = true,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
+            };
+
+            foreach (var item in sortedData)
+            {
+                commissionSeries.Points.AddXY(item.SalesmanName, item.NetCommission);
+                incentiveSeries.Points.AddXY(item.SalesmanName, item.Incentive);
             }
 
             chartCommission.Series.Add(commissionSeries);
-
+            chartCommission.Series.Add(incentiveSeries);
         }
+
+        private void comissionDateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateCommissionData();
+        }
+
+        private void prevCommissionDateButton_Click(object sender, EventArgs e)
+        {
+            comissionDateTimePicker.Value = comissionDateTimePicker.Value.AddDays(-1);
+        }
+
+        private void nextCommissionDateButton_Click(object sender, EventArgs e)
+        {
+            comissionDateTimePicker.Value = comissionDateTimePicker.Value.AddDays(1);
+        }
+
+        private void todayCommissionButton_Click(object sender, EventArgs e)
+        {
+            if (comissionDateTimePicker.Value.Date == DateTime.Today)
+            {
+                UpdateCommissionData();
+            }
+            else
+            {
+                comissionDateTimePicker.Value = DateTime.Today;
+            }
+        }
+
+        private void incentiveSettingsButton_Click(object sender, EventArgs e)
+        {
+            using (IncentiveConfigDialog dialog = new IncentiveConfigDialog())
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    UpdateCommissionData();
+                }
+            }
+        }
+
+        private void comissionDataGrid_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            string colName = comissionDataGrid.Columns[e.ColumnIndex].Name;
+            if (colName == "Incentive" || colName == "TotalPayable" || colName == "Salesman" || colName == "SalesmanNo")
+            {
+                string sNo = comissionDataGrid.Rows[e.RowIndex].Cells["SalesmanNo"].Value?.ToString() ?? "";
+                string sName = comissionDataGrid.Rows[e.RowIndex].Cells["Salesman"].Value?.ToString() ?? "";
+                string key = sNo + "|" + sName;
+
+                if (currentCommissionStats != null && currentCommissionStats.ContainsKey(key))
+                {
+                    e.ToolTipText = currentCommissionStats[key].GetIncentiveTooltip();
+                }
+            }
+        }
+
         private void printCommissionButton_Click(object sender, EventArgs e)
         {
+            if (comissionDataGrid.DataSource == null || ((DataTable)comissionDataGrid.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("No commission data available to print for the selected date.", "Print Commission", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             PrintDialog printDialog = new PrintDialog();
             PrintDocument printDocument = new PrintDocument();
             PaperSize a5Paper = new PaperSize("A5", 583, 827); // A5 size in hundredths of an inch (5.83" x 8.27")
-            printDocument.DefaultPageSettings.PaperSize = a5Paper; printDocument.PrintPage += PrintDocument_PrintPage;
+            printDocument.DefaultPageSettings.PaperSize = a5Paper;
+            printDocument.PrintPage += PrintDocument_PrintPage;
 
             printDialog.Document = printDocument;
 
@@ -2051,86 +2340,136 @@ namespace Customer_Loyalty_Portal
 
         private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
         {
-            DataTable dt_combined = new DataTable();
-            dt_combined = (DataTable)comissionDataGrid.DataSource;
-
-            Console.WriteLine(dt_combined.Rows.Count);
+            DataTable dt_combined = (DataTable)comissionDataGrid.DataSource;
+            if (dt_combined == null || dt_combined.Rows.Count == 0)
+            {
+                e.HasMorePages = false;
+                return;
+            }
 
             Graphics graphics = e.Graphics;
-            int y = 10; // Start printing at the top
+            int y = 20; // Start printing at top with nice margin
 
-            // Print Title
-            Font titleFont = new Font("Arial", 14, FontStyle.Bold);
-            graphics.DrawString($"{machine} Commission Report - {comissionDateTimePicker.Value.ToString("dd-MM-yyyy")}", titleFont, Brushes.Black, 10, y);
-            y += 30;
+            // Print Title Header
+            Font titleFont = new Font("Arial", 13, FontStyle.Bold);
+            Font subTitleFont = new Font("Arial", 9, FontStyle.Regular);
+            string titleText = $"{machine} Commission Report";
+            string dateText = $"Date: {comissionDateTimePicker.Value.ToString("dd-MM-yyyy")} ({comissionDateTimePicker.Value.ToString("dddd")})";
+
+            graphics.DrawString(titleText, titleFont, Brushes.Black, 20, y);
+            y += 24;
+            graphics.DrawString(dateText, subTitleFont, Brushes.Black, 20, y);
+            y += 25;
 
             // Print Table Header
-            Font headerFont = new Font("Arial", 10, FontStyle.Bold);
-            Pen borderPen = new Pen(Color.Black, 1); // Pen for borders
+            Font headerFont = new Font("Arial", 9, FontStyle.Bold);
+            Font rowFont = new Font("Arial", 9, FontStyle.Regular);
+            Font totalFont = new Font("Arial", 9, FontStyle.Bold);
+            Pen borderPen = new Pen(Color.Black, 1);
 
-            int cellHeight = 20; // Height of each row
-            int headerY = y;     // Starting Y position for the header
-            int tableX = 10;     // Starting X position for the table
-            int[] columnWidths = { 40, 150, 100, 100, 100 }; // Column widths for "No", "Salesman", "Qty", "TaxableAmt", "Comission"
+            int cellHeight = 22;
+            int tableX = 20;
+            // Columns: No (40), Salesman (185), Net Qty (60), Commission (105), Incentive (95), Total (95) -> Total = 580
+            int[] columnWidths = { 40, 185, 60, 105, 95, 95 };
+            StringFormat leftFormat = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
+            StringFormat centerFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            StringFormat rightFormat = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
 
-            // Draw header cells
-            graphics.DrawRectangle(borderPen, tableX, headerY, columnWidths[0], cellHeight); // "No" cell
-            graphics.DrawRectangle(borderPen, tableX + columnWidths[0], headerY, columnWidths[1], cellHeight); // "Salesman" cell
-            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1], headerY, columnWidths[2], cellHeight); // "Qty" cell
-            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], headerY, columnWidths[3], cellHeight); // "TaxableAmt" cell
-            graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], headerY, columnWidths[4], cellHeight); // "Comission" cell
+            // Header Background & Borders
+            Rectangle[] headerRects = {
+                new Rectangle(tableX, y, columnWidths[0], cellHeight),
+                new Rectangle(tableX + columnWidths[0], y, columnWidths[1], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
+            };
 
-            graphics.DrawString("No", headerFont, Brushes.Black, tableX + 5, headerY + 5);
-            graphics.DrawString("Salesman", headerFont, Brushes.Black, tableX + columnWidths[0] + 5, headerY + 5);
-            graphics.DrawString("Qty", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + 5, headerY + 5);
-            graphics.DrawString("TaxableAmt", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + 5, headerY + 5);
-            graphics.DrawString("Comission", headerFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 5, headerY + 5);
+            for (int i = 0; i < headerRects.Length; i++)
+            {
+                graphics.FillRectangle(Brushes.LightGray, headerRects[i]);
+                graphics.DrawRectangle(borderPen, headerRects[i]);
+            }
 
-            // Update Y position after header
+            graphics.DrawString("No.", headerFont, Brushes.Black, headerRects[0], centerFormat);
+            graphics.DrawString("Salesman Name", headerFont, Brushes.Black, new Rectangle(headerRects[1].X + 4, headerRects[1].Y, headerRects[1].Width - 8, headerRects[1].Height), leftFormat);
+            graphics.DrawString("Net Qty", headerFont, Brushes.Black, new Rectangle(headerRects[2].X + 4, headerRects[2].Y, headerRects[2].Width - 8, headerRects[2].Height), rightFormat);
+            graphics.DrawString("Commission (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[3].X + 4, headerRects[3].Y, headerRects[3].Width - 8, headerRects[3].Height), rightFormat);
+            graphics.DrawString("Incentive (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[4].X + 4, headerRects[4].Y, headerRects[4].Width - 8, headerRects[4].Height), rightFormat);
+            graphics.DrawString("Total (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[5].X + 4, headerRects[5].Y, headerRects[5].Width - 8, headerRects[5].Height), rightFormat);
+
             y += cellHeight;
 
-            // Print Table Rows
-            Font rowFont = new Font("Arial", 10);
+            int totalQty = 0;
+            decimal totalCommission = 0m;
+            decimal totalIncentive = 0m;
+            decimal totalPayable = 0m;
+
+            // Print Data Rows
             foreach (DataRow row in dt_combined.Rows)
             {
-                int rowY = y;
+                Rectangle[] rowRects = {
+                    new Rectangle(tableX, y, columnWidths[0], cellHeight),
+                    new Rectangle(tableX + columnWidths[0], y, columnWidths[1], cellHeight),
+                    new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
+                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
+                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
+                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
+                };
 
-                // Draw borders for each cell in the row
-                graphics.DrawRectangle(borderPen, tableX, rowY, columnWidths[0], cellHeight); // "No" cell
-                graphics.DrawRectangle(borderPen, tableX + columnWidths[0], rowY, columnWidths[1], cellHeight); // "Salesman" cell
-                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1], rowY, columnWidths[2], cellHeight); // "Qty" cell
-                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], rowY, columnWidths[3], cellHeight); // "TaxableAmt" cell
-                graphics.DrawRectangle(borderPen, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], rowY, columnWidths[4], cellHeight); // "Comission" cell
+                for (int i = 0; i < rowRects.Length; i++)
+                {
+                    graphics.DrawRectangle(borderPen, rowRects[i]);
+                }
 
-                // Print row data
-                graphics.DrawString(row["SalesmanNo"].ToString(), rowFont, Brushes.Black, tableX + 5, rowY + 5);
-                graphics.DrawString(row["Salesman"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + 5, rowY + 5);
-                graphics.DrawString(row["Qty"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + 5, rowY + 5);
-                graphics.DrawString(row["TaxableAmt"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + 5, rowY + 5);
-                graphics.DrawString(row["Comission"].ToString(), rowFont, Brushes.Black, tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + 5, rowY + 5);
+                string sNo = row["SalesmanNo"] != DBNull.Value ? row["SalesmanNo"].ToString() : "";
+                string sName = row["Salesman"] != DBNull.Value ? row["Salesman"].ToString() : "";
+                int qty = row["Qty"] != DBNull.Value ? Convert.ToInt32(row["Qty"]) : 0;
+                decimal comm = row["Comission"] != DBNull.Value ? Convert.ToDecimal(row["Comission"]) : 0m;
+                decimal inc = dt_combined.Columns.Contains("Incentive") && row["Incentive"] != DBNull.Value ? Convert.ToDecimal(row["Incentive"]) : 0m;
+                decimal tot = dt_combined.Columns.Contains("TotalPayable") && row["TotalPayable"] != DBNull.Value ? Convert.ToDecimal(row["TotalPayable"]) : (comm + inc);
 
-                y += cellHeight; // Move to the next row
+                totalQty += qty;
+                totalCommission += comm;
+                totalIncentive += inc;
+                totalPayable += tot;
+
+                graphics.DrawString(sNo, rowFont, Brushes.Black, rowRects[0], centerFormat);
+                graphics.DrawString(sName, rowFont, Brushes.Black, new Rectangle(rowRects[1].X + 4, rowRects[1].Y, rowRects[1].Width - 8, rowRects[1].Height), leftFormat);
+                graphics.DrawString(qty.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[2].X + 4, rowRects[2].Y, rowRects[2].Width - 8, rowRects[2].Height), rightFormat);
+                graphics.DrawString(comm.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[3].X + 4, rowRects[3].Y, rowRects[3].Width - 8, rowRects[3].Height), rightFormat);
+                graphics.DrawString(inc.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[4].X + 4, rowRects[4].Y, rowRects[4].Width - 8, rowRects[4].Height), rightFormat);
+                graphics.DrawString(tot.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[5].X + 4, rowRects[5].Y, rowRects[5].Width - 8, rowRects[5].Height), rightFormat);
+
+                y += cellHeight;
             }
 
-            // Optionally Print Graphs
-            y += 30; // Add some space before printing graphs
-            // UNCOMMENT TO PRINT GRAPHS
-            /*
-            if (chartQty != null)
+            // Print Grand Total Row
+            Rectangle[] totalRects = {
+                new Rectangle(tableX, y, columnWidths[0] + columnWidths[1], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
+                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
+            };
+
+            for (int i = 0; i < totalRects.Length; i++)
             {
-                Bitmap chartBitmap = new Bitmap(chartQty.Width, chartQty.Height);
-                chartQty.DrawToBitmap(chartBitmap, new Rectangle(0, 0, chartQty.Width, chartQty.Height));
-                graphics.DrawImage(chartBitmap, 10, y);
-                y += chartQty.Height + 20;
+                graphics.FillRectangle(Brushes.WhiteSmoke, totalRects[i]);
+                graphics.DrawRectangle(borderPen, totalRects[i]);
             }
 
-            if (chartCommission != null)
-            {
-                Bitmap chartBitmap = new Bitmap(chartCommission.Width, chartCommission.Height);
-                chartCommission.DrawToBitmap(chartBitmap, new Rectangle(0, 0, chartCommission.Width, chartCommission.Height));
-                graphics.DrawImage(chartBitmap, 10, y);
-                y += chartCommission.Height + 20;
-            }*/
+            graphics.DrawString("TOTAL", totalFont, Brushes.Black, new Rectangle(totalRects[0].X + 8, totalRects[0].Y, totalRects[0].Width - 16, totalRects[0].Height), leftFormat);
+            graphics.DrawString(totalQty.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[1].X + 4, totalRects[1].Y, totalRects[1].Width - 8, totalRects[1].Height), rightFormat);
+            graphics.DrawString(totalCommission.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[2].X + 4, totalRects[2].Y, totalRects[2].Width - 8, totalRects[2].Height), rightFormat);
+            graphics.DrawString(totalIncentive.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[3].X + 4, totalRects[3].Y, totalRects[3].Width - 8, totalRects[3].Height), rightFormat);
+            graphics.DrawString(totalPayable.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[4].X + 4, totalRects[4].Y, totalRects[4].Width - 8, totalRects[4].Height), rightFormat);
+
+            y += cellHeight + 15;
+
+            // Print summary timestamp
+            Font footerFont = new Font("Arial", 8, FontStyle.Italic);
+            graphics.DrawString($"Report generated on: {DateTime.Now.ToString("dd-MM-yyyy hh:mm tt")}", footerFont, Brushes.Gray, 20, y);
 
             e.HasMorePages = false; // Indicate no more pages
         }
@@ -2175,6 +2514,10 @@ namespace Customer_Loyalty_Portal
                 UpdateTotalDebit();
 
                 dailyBalanceTab_Click(sender, e);
+            }
+            else if (tabControl1.SelectedTab == commissionTab)
+            {
+                UpdateCommissionData();
             }
         }
 
@@ -2246,6 +2589,62 @@ namespace Customer_Loyalty_Portal
                 cashGridView.Columns[2].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
                 cashGridView.Columns[2].DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             }
+
+            if (comissionDataGrid != null && comissionDataGrid.Columns.Count > 0)
+            {
+                if (comissionDataGrid.Columns.Contains("SalesmanNo"))
+                {
+                    comissionDataGrid.Columns["SalesmanNo"].HeaderText = "No.";
+                    comissionDataGrid.Columns["SalesmanNo"].Width = 55;
+                    comissionDataGrid.Columns["SalesmanNo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+                if (comissionDataGrid.Columns.Contains("Salesman"))
+                {
+                    comissionDataGrid.Columns["Salesman"].HeaderText = "Salesman Name";
+                    comissionDataGrid.Columns["Salesman"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
+                if (comissionDataGrid.Columns.Contains("Qty"))
+                {
+                    comissionDataGrid.Columns["Qty"].HeaderText = "Net Qty";
+                    comissionDataGrid.Columns["Qty"].Width = 70;
+                    comissionDataGrid.Columns["Qty"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    comissionDataGrid.Columns["Qty"].DefaultCellStyle.Format = "N0";
+                    comissionDataGrid.Columns["Qty"].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+                }
+                if (comissionDataGrid.Columns.Contains("TaxableAmt"))
+                {
+                    comissionDataGrid.Columns["TaxableAmt"].HeaderText = "Taxable Amount (₹)";
+                    comissionDataGrid.Columns["TaxableAmt"].Width = 125;
+                    comissionDataGrid.Columns["TaxableAmt"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    comissionDataGrid.Columns["TaxableAmt"].DefaultCellStyle.Format = "N0";
+                    comissionDataGrid.Columns["TaxableAmt"].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+                }
+                if (comissionDataGrid.Columns.Contains("Comission"))
+                {
+                    comissionDataGrid.Columns["Comission"].HeaderText = "Commission (₹)";
+                    comissionDataGrid.Columns["Comission"].Width = 110;
+                    comissionDataGrid.Columns["Comission"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    comissionDataGrid.Columns["Comission"].DefaultCellStyle.Format = "N0";
+                    comissionDataGrid.Columns["Comission"].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+                }
+                if (comissionDataGrid.Columns.Contains("Incentive"))
+                {
+                    comissionDataGrid.Columns["Incentive"].HeaderText = "Incentive (₹)";
+                    comissionDataGrid.Columns["Incentive"].Width = 95;
+                    comissionDataGrid.Columns["Incentive"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    comissionDataGrid.Columns["Incentive"].DefaultCellStyle.Format = "N0";
+                    comissionDataGrid.Columns["Incentive"].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+                }
+                if (comissionDataGrid.Columns.Contains("TotalPayable"))
+                {
+                    comissionDataGrid.Columns["TotalPayable"].HeaderText = "Total (₹)";
+                    comissionDataGrid.Columns["TotalPayable"].Width = 100;
+                    comissionDataGrid.Columns["TotalPayable"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    comissionDataGrid.Columns["TotalPayable"].DefaultCellStyle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+                    comissionDataGrid.Columns["TotalPayable"].DefaultCellStyle.Format = "N0";
+                    comissionDataGrid.Columns["TotalPayable"].DefaultCellStyle.Padding = new Padding(0, 0, 6, 0);
+                }
+            }
         }
 
         private void prevDateButton_Click(object sender, EventArgs e)
@@ -2256,6 +2655,203 @@ namespace Customer_Loyalty_Portal
         private void nextDateButton_Click(object sender, EventArgs e)
         {
             dailyBalanceDateTimePicker.Value = dailyBalanceDateTimePicker.Value.AddDays(1);
+        }
+    }
+
+    public class CustomerSalesSummary
+    {
+        public string CustomerKey { get; set; }
+        public string CustomerDisplay { get; set; }
+        public List<string> VoucherNumbers { get; set; } = new List<string>();
+        public decimal TotalAmount { get; set; }
+    }
+
+    public class BillIncentiveDetail
+    {
+        public List<string> VoucherNumbers { get; set; } = new List<string>();
+        public string CustomerDisplay { get; set; }
+        public decimal BillAmount { get; set; }
+        public decimal IncentiveAmount { get; set; }
+        public decimal SlabThreshold { get; set; }
+
+        public string GetDisplayLabel()
+        {
+            if (VoucherNumbers == null || VoucherNumbers.Count == 0)
+            {
+                return $"• Bill: ₹ {BillAmount:N0} (+₹ {IncentiveAmount:N0})";
+            }
+            else if (VoucherNumbers.Count == 1)
+            {
+                return $"• Bill #{VoucherNumbers[0]}: ₹ {BillAmount:N0} (+₹ {IncentiveAmount:N0})";
+            }
+            else
+            {
+                string billsStr = string.Join(", #", VoucherNumbers);
+                string custStr = !string.IsNullOrEmpty(CustomerDisplay) ? $" (Cust: {CustomerDisplay})" : "";
+                return $"• Bills #{billsStr}{custStr}: ₹ {BillAmount:N0} (+₹ {IncentiveAmount:N0})";
+            }
+        }
+    }
+
+    public class SalesmanCommissionData
+    {
+        public string SalesmanNo { get; set; }
+        public string SalesmanName { get; set; }
+        public string Salesman => SalesmanName;
+        public int SalesQty { get; set; }
+        public int ReturnQty { get; set; }
+        public int NetQty => SalesQty - ReturnQty;
+        public decimal SalesTaxableAmt { get; set; }
+        public decimal ReturnTaxableAmt { get; set; }
+        public decimal NetTaxableAmt => SalesTaxableAmt - ReturnTaxableAmt;
+        public decimal NetCommission => Math.Round(NetTaxableAmt * 0.01m, 0, MidpointRounding.AwayFromZero);
+        public decimal Incentive { get; set; }
+        public int IncentiveBillCount { get; set; }
+        public decimal TotalPayable => NetCommission + Incentive;
+        public List<BillIncentiveDetail> QualifyingBills { get; set; } = new List<BillIncentiveDetail>();
+
+        public string GetIncentiveTooltip()
+        {
+            if (Incentive == 0 || QualifyingBills == null || QualifyingBills.Count == 0)
+            {
+                return $"Salesman: {SalesmanName}\nBase Commission: ₹ {NetCommission:N0}\nIncentive: ₹ 0 (No qualifying bills)";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"--- Incentive Breakdown: {SalesmanName} ---");
+            int totalQualifyingBills = QualifyingBills.Sum(q => q.VoucherNumbers != null ? q.VoucherNumbers.Count : 1);
+            sb.AppendLine($"Total Incentive: ₹ {Incentive:N0} (from {totalQualifyingBills} qualifying bill{(totalQualifyingBills > 1 ? "s" : "")})");
+            sb.AppendLine("--------------------------------------------------");
+            foreach (var item in QualifyingBills)
+            {
+                sb.AppendLine(item.GetDisplayLabel());
+            }
+            sb.AppendLine("--------------------------------------------------");
+            sb.AppendLine($"Base Commission: ₹ {NetCommission:N0}");
+            sb.Append($"Total Payout: ₹ {TotalPayable:N0}");
+            return sb.ToString();
+        }
+    }
+
+    public class IncentiveSlab
+    {
+        public decimal MinAmount { get; set; }
+        public decimal IncentiveAmount { get; set; }
+
+        public IncentiveSlab() { }
+        public IncentiveSlab(decimal minAmount, decimal incentiveAmount)
+        {
+            MinAmount = minAmount;
+            IncentiveAmount = incentiveAmount;
+        }
+    }
+
+    public class IncentiveManager
+    {
+        private static string ConfigFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IncentiveSettings.txt");
+
+        public static bool Enabled { get; set; } = true;
+        public static List<IncentiveSlab> Slabs { get; set; } = new List<IncentiveSlab>();
+
+        static IncentiveManager()
+        {
+            LoadSettings();
+        }
+
+        public static void LoadSettings()
+        {
+            Slabs.Clear();
+            try
+            {
+                if (File.Exists(ConfigFilePath))
+                {
+                    string[] lines = File.ReadAllLines(ConfigFilePath);
+                    foreach (var line in lines)
+                    {
+                        string trimmed = line.Trim();
+                        if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#")) continue;
+
+                        if (trimmed.StartsWith("Enabled=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bool en;
+                            if (bool.TryParse(trimmed.Substring(8).Trim(), out en))
+                            {
+                                Enabled = en;
+                            }
+                        }
+                        else if (trimmed.Contains(":"))
+                        {
+                            string[] parts = trimmed.Split(':');
+                            if (parts.Length == 2)
+                            {
+                                decimal minAmt, incAmt;
+                                if (decimal.TryParse(parts[0].Trim(), out minAmt) && decimal.TryParse(parts[1].Trim(), out incAmt))
+                                {
+                                    Slabs.Add(new IncentiveSlab(minAmt, incAmt));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error loading incentive settings: " + ex.Message);
+            }
+
+            // Defaults if empty
+            if (Slabs.Count == 0)
+            {
+                Enabled = true;
+                Slabs.Add(new IncentiveSlab(5000, 15));
+                Slabs.Add(new IncentiveSlab(7500, 20));
+            }
+
+            Slabs = Slabs.OrderBy(s => s.MinAmount).ToList();
+        }
+
+        public static void SaveSettings(bool enabled, List<IncentiveSlab> slabs)
+        {
+            Enabled = enabled;
+            Slabs = slabs.OrderBy(s => s.MinAmount).ToList();
+            try
+            {
+                List<string> lines = new List<string>();
+                lines.Add("# Salesman Commission Incentive Settings");
+                lines.Add("Enabled=" + (Enabled ? "true" : "false"));
+                foreach (var slab in Slabs)
+                {
+                    lines.Add(slab.MinAmount.ToString("0") + ":" + slab.IncentiveAmount.ToString("0"));
+                }
+                File.WriteAllLines(ConfigFilePath, lines);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving incentive settings: " + ex.Message);
+            }
+        }
+
+        public static decimal CalculateBillIncentive(decimal billAmount)
+        {
+            decimal threshold;
+            return CalculateBillIncentiveWithThreshold(billAmount, out threshold);
+        }
+
+        public static decimal CalculateBillIncentiveWithThreshold(decimal billAmount, out decimal matchedThreshold)
+        {
+            matchedThreshold = 0m;
+            if (!Enabled || Slabs == null || Slabs.Count == 0 || billAmount <= 0) return 0m;
+
+            var sortedDesc = Slabs.OrderByDescending(s => s.MinAmount);
+            foreach (var slab in sortedDesc)
+            {
+                if (billAmount >= slab.MinAmount)
+                {
+                    matchedThreshold = slab.MinAmount;
+                    return slab.IncentiveAmount;
+                }
+            }
+            return 0m;
         }
     }
 }

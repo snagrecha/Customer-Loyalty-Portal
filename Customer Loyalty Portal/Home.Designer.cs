@@ -186,6 +186,23 @@ namespace Customer_Loyalty_Portal
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.commissionTab = new System.Windows.Forms.TabPage();
+            this.prevCommissionDateButton = new System.Windows.Forms.Button();
+            this.nextCommissionDateButton = new System.Windows.Forms.Button();
+            this.todayCommissionButton = new System.Windows.Forms.Button();
+            this.dateCommissionLabel = new System.Windows.Forms.Label();
+            this.incentiveSettingsButton = new System.Windows.Forms.Button();
+            this.panelCommQty = new System.Windows.Forms.Panel();
+            this.lblCommQtyTitle = new System.Windows.Forms.Label();
+            this.lblTotalCommQty = new System.Windows.Forms.Label();
+            this.panelCommSales = new System.Windows.Forms.Panel();
+            this.lblCommSalesTitle = new System.Windows.Forms.Label();
+            this.lblTotalCommSales = new System.Windows.Forms.Label();
+            this.panelCommAmt = new System.Windows.Forms.Panel();
+            this.lblCommAmtTitle = new System.Windows.Forms.Label();
+            this.lblTotalCommAmt = new System.Windows.Forms.Label();
+            this.panelCommTotal = new System.Windows.Forms.Panel();
+            this.lblCommTotalTitle = new System.Windows.Forms.Label();
+            this.lblTotalCommTotal = new System.Windows.Forms.Label();
             this.comissionDataGrid = new System.Windows.Forms.DataGridView();
             this.comissionDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.chartCommission = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -216,6 +233,9 @@ namespace Customer_Loyalty_Portal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.commissionTab.SuspendLayout();
+            this.panelCommQty.SuspendLayout();
+            this.panelCommSales.SuspendLayout();
+            this.panelCommAmt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comissionDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartCommission)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartQty)).BeginInit();
@@ -2089,9 +2109,18 @@ namespace Customer_Loyalty_Portal
             // 
             // commissionTab
             // 
-            this.commissionTab.Controls.Add(this.printCommissionButton);
-            this.commissionTab.Controls.Add(this.comissionDataGrid);
+            this.commissionTab.Controls.Add(this.prevCommissionDateButton);
             this.commissionTab.Controls.Add(this.comissionDateTimePicker);
+            this.commissionTab.Controls.Add(this.nextCommissionDateButton);
+            this.commissionTab.Controls.Add(this.todayCommissionButton);
+            this.commissionTab.Controls.Add(this.dateCommissionLabel);
+            this.commissionTab.Controls.Add(this.incentiveSettingsButton);
+            this.commissionTab.Controls.Add(this.printCommissionButton);
+            this.commissionTab.Controls.Add(this.panelCommQty);
+            this.commissionTab.Controls.Add(this.panelCommSales);
+            this.commissionTab.Controls.Add(this.panelCommAmt);
+            this.commissionTab.Controls.Add(this.panelCommTotal);
+            this.commissionTab.Controls.Add(this.comissionDataGrid);
             this.commissionTab.Controls.Add(this.chartCommission);
             this.commissionTab.Controls.Add(this.chartQty);
             this.commissionTab.Location = new System.Drawing.Point(4, 22);
@@ -2101,28 +2130,253 @@ namespace Customer_Loyalty_Portal
             this.commissionTab.Text = "COMMISSION";
             this.commissionTab.UseVisualStyleBackColor = true;
             // 
+            // prevCommissionDateButton
+            // 
+            this.prevCommissionDateButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
+            this.prevCommissionDateButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.prevCommissionDateButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(212)))), ((int)(((byte)(218)))));
+            this.prevCommissionDateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.prevCommissionDateButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prevCommissionDateButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.prevCommissionDateButton.Location = new System.Drawing.Point(20, 14);
+            this.prevCommissionDateButton.Name = "prevCommissionDateButton";
+            this.prevCommissionDateButton.Size = new System.Drawing.Size(36, 28);
+            this.prevCommissionDateButton.TabIndex = 41;
+            this.prevCommissionDateButton.Text = "◀";
+            this.prevCommissionDateButton.UseVisualStyleBackColor = false;
+            this.prevCommissionDateButton.Click += new System.EventHandler(this.prevCommissionDateButton_Click);
+            // 
+            // comissionDateTimePicker
+            // 
+            this.comissionDateTimePicker.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comissionDateTimePicker.Location = new System.Drawing.Point(62, 15);
+            this.comissionDateTimePicker.Name = "comissionDateTimePicker";
+            this.comissionDateTimePicker.Size = new System.Drawing.Size(155, 25);
+            this.comissionDateTimePicker.TabIndex = 3;
+            this.comissionDateTimePicker.ValueChanged += new System.EventHandler(this.comissionDateTimePicker_ValueChanged);
+            // 
+            // nextCommissionDateButton
+            // 
+            this.nextCommissionDateButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
+            this.nextCommissionDateButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.nextCommissionDateButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(212)))), ((int)(((byte)(218)))));
+            this.nextCommissionDateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.nextCommissionDateButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nextCommissionDateButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.nextCommissionDateButton.Location = new System.Drawing.Point(223, 14);
+            this.nextCommissionDateButton.Name = "nextCommissionDateButton";
+            this.nextCommissionDateButton.Size = new System.Drawing.Size(36, 28);
+            this.nextCommissionDateButton.TabIndex = 42;
+            this.nextCommissionDateButton.Text = "▶";
+            this.nextCommissionDateButton.UseVisualStyleBackColor = false;
+            this.nextCommissionDateButton.Click += new System.EventHandler(this.nextCommissionDateButton_Click);
+            // 
+            // todayCommissionButton
+            // 
+            this.todayCommissionButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
+            this.todayCommissionButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.todayCommissionButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(212)))), ((int)(((byte)(218)))));
+            this.todayCommissionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.todayCommissionButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.todayCommissionButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.todayCommissionButton.Location = new System.Drawing.Point(265, 14);
+            this.todayCommissionButton.Name = "todayCommissionButton";
+            this.todayCommissionButton.Size = new System.Drawing.Size(56, 28);
+            this.todayCommissionButton.TabIndex = 43;
+            this.todayCommissionButton.Text = "Today";
+            this.todayCommissionButton.UseVisualStyleBackColor = false;
+            this.todayCommissionButton.Click += new System.EventHandler(this.todayCommissionButton_Click);
+            // 
+            // dateCommissionLabel
+            // 
+            this.dateCommissionLabel.AutoSize = true;
+            this.dateCommissionLabel.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dateCommissionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
+            this.dateCommissionLabel.Location = new System.Drawing.Point(327, 18);
+            this.dateCommissionLabel.Name = "dateCommissionLabel";
+            this.dateCommissionLabel.Size = new System.Drawing.Size(43, 17);
+            this.dateCommissionLabel.TabIndex = 44;
+            this.dateCommissionLabel.Text = "Date: ";
+            // 
+            // incentiveSettingsButton
+            // 
+            this.incentiveSettingsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.incentiveSettingsButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.incentiveSettingsButton.FlatAppearance.BorderSize = 0;
+            this.incentiveSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.incentiveSettingsButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.incentiveSettingsButton.ForeColor = System.Drawing.Color.White;
+            this.incentiveSettingsButton.Location = new System.Drawing.Point(490, 14);
+            this.incentiveSettingsButton.Name = "incentiveSettingsButton";
+            this.incentiveSettingsButton.Size = new System.Drawing.Size(105, 28);
+            this.incentiveSettingsButton.TabIndex = 48;
+            this.incentiveSettingsButton.Text = "⚙ Incentives";
+            this.incentiveSettingsButton.UseVisualStyleBackColor = false;
+            this.incentiveSettingsButton.Click += new System.EventHandler(this.incentiveSettingsButton_Click);
+            // 
+            // printCommissionButton
+            // 
+            this.printCommissionButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.printCommissionButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.printCommissionButton.FlatAppearance.BorderSize = 0;
+            this.printCommissionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.printCommissionButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.printCommissionButton.ForeColor = System.Drawing.Color.White;
+            this.printCommissionButton.Location = new System.Drawing.Point(605, 14);
+            this.printCommissionButton.Name = "printCommissionButton";
+            this.printCommissionButton.Size = new System.Drawing.Size(115, 28);
+            this.printCommissionButton.TabIndex = 40;
+            this.printCommissionButton.Text = "Print Report";
+            this.printCommissionButton.UseVisualStyleBackColor = false;
+            this.printCommissionButton.Click += new System.EventHandler(this.printCommissionButton_Click);
+            // 
+            // panelCommQty
+            // 
+            this.panelCommQty.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelCommQty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCommQty.Controls.Add(this.lblCommQtyTitle);
+            this.panelCommQty.Controls.Add(this.lblTotalCommQty);
+            this.panelCommQty.Location = new System.Drawing.Point(20, 48);
+            this.panelCommQty.Name = "panelCommQty";
+            this.panelCommQty.Size = new System.Drawing.Size(165, 56);
+            this.panelCommQty.TabIndex = 45;
+            // 
+            // lblCommQtyTitle
+            // 
+            this.lblCommQtyTitle.AutoSize = true;
+            this.lblCommQtyTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCommQtyTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblCommQtyTitle.Location = new System.Drawing.Point(8, 4);
+            this.lblCommQtyTitle.Name = "lblCommQtyTitle";
+            this.lblCommQtyTitle.Size = new System.Drawing.Size(83, 12);
+            this.lblCommQtyTitle.TabIndex = 0;
+            this.lblCommQtyTitle.Text = "TOTAL NET QTY";
+            // 
+            // lblTotalCommQty
+            // 
+            this.lblTotalCommQty.AutoSize = true;
+            this.lblTotalCommQty.Font = new System.Drawing.Font("Segoe UI", 12.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalCommQty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
+            this.lblTotalCommQty.Location = new System.Drawing.Point(8, 22);
+            this.lblTotalCommQty.Name = "lblTotalCommQty";
+            this.lblTotalCommQty.Size = new System.Drawing.Size(54, 23);
+            this.lblTotalCommQty.TabIndex = 1;
+            this.lblTotalCommQty.Text = "0 pcs";
+            // 
+            // panelCommSales
+            // 
+            this.panelCommSales.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelCommSales.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCommSales.Controls.Add(this.lblCommSalesTitle);
+            this.panelCommSales.Controls.Add(this.lblTotalCommSales);
+            this.panelCommSales.Location = new System.Drawing.Point(198, 48);
+            this.panelCommSales.Name = "panelCommSales";
+            this.panelCommSales.Size = new System.Drawing.Size(165, 56);
+            this.panelCommSales.TabIndex = 46;
+            // 
+            // lblCommSalesTitle
+            // 
+            this.lblCommSalesTitle.AutoSize = true;
+            this.lblCommSalesTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCommSalesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblCommSalesTitle.Location = new System.Drawing.Point(8, 4);
+            this.lblCommSalesTitle.Name = "lblCommSalesTitle";
+            this.lblCommSalesTitle.Size = new System.Drawing.Size(117, 12);
+            this.lblCommSalesTitle.TabIndex = 0;
+            this.lblCommSalesTitle.Text = "TOTAL TAXABLE SALES";
+            // 
+            // lblTotalCommSales
+            // 
+            this.lblTotalCommSales.AutoSize = true;
+            this.lblTotalCommSales.Font = new System.Drawing.Font("Segoe UI", 12.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalCommSales.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.lblTotalCommSales.Location = new System.Drawing.Point(8, 22);
+            this.lblTotalCommSales.Name = "lblTotalCommSales";
+            this.lblTotalCommSales.Size = new System.Drawing.Size(40, 23);
+            this.lblTotalCommSales.TabIndex = 1;
+            this.lblTotalCommSales.Text = "₹ 0";
+            // 
+            // panelCommAmt
+            // 
+            this.panelCommAmt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelCommAmt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCommAmt.Controls.Add(this.lblCommAmtTitle);
+            this.panelCommAmt.Controls.Add(this.lblTotalCommAmt);
+            this.panelCommAmt.Location = new System.Drawing.Point(376, 48);
+            this.panelCommAmt.Name = "panelCommAmt";
+            this.panelCommAmt.Size = new System.Drawing.Size(165, 56);
+            this.panelCommAmt.TabIndex = 47;
+            // 
+            // lblCommAmtTitle
+            // 
+            this.lblCommAmtTitle.AutoSize = true;
+            this.lblCommAmtTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCommAmtTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblCommAmtTitle.Location = new System.Drawing.Point(8, 4);
+            this.lblCommAmtTitle.Name = "lblCommAmtTitle";
+            this.lblCommAmtTitle.Size = new System.Drawing.Size(126, 12);
+            this.lblCommAmtTitle.TabIndex = 0;
+            this.lblCommAmtTitle.Text = "COMMISSION (₹)";
+            // 
+            // lblTotalCommAmt
+            // 
+            this.lblTotalCommAmt.AutoSize = true;
+            this.lblTotalCommAmt.Font = new System.Drawing.Font("Segoe UI", 12.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalCommAmt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
+            this.lblTotalCommAmt.Location = new System.Drawing.Point(8, 22);
+            this.lblTotalCommAmt.Name = "lblTotalCommAmt";
+            this.lblTotalCommAmt.Size = new System.Drawing.Size(40, 23);
+            this.lblTotalCommAmt.TabIndex = 1;
+            this.lblTotalCommAmt.Text = "₹ 0";
+            // 
+            // panelCommTotal
+            // 
+            this.panelCommTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelCommTotal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCommTotal.Controls.Add(this.lblCommTotalTitle);
+            this.panelCommTotal.Controls.Add(this.lblTotalCommTotal);
+            this.panelCommTotal.Location = new System.Drawing.Point(554, 48);
+            this.panelCommTotal.Name = "panelCommTotal";
+            this.panelCommTotal.Size = new System.Drawing.Size(166, 56);
+            this.panelCommTotal.TabIndex = 49;
+            // 
+            // lblCommTotalTitle
+            // 
+            this.lblCommTotalTitle.AutoSize = true;
+            this.lblCommTotalTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCommTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblCommTotalTitle.Location = new System.Drawing.Point(8, 4);
+            this.lblCommTotalTitle.Name = "lblCommTotalTitle";
+            this.lblCommTotalTitle.Size = new System.Drawing.Size(107, 12);
+            this.lblCommTotalTitle.TabIndex = 0;
+            this.lblCommTotalTitle.Text = "TOTAL PAYOUT (₹)";
+            // 
+            // lblTotalCommTotal
+            // 
+            this.lblTotalCommTotal.AutoSize = true;
+            this.lblTotalCommTotal.Font = new System.Drawing.Font("Segoe UI", 12.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalCommTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(51)))), ((int)(((byte)(132)))));
+            this.lblTotalCommTotal.Location = new System.Drawing.Point(8, 22);
+            this.lblTotalCommTotal.Name = "lblTotalCommTotal";
+            this.lblTotalCommTotal.Size = new System.Drawing.Size(40, 23);
+            this.lblTotalCommTotal.TabIndex = 1;
+            this.lblTotalCommTotal.Text = "₹ 0";
+            // 
             // comissionDataGrid
             // 
             this.comissionDataGrid.AllowUserToAddRows = false;
             this.comissionDataGrid.AllowUserToDeleteRows = false;
             this.comissionDataGrid.BackgroundColor = System.Drawing.Color.White;
             this.comissionDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.comissionDataGrid.Location = new System.Drawing.Point(55, 86);
+            this.comissionDataGrid.Location = new System.Drawing.Point(20, 112);
             this.comissionDataGrid.Name = "comissionDataGrid";
             this.comissionDataGrid.ReadOnly = true;
             this.comissionDataGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.comissionDataGrid.RowHeadersVisible = false;
-            this.comissionDataGrid.Size = new System.Drawing.Size(641, 197);
+            this.comissionDataGrid.ShowCellToolTips = true;
+            this.comissionDataGrid.Size = new System.Drawing.Size(700, 516);
             this.comissionDataGrid.TabIndex = 4;
-            // 
-            // comissionDateTimePicker
-            // 
-            this.comissionDateTimePicker.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comissionDateTimePicker.Location = new System.Drawing.Point(244, 38);
-            this.comissionDateTimePicker.Name = "comissionDateTimePicker";
-            this.comissionDateTimePicker.Size = new System.Drawing.Size(200, 25);
-            this.comissionDateTimePicker.TabIndex = 3;
-            this.comissionDateTimePicker.ValueChanged += new System.EventHandler(this.comissionDateTimePicker_ValueChanged);
+            this.comissionDataGrid.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.comissionDataGrid_CellToolTipTextNeeded);
             // 
             // chartCommission
             // 
@@ -2130,13 +2384,13 @@ namespace Customer_Loyalty_Portal
             this.chartCommission.ChartAreas.Add(chartArea3);
             legend3.Name = "Legend1";
             this.chartCommission.Legends.Add(legend3);
-            this.chartCommission.Location = new System.Drawing.Point(745, 16);
+            this.chartCommission.Location = new System.Drawing.Point(740, 12);
             this.chartCommission.Name = "chartCommission";
             series3.ChartArea = "ChartArea1";
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chartCommission.Series.Add(series3);
-            this.chartCommission.Size = new System.Drawing.Size(586, 288);
+            this.chartCommission.Size = new System.Drawing.Size(595, 298);
             this.chartCommission.TabIndex = 2;
             this.chartCommission.Text = "comissionChart";
             // 
@@ -2146,31 +2400,15 @@ namespace Customer_Loyalty_Portal
             this.chartQty.ChartAreas.Add(chartArea4);
             legend4.Name = "Legend1";
             this.chartQty.Legends.Add(legend4);
-            this.chartQty.Location = new System.Drawing.Point(745, 347);
+            this.chartQty.Location = new System.Drawing.Point(740, 320);
             this.chartQty.Name = "chartQty";
             series4.ChartArea = "ChartArea1";
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chartQty.Series.Add(series4);
-            this.chartQty.Size = new System.Drawing.Size(586, 288);
+            this.chartQty.Size = new System.Drawing.Size(595, 308);
             this.chartQty.TabIndex = 1;
             this.chartQty.Text = "qtyChart";
-            // 
-            // printCommissionButton
-            // 
-            this.printCommissionButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
-            this.printCommissionButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.printCommissionButton.FlatAppearance.BorderSize = 0;
-            this.printCommissionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.printCommissionButton.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.printCommissionButton.ForeColor = System.Drawing.Color.White;
-            this.printCommissionButton.Location = new System.Drawing.Point(255, 305);
-            this.printCommissionButton.Name = "printCommissionButton";
-            this.printCommissionButton.Size = new System.Drawing.Size(160, 34);
-            this.printCommissionButton.TabIndex = 40;
-            this.printCommissionButton.Text = "Print Commission";
-            this.printCommissionButton.UseVisualStyleBackColor = false;
-            this.printCommissionButton.Click += new System.EventHandler(this.printCommissionButton_Click);
             // 
             // prevDateButton
             // 
@@ -2255,7 +2493,16 @@ namespace Customer_Loyalty_Portal
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            this.panelCommQty.ResumeLayout(false);
+            this.panelCommQty.PerformLayout();
+            this.panelCommSales.ResumeLayout(false);
+            this.panelCommSales.PerformLayout();
+            this.panelCommAmt.ResumeLayout(false);
+            this.panelCommAmt.PerformLayout();
+            this.panelCommTotal.ResumeLayout(false);
+            this.panelCommTotal.PerformLayout();
             this.commissionTab.ResumeLayout(false);
+            this.commissionTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comissionDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartCommission)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartQty)).EndInit();
@@ -2418,6 +2665,23 @@ namespace Customer_Loyalty_Portal
         private System.Windows.Forms.DataVisualization.Charting.Chart chartQty;
         private System.Windows.Forms.DataGridView comissionDataGrid;
         private System.Windows.Forms.Button printCommissionButton;
+        private System.Windows.Forms.Button prevCommissionDateButton;
+        private System.Windows.Forms.Button nextCommissionDateButton;
+        private System.Windows.Forms.Button todayCommissionButton;
+        private System.Windows.Forms.Button incentiveSettingsButton;
+        private System.Windows.Forms.Label dateCommissionLabel;
+        private System.Windows.Forms.Panel panelCommQty;
+        private System.Windows.Forms.Label lblCommQtyTitle;
+        private System.Windows.Forms.Label lblTotalCommQty;
+        private System.Windows.Forms.Panel panelCommSales;
+        private System.Windows.Forms.Label lblCommSalesTitle;
+        private System.Windows.Forms.Label lblTotalCommSales;
+        private System.Windows.Forms.Panel panelCommAmt;
+        private System.Windows.Forms.Label lblCommAmtTitle;
+        private System.Windows.Forms.Label lblTotalCommAmt;
+        private System.Windows.Forms.Panel panelCommTotal;
+        private System.Windows.Forms.Label lblCommTotalTitle;
+        private System.Windows.Forms.Label lblTotalCommTotal;
         private System.Windows.Forms.DateTimePicker dailyBalanceDateTimePicker;
         private System.Windows.Forms.Button prevDateButton;
         private System.Windows.Forms.Button nextDateButton;
