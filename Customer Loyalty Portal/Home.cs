@@ -994,6 +994,24 @@ namespace Customer_Loyalty_Portal
             if (btn != null) btn.BackColor = Color.FromArgb(24, 43, 73);
         }
 
+        private void whatsNewButton_Click(object sender, EventArgs e)
+        {
+            ChangelogDialog dlg = new ChangelogDialog();
+            dlg.ShowDialog(this);
+        }
+
+        private void whatsNewButton_MouseEnter(object sender, EventArgs e)
+        {
+            whatsNewButton.BackColor = Color.FromArgb(13, 110, 253);
+            whatsNewButton.ForeColor = Color.White;
+        }
+
+        private void whatsNewButton_MouseLeave(object sender, EventArgs e)
+        {
+            whatsNewButton.BackColor = Color.FromArgb(41, 60, 90);
+            whatsNewButton.ForeColor = Color.FromArgb(200, 225, 255);
+        }
+
         private void dataGridViewPH_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;

@@ -133,6 +133,7 @@ namespace Customer_Loyalty_Portal
             this.label15 = new System.Windows.Forms.Label();
             this.prevDateButton = new System.Windows.Forms.Button();
             this.nextDateButton = new System.Windows.Forms.Button();
+            this.whatsNewButton = new System.Windows.Forms.Button();
             this.dateLabel = new System.Windows.Forms.Label();
             this.customerDataTab = new System.Windows.Forms.TabPage();
             this.exportButton = new System.Windows.Forms.Button();
@@ -245,6 +246,7 @@ namespace Customer_Loyalty_Portal
             // 
             this.customTitleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
             this.customTitleBar.Controls.Add(this.titleLabel);
+            this.customTitleBar.Controls.Add(this.whatsNewButton);
             this.customTitleBar.Controls.Add(this.minWindowButton);
             this.customTitleBar.Controls.Add(this.maxWindowButton);
             this.customTitleBar.Controls.Add(this.closeWindowButton);
@@ -268,6 +270,24 @@ namespace Customer_Loyalty_Portal
             this.titleLabel.Text = "Customer Loyalty Portal";
             this.titleLabel.DoubleClick += new System.EventHandler(this.customTitleBar_DoubleClick);
             this.titleLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTitleBar_MouseDown);
+            // 
+            // whatsNewButton
+            // 
+            this.whatsNewButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
+            this.whatsNewButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.whatsNewButton.FlatAppearance.BorderSize = 0;
+            this.whatsNewButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.whatsNewButton.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.whatsNewButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.whatsNewButton.Location = new System.Drawing.Point(198, 5);
+            this.whatsNewButton.Name = "whatsNewButton";
+            this.whatsNewButton.Size = new System.Drawing.Size(145, 26);
+            this.whatsNewButton.TabIndex = 4;
+            this.whatsNewButton.Text = "v2.5 • What\'s New ℹ";
+            this.whatsNewButton.UseVisualStyleBackColor = false;
+            this.whatsNewButton.Click += new System.EventHandler(this.whatsNewButton_Click);
+            this.whatsNewButton.MouseEnter += new System.EventHandler(this.whatsNewButton_MouseEnter);
+            this.whatsNewButton.MouseLeave += new System.EventHandler(this.whatsNewButton_MouseLeave);
             // 
             // minWindowButton
             // 
@@ -2685,6 +2705,7 @@ namespace Customer_Loyalty_Portal
         private System.Windows.Forms.DateTimePicker dailyBalanceDateTimePicker;
         private System.Windows.Forms.Button prevDateButton;
         private System.Windows.Forms.Button nextDateButton;
+        private System.Windows.Forms.Button whatsNewButton;
     }
 }
 

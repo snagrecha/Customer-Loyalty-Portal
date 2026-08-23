@@ -82,11 +82,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppVersion.cs" />
     <Compile Include="BillDetailDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BillDetailDialog.Designer.cs">
       <DependentUpon>BillDetailDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangelogDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangelogDialog.Designer.cs">
+      <DependentUpon>ChangelogDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomerLoyaltyDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
