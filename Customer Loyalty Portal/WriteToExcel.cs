@@ -11,6 +11,12 @@ using System.Windows.Forms;
 
 namespace Customer_Loyalty_Portal
 {
+    public enum SendReportEmailResult
+    {
+        Sent,
+        Queued
+    }
+
     class WriteToExcel
     {
         public static String email = "thepanthouseonline@gmail.com";
@@ -23,38 +29,79 @@ namespace Customer_Loyalty_Portal
             worksheet.get_Range(c1, c2).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium, XlColorIndex.xlColorIndexAutomatic, XlColorIndex.xlColorIndexAutomatic);
         }
 
-        public static int sendEmail(String toEmail, String source, DateTime date)
+        public static bool SendEmailDirect(string toEmail, string subject, string body, string attachmentPath, out string errorMessage)
         {
+            errorMessage = "";
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress(email);
-                mail.To.Add(toEmail);
-                mail.Subject = "Daily Balance Sheet for " + source + " Dated " + date.ToString("dd-MM-yyyy");
-                mail.Body = "PFA Daily Balance details for " + source + " Dated " + date.ToString("dd-MM-yyyy") + " (Generated: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm tt") + ")";
-
-                string filePath = workingDirectory + source + "_" + date.ToString("ddMMyy") + ".xls";
-                if (File.Exists(filePath))
+                using (MailMessage mail = new MailMessage())
                 {
-                    System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(filePath);
-                    mail.Attachments.Add(attachment);
+                    using (SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com"))
+                    {
+                        mail.From = new MailAddress(email);
+                        mail.To.Add(toEmail);
+                        mail.Subject = subject;
+                        mail.Body = body;
+
+                        if (!string.IsNullOrEmpty(attachmentPath) && File.Exists(attachmentPath))
+                        {
+                            System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(attachmentPath);
+                            mail.Attachments.Add(attachment);
+                        }
+
+                        SmtpServer.Port = 587;
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(email, pwd);
+                        SmtpServer.EnableSsl = true;
+                        SmtpServer.Timeout = 15000; // 15s timeout
+
+                        SmtpServer.Send(mail);
+                    }
                 }
-
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential(email, pwd);
-                SmtpServer.EnableSsl = true;
-
-                SmtpServer.Send(mail);
-                //MessageBox.Show("Mail Sent!!!");
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to send email: " + ex.Message);
-                Console.WriteLine(ex.ToString());
-                return 0;
+                errorMessage = ex.Message;
+                Console.WriteLine("SendEmailDirect error: " + ex.ToString());
+                return false;
             }
-            return 1;
+        }
+
+        public static SendReportEmailResult SendReportEmail(string toEmail, string source, DateTime date)
+        {
+            string subject = "Daily Balance Sheet for " + source + " Dated " + date.ToString("dd-MM-yyyy");
+            string body = "PFA Daily Balance details for " + source + " Dated " + date.ToString("dd-MM-yyyy") + " (Generated: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm tt") + ")";
+            string filePath = workingDirectory + source + "_" + date.ToString("ddMMyy") + ".xls";
+
+            string error;
+            bool sent = SendEmailDirect(toEmail, subject, body, filePath, out error);
+
+            if (sent)
+            {
+                return SendReportEmailResult.Sent;
+            }
+            else
+            {
+                EmailQueueManager.Enqueue(new PendingEmailItem
+                {
+                    ToEmail = toEmail,
+                    Source = source,
+                    ReportDate = date,
+                    AttachmentPath = filePath,
+                    Subject = subject,
+                    Body = body,
+                    LastError = error,
+                    AttemptCount = 1,
+                    LastAttemptAt = DateTime.Now
+                });
+                return SendReportEmailResult.Queued;
+            }
+        }
+
+        public static int sendEmail(String toEmail, String source, DateTime date)
+        {
+            SendReportEmailResult result = SendReportEmail(toEmail, source, date);
+            return result == SendReportEmailResult.Sent ? 1 : 0;
         }
 
         public static void writeToExcel(Home home, String source, DateTime date)

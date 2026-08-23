@@ -845,12 +845,11 @@ namespace Customer_Loyalty_Portal
 
             //DataTable dt = DBHandler.GetLastBills("LENOVO-PC\\SQL2008", "GRExtreme_PantHouseJ", "10", finYearID);
             DataTable dt = DBHandler.GetLastBills(tphServerName, tphDBName, "10", phFinYearID);
-            //DataTable dt2 = DBHandler.GetLastBills("HP-PC\\SQL2008", "G_PANTHOUSE", "10", finYearID);
             DataTable dt2 = DBHandler.GetLastBills(jrServerName, jrDBName, "10", jrFinYearID);
-            //label12.Text = "V " + version;
             UpdateBillDataGrid(dt, dt2);
 
-            //splashScreen.Close();
+            EmailQueueManager.InitializeAndStartWorker();
+            log.LogWrite("Initialized EmailQueueManager background worker");
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -1389,9 +1388,8 @@ namespace Customer_Loyalty_Portal
             }
         }
 
-        private void submitPrintButton_Click(object sender, EventArgs e)
+        private async void submitPrintButton_Click(object sender, EventArgs e)
         {
-            
             String toEmail = "";
             String source = "";
             //if (machine == "HP-PC") 
@@ -1410,9 +1408,16 @@ namespace Customer_Loyalty_Portal
 
             WriteToExcel.writeToExcel(this, source, date);
 
-            WriteToExcel.sendEmail(toEmail, source, date);
+            SendReportEmailResult emailResult = await Task.Run(() => WriteToExcel.SendReportEmail(toEmail, source, date));
 
-            MessageBox.Show("Daily Balance Submitted Successfully!");
+            if (emailResult == SendReportEmailResult.Sent)
+            {
+                MessageBox.Show("Daily Balance Submitted & Emailed Successfully!", "Daily Balance", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Daily Balance Submitted & Printed Successfully!\n\nNote: Email could not be sent immediately due to network unavailability. It has been queued safely and will be sent automatically in the background once internet connection is restored.", "Daily Balance", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void deleteCreditButton_Click(object sender, EventArgs e)

@@ -94,6 +94,7 @@
       <DependentUpon>CustomerLoyaltyDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="DBHandler.cs" />
+    <Compile Include="EmailQueueManager.cs" />
     <Compile Include="G_PANTHOUSEDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
