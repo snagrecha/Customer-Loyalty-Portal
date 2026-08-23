@@ -853,6 +853,8 @@ namespace Customer_Loyalty_Portal
 
             BackupManager.InitializeAndStartWorker();
             log.LogWrite("Initialized BackupManager automated background scheduler");
+
+            SetupBackupTab();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -2545,6 +2547,10 @@ namespace Customer_Loyalty_Portal
             {
                 UpdateCommissionData();
             }
+            else if (tabControl1.SelectedTab == backupTab)
+            {
+                RefreshBackupTabStatus();
+            }
         }
 
         public void StyleGridCommon(DataGridView grid)
@@ -2578,7 +2584,7 @@ namespace Customer_Loyalty_Portal
 
         public void StyleAllDataGrids()
         {
-            DataGridView[] grids = { creditGridView, debitGridView, cashGridView, dataGridView1, dataGridViewPH, dataGridViewJunior, customerListDataGrid, comissionDataGrid };
+            DataGridView[] grids = { creditGridView, debitGridView, cashGridView, dataGridView1, dataGridViewPH, dataGridViewJunior, customerListDataGrid, comissionDataGrid, backupHistoryDataGrid };
             foreach (var grid in grids)
             {
                 StyleGridCommon(grid);
@@ -2682,6 +2688,265 @@ namespace Customer_Loyalty_Portal
         {
             dailyBalanceDateTimePicker.Value = dailyBalanceDateTimePicker.Value.AddDays(1);
         }
+
+        #region Database Backup Tab Implementation
+
+        private void SetupBackupTab()
+        {
+            try
+            {
+                // Setup DataGridView columns for Backup History
+                backupHistoryDataGrid.Columns.Clear();
+                backupHistoryDataGrid.AutoGenerateColumns = false;
+
+                backupHistoryDataGrid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Timestamp",
+                    HeaderText = "DATE & TIME",
+                    DataPropertyName = "Timestamp",
+                    Width = 145
+                });
+
+                backupHistoryDataGrid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Database",
+                    HeaderText = "DATABASE",
+                    DataPropertyName = "Database",
+                    Width = 160
+                });
+
+                backupHistoryDataGrid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Status",
+                    HeaderText = "STATUS",
+                    DataPropertyName = "Status",
+                    Width = 95
+                });
+
+                backupHistoryDataGrid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Size",
+                    HeaderText = "ARCHIVE SIZE",
+                    DataPropertyName = "Size",
+                    Width = 110
+                });
+
+                backupHistoryDataGrid.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Message",
+                    HeaderText = "DETAILS & CLOUD STATUS",
+                    DataPropertyName = "Message",
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                });
+
+                // Format cell styling on DataBindingComplete
+                backupHistoryDataGrid.DataBindingComplete += (s, e) =>
+                {
+                    foreach (DataGridViewRow row in backupHistoryDataGrid.Rows)
+                    {
+                        string status = row.Cells["Status"].Value?.ToString();
+                        if (status == "SUCCESS")
+                        {
+                            row.Cells["Status"].Style.ForeColor = Color.FromArgb(40, 167, 69);
+                            row.Cells["Status"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                        }
+                        else if (status == "FAILED")
+                        {
+                            row.Cells["Status"].Style.ForeColor = Color.FromArgb(220, 53, 69);
+                            row.Cells["Status"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                        }
+                    }
+                };
+
+                // Load settings into UI controls
+                chkBackupEnabled.Checked = BackupSettings.Current.Enabled;
+                txtBackupDir.Text = BackupSettings.Current.BackupDirectory;
+                chkSlot1.Checked = BackupSettings.Current.Slot1Enabled;
+                dtpSlot1.Value = DateTime.Today.Add(BackupSettings.Current.Slot1Time);
+                chkSlot2.Checked = BackupSettings.Current.Slot2Enabled;
+                dtpSlot2.Value = DateTime.Today.Add(BackupSettings.Current.Slot2Time);
+                numRetentionDays.Value = BackupSettings.Current.RetentionDays;
+                chkDbCustomerLoyalty.Checked = BackupSettings.Current.IncludeCustomerLoyalty;
+                chkDbTPH.Checked = BackupSettings.Current.IncludeTPH;
+                chkDbJunior.Checked = BackupSettings.Current.IncludeJunior;
+
+                // Subscribe to live backup progress events
+                BackupManager.OnProgressMessage += (msg) =>
+                {
+                    if (this.IsHandleCreated)
+                    {
+                        this.BeginInvoke(new Action(() =>
+                        {
+                            lblBackupProgress.Text = msg;
+                        }));
+                    }
+                };
+
+                BackupManager.OnBackupCompleted += () =>
+                {
+                    if (this.IsHandleCreated)
+                    {
+                        this.BeginInvoke(new Action(() =>
+                        {
+                            btnBackupNow.Enabled = true;
+                            btnBackupNow.BackColor = Color.FromArgb(40, 167, 69);
+                            RefreshBackupTabStatus();
+                        }));
+                    }
+                };
+
+                RefreshBackupTabStatus();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in SetupBackupTab: " + ex.Message);
+            }
+        }
+
+        private void RefreshBackupTabStatus()
+        {
+            try
+            {
+                // 1. Last Backup Card
+                string lastSlot = BackupManager.GetLastCompletedSlot();
+                if (!string.IsNullOrEmpty(lastSlot))
+                {
+                    lblLastBackupVal.Text = lastSlot;
+                    lblLastBackupStatus.Text = "All DBs Backed Up ✓";
+                    lblLastBackupStatus.ForeColor = Color.FromArgb(40, 167, 69);
+                }
+                else
+                {
+                    lblLastBackupVal.Text = "Never / Pending";
+                    lblLastBackupStatus.Text = "Pending First Run";
+                    lblLastBackupStatus.ForeColor = Color.FromArgb(108, 117, 125);
+                }
+
+                // 2. Next Scheduled Backup Card
+                lblNextBackupVal.Text = BackupManager.GetNextScheduledSlotString();
+                lblNextBackupSub.Text = BackupSettings.Current.Enabled ? "(Auto catch-up active)" : "(Backups Disabled)";
+
+                // 3. Cloud Storage Card
+                string dir = BackupManager.GetCloudBackupDirectory();
+                string root = Path.GetPathRoot(dir);
+                if (!string.IsNullOrEmpty(root) && Directory.Exists(root))
+                {
+                    try
+                    {
+                        DriveInfo drive = new DriveInfo(root);
+                        double freeGb = Math.Round(drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0), 1);
+                        lblCloudStorageVal.Text = $"{drive.Name} ({drive.VolumeLabel})";
+                        lblCloudStorageSub.Text = $"{freeGb:N1} GB Free Space";
+                    }
+                    catch
+                    {
+                        lblCloudStorageVal.Text = "Configured Folder";
+                        lblCloudStorageSub.Text = "Path: " + dir;
+                    }
+                }
+                else
+                {
+                    lblCloudStorageVal.Text = "Local / Network Drive";
+                    lblCloudStorageSub.Text = dir;
+                }
+
+                // 4. Populate Logs Grid
+                var history = BackupManager.GetBackupHistory();
+                backupHistoryDataGrid.DataSource = history;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in RefreshBackupTabStatus: " + ex.Message);
+            }
+        }
+
+        private void btnSaveBackupSettings_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BackupSettings.Current.Enabled = chkBackupEnabled.Checked;
+                BackupSettings.Current.BackupDirectory = txtBackupDir.Text.Trim();
+                BackupSettings.Current.Slot1Enabled = chkSlot1.Checked;
+                BackupSettings.Current.Slot1Time = dtpSlot1.Value.TimeOfDay;
+                BackupSettings.Current.Slot2Enabled = chkSlot2.Checked;
+                BackupSettings.Current.Slot2Time = dtpSlot2.Value.TimeOfDay;
+                BackupSettings.Current.RetentionDays = (int)numRetentionDays.Value;
+                BackupSettings.Current.IncludeCustomerLoyalty = chkDbCustomerLoyalty.Checked;
+                BackupSettings.Current.IncludeTPH = chkDbTPH.Checked;
+                BackupSettings.Current.IncludeJunior = chkDbJunior.Checked;
+
+                BackupSettings.Save();
+
+                MessageBox.Show("Backup configuration saved successfully!", "Settings Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                RefreshBackupTabStatus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving backup settings: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnBackupNow_Click(object sender, EventArgs e)
+        {
+            if (BackupManager.IsBackingUp)
+            {
+                MessageBox.Show("A backup is already running in the background. Please wait for it to complete.", "Backup In Progress", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            btnBackupNow.Enabled = false;
+            btnBackupNow.BackColor = Color.FromArgb(108, 117, 125);
+            lblBackupProgress.Text = "Starting manual backup...";
+
+            Task.Run(() =>
+            {
+                BackupManager.RunFullBackup(null, "Manual UI Button");
+            });
+        }
+
+        private void btnBrowseBackupDir_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = "Select Destination Folder for SQL Database Backups (e.g. Google Drive / OneDrive)";
+                if (Directory.Exists(txtBackupDir.Text))
+                {
+                    fbd.SelectedPath = txtBackupDir.Text;
+                }
+
+                if (fbd.ShowDialog(this) == DialogResult.OK)
+                {
+                    txtBackupDir.Text = fbd.SelectedPath;
+                }
+            }
+        }
+
+        private void btnOpenBackupFolder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string dir = BackupManager.GetCloudBackupDirectory();
+                if (Directory.Exists(dir))
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", dir);
+                }
+                else
+                {
+                    MessageBox.Show("Backup folder does not exist yet: " + dir, "Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open folder: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnRefreshBackupStatus_Click(object sender, EventArgs e)
+        {
+            RefreshBackupTabStatus();
+        }
+
+        #endregion
     }
 
     public class CustomerSalesSummary

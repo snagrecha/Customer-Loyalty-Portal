@@ -71,6 +71,45 @@ namespace Customer_Loyalty_Portal
             this.label36 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.backupTab = new System.Windows.Forms.TabPage();
+            this.panelBackupLeft = new System.Windows.Forms.Panel();
+            this.groupBoxBackupConfig = new System.Windows.Forms.GroupBox();
+            this.chkBackupEnabled = new System.Windows.Forms.CheckBox();
+            this.lblBackupDir = new System.Windows.Forms.Label();
+            this.txtBackupDir = new System.Windows.Forms.TextBox();
+            this.btnBrowseBackupDir = new System.Windows.Forms.Button();
+            this.btnOpenBackupFolder = new System.Windows.Forms.Button();
+            this.lblSchedule = new System.Windows.Forms.Label();
+            this.chkSlot1 = new System.Windows.Forms.CheckBox();
+            this.dtpSlot1 = new System.Windows.Forms.DateTimePicker();
+            this.chkSlot2 = new System.Windows.Forms.CheckBox();
+            this.dtpSlot2 = new System.Windows.Forms.DateTimePicker();
+            this.lblRetention = new System.Windows.Forms.Label();
+            this.numRetentionDays = new System.Windows.Forms.NumericUpDown();
+            this.lblRetentionDaysText = new System.Windows.Forms.Label();
+            this.lblTargetDbs = new System.Windows.Forms.Label();
+            this.chkDbCustomerLoyalty = new System.Windows.Forms.CheckBox();
+            this.chkDbTPH = new System.Windows.Forms.CheckBox();
+            this.chkDbJunior = new System.Windows.Forms.CheckBox();
+            this.btnSaveBackupSettings = new System.Windows.Forms.Button();
+            this.btnBackupNow = new System.Windows.Forms.Button();
+            this.lblBackupProgress = new System.Windows.Forms.Label();
+            this.panelBackupRight = new System.Windows.Forms.Panel();
+            this.panelLastBackup = new System.Windows.Forms.Panel();
+            this.lblLastBackupTitle = new System.Windows.Forms.Label();
+            this.lblLastBackupVal = new System.Windows.Forms.Label();
+            this.lblLastBackupStatus = new System.Windows.Forms.Label();
+            this.panelNextBackup = new System.Windows.Forms.Panel();
+            this.lblNextBackupTitle = new System.Windows.Forms.Label();
+            this.lblNextBackupVal = new System.Windows.Forms.Label();
+            this.lblNextBackupSub = new System.Windows.Forms.Label();
+            this.panelCloudStorage = new System.Windows.Forms.Panel();
+            this.lblCloudStorageTitle = new System.Windows.Forms.Label();
+            this.lblCloudStorageVal = new System.Windows.Forms.Label();
+            this.lblCloudStorageSub = new System.Windows.Forms.Label();
+            this.lblBackupHistoryTitle = new System.Windows.Forms.Label();
+            this.btnRefreshBackupStatus = new System.Windows.Forms.Button();
+            this.backupHistoryDataGrid = new System.Windows.Forms.DataGridView();
             this.dailyBalanceTab = new System.Windows.Forms.TabPage();
             this.label47 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
@@ -2116,6 +2155,7 @@ namespace Customer_Loyalty_Portal
             this.tabControl1.Controls.Add(this.dailyBalanceTab);
             this.tabControl1.Controls.Add(this.billSearchTab);
             this.tabControl1.Controls.Add(this.commissionTab);
+            this.tabControl1.Controls.Add(this.backupTab);
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -2430,6 +2470,511 @@ namespace Customer_Loyalty_Portal
             this.chartQty.TabIndex = 1;
             this.chartQty.Text = "qtyChart";
             // 
+            // backupTab
+            // 
+            this.backupTab.BackColor = System.Drawing.Color.White;
+            this.backupTab.Controls.Add(this.panelBackupLeft);
+            this.backupTab.Controls.Add(this.panelBackupRight);
+            this.backupTab.Location = new System.Drawing.Point(4, 22);
+            this.backupTab.Name = "backupTab";
+            this.backupTab.Size = new System.Drawing.Size(1358, 640);
+            this.backupTab.TabIndex = 5;
+            this.backupTab.Text = "DATABASE BACKUPS";
+            this.backupTab.UseVisualStyleBackColor = true;
+            // 
+            // panelBackupLeft
+            // 
+            this.panelBackupLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.panelBackupLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBackupLeft.Controls.Add(this.groupBoxBackupConfig);
+            this.panelBackupLeft.Location = new System.Drawing.Point(16, 14);
+            this.panelBackupLeft.Name = "panelBackupLeft";
+            this.panelBackupLeft.Size = new System.Drawing.Size(440, 612);
+            this.panelBackupLeft.TabIndex = 0;
+            // 
+            // groupBoxBackupConfig
+            // 
+            this.groupBoxBackupConfig.Controls.Add(this.chkBackupEnabled);
+            this.groupBoxBackupConfig.Controls.Add(this.lblBackupDir);
+            this.groupBoxBackupConfig.Controls.Add(this.txtBackupDir);
+            this.groupBoxBackupConfig.Controls.Add(this.btnBrowseBackupDir);
+            this.groupBoxBackupConfig.Controls.Add(this.btnOpenBackupFolder);
+            this.groupBoxBackupConfig.Controls.Add(this.lblSchedule);
+            this.groupBoxBackupConfig.Controls.Add(this.chkSlot1);
+            this.groupBoxBackupConfig.Controls.Add(this.dtpSlot1);
+            this.groupBoxBackupConfig.Controls.Add(this.chkSlot2);
+            this.groupBoxBackupConfig.Controls.Add(this.dtpSlot2);
+            this.groupBoxBackupConfig.Controls.Add(this.lblRetention);
+            this.groupBoxBackupConfig.Controls.Add(this.numRetentionDays);
+            this.groupBoxBackupConfig.Controls.Add(this.lblRetentionDaysText);
+            this.groupBoxBackupConfig.Controls.Add(this.lblTargetDbs);
+            this.groupBoxBackupConfig.Controls.Add(this.chkDbCustomerLoyalty);
+            this.groupBoxBackupConfig.Controls.Add(this.chkDbTPH);
+            this.groupBoxBackupConfig.Controls.Add(this.chkDbJunior);
+            this.groupBoxBackupConfig.Controls.Add(this.btnSaveBackupSettings);
+            this.groupBoxBackupConfig.Controls.Add(this.btnBackupNow);
+            this.groupBoxBackupConfig.Controls.Add(this.lblBackupProgress);
+            this.groupBoxBackupConfig.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxBackupConfig.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(43)))), ((int)(((byte)(73)))));
+            this.groupBoxBackupConfig.Location = new System.Drawing.Point(12, 10);
+            this.groupBoxBackupConfig.Name = "groupBoxBackupConfig";
+            this.groupBoxBackupConfig.Size = new System.Drawing.Size(414, 588);
+            this.groupBoxBackupConfig.TabIndex = 0;
+            this.groupBoxBackupConfig.TabStop = false;
+            this.groupBoxBackupConfig.Text = "Configuration & Actions";
+            // 
+            // chkBackupEnabled
+            // 
+            this.chkBackupEnabled.AutoSize = true;
+            this.chkBackupEnabled.Checked = true;
+            this.chkBackupEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBackupEnabled.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBackupEnabled.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.chkBackupEnabled.Location = new System.Drawing.Point(16, 28);
+            this.chkBackupEnabled.Name = "chkBackupEnabled";
+            this.chkBackupEnabled.Size = new System.Drawing.Size(232, 21);
+            this.chkBackupEnabled.TabIndex = 0;
+            this.chkBackupEnabled.Text = "Enable Automated Daily Backups";
+            this.chkBackupEnabled.UseVisualStyleBackColor = true;
+            // 
+            // lblBackupDir
+            // 
+            this.lblBackupDir.AutoSize = true;
+            this.lblBackupDir.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBackupDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblBackupDir.Location = new System.Drawing.Point(13, 58);
+            this.lblBackupDir.Name = "lblBackupDir";
+            this.lblBackupDir.Size = new System.Drawing.Size(183, 15);
+            this.lblBackupDir.TabIndex = 1;
+            this.lblBackupDir.Text = "Cloud / Backup Directory (Path):";
+            // 
+            // txtBackupDir
+            // 
+            this.txtBackupDir.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBackupDir.Location = new System.Drawing.Point(16, 78);
+            this.txtBackupDir.Name = "txtBackupDir";
+            this.txtBackupDir.Size = new System.Drawing.Size(275, 23);
+            this.txtBackupDir.TabIndex = 2;
+            this.txtBackupDir.Text = "G:\\My Drive\\SQLBackups";
+            // 
+            // btnBrowseBackupDir
+            // 
+            this.btnBrowseBackupDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
+            this.btnBrowseBackupDir.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBrowseBackupDir.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(212)))), ((int)(((byte)(218)))));
+            this.btnBrowseBackupDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBrowseBackupDir.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBrowseBackupDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.btnBrowseBackupDir.Location = new System.Drawing.Point(298, 77);
+            this.btnBrowseBackupDir.Name = "btnBrowseBackupDir";
+            this.btnBrowseBackupDir.Size = new System.Drawing.Size(100, 25);
+            this.btnBrowseBackupDir.TabIndex = 3;
+            this.btnBrowseBackupDir.Text = "Browse...";
+            this.btnBrowseBackupDir.UseVisualStyleBackColor = false;
+            this.btnBrowseBackupDir.Click += new System.EventHandler(this.btnBrowseBackupDir_Click);
+            // 
+            // btnOpenBackupFolder
+            // 
+            this.btnOpenBackupFolder.BackColor = System.Drawing.Color.White;
+            this.btnOpenBackupFolder.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnOpenBackupFolder.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.btnOpenBackupFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpenBackupFolder.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenBackupFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.btnOpenBackupFolder.Location = new System.Drawing.Point(16, 108);
+            this.btnOpenBackupFolder.Name = "btnOpenBackupFolder";
+            this.btnOpenBackupFolder.Size = new System.Drawing.Size(150, 26);
+            this.btnOpenBackupFolder.TabIndex = 4;
+            this.btnOpenBackupFolder.Text = "Open in Explorer 📁";
+            this.btnOpenBackupFolder.UseVisualStyleBackColor = false;
+            this.btnOpenBackupFolder.Click += new System.EventHandler(this.btnOpenBackupFolder_Click);
+            // 
+            // lblSchedule
+            // 
+            this.lblSchedule.AutoSize = true;
+            this.lblSchedule.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSchedule.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblSchedule.Location = new System.Drawing.Point(13, 146);
+            this.lblSchedule.Name = "lblSchedule";
+            this.lblSchedule.Size = new System.Drawing.Size(140, 15);
+            this.lblSchedule.TabIndex = 5;
+            this.lblSchedule.Text = "Daily Scheduled Times:";
+            // 
+            // chkSlot1
+            // 
+            this.chkSlot1.AutoSize = true;
+            this.chkSlot1.Checked = true;
+            this.chkSlot1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSlot1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkSlot1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.chkSlot1.Location = new System.Drawing.Point(16, 168);
+            this.chkSlot1.Name = "chkSlot1";
+            this.chkSlot1.Size = new System.Drawing.Size(59, 19);
+            this.chkSlot1.TabIndex = 6;
+            this.chkSlot1.Text = "Slot 1:";
+            this.chkSlot1.UseVisualStyleBackColor = true;
+            // 
+            // dtpSlot1
+            // 
+            this.dtpSlot1.CustomFormat = "hh:mm tt";
+            this.dtpSlot1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpSlot1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpSlot1.Location = new System.Drawing.Point(78, 166);
+            this.dtpSlot1.Name = "dtpSlot1";
+            this.dtpSlot1.ShowUpDown = true;
+            this.dtpSlot1.Size = new System.Drawing.Size(95, 23);
+            this.dtpSlot1.TabIndex = 7;
+            // 
+            // chkSlot2
+            // 
+            this.chkSlot2.AutoSize = true;
+            this.chkSlot2.Checked = true;
+            this.chkSlot2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSlot2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkSlot2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.chkSlot2.Location = new System.Drawing.Point(190, 168);
+            this.chkSlot2.Name = "chkSlot2";
+            this.chkSlot2.Size = new System.Drawing.Size(59, 19);
+            this.chkSlot2.TabIndex = 8;
+            this.chkSlot2.Text = "Slot 2:";
+            this.chkSlot2.UseVisualStyleBackColor = true;
+            // 
+            // dtpSlot2
+            // 
+            this.dtpSlot2.CustomFormat = "hh:mm tt";
+            this.dtpSlot2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpSlot2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpSlot2.Location = new System.Drawing.Point(252, 166);
+            this.dtpSlot2.Name = "dtpSlot2";
+            this.dtpSlot2.ShowUpDown = true;
+            this.dtpSlot2.Size = new System.Drawing.Size(95, 23);
+            this.dtpSlot2.TabIndex = 9;
+            // 
+            // lblRetention
+            // 
+            this.lblRetention.AutoSize = true;
+            this.lblRetention.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRetention.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblRetention.Location = new System.Drawing.Point(13, 204);
+            this.lblRetention.Name = "lblRetention";
+            this.lblRetention.Size = new System.Drawing.Size(147, 15);
+            this.lblRetention.TabIndex = 10;
+            this.lblRetention.Text = "Retention Period (Days):";
+            // 
+            // numRetentionDays
+            // 
+            this.numRetentionDays.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numRetentionDays.Location = new System.Drawing.Point(16, 224);
+            this.numRetentionDays.Maximum = new decimal(new int[] { 365, 0, 0, 0 });
+            this.numRetentionDays.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.numRetentionDays.Name = "numRetentionDays";
+            this.numRetentionDays.Size = new System.Drawing.Size(65, 23);
+            this.numRetentionDays.TabIndex = 11;
+            this.numRetentionDays.Value = new decimal(new int[] { 15, 0, 0, 0 });
+            // 
+            // lblRetentionDaysText
+            // 
+            this.lblRetentionDaysText.AutoSize = true;
+            this.lblRetentionDaysText.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRetentionDaysText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblRetentionDaysText.Location = new System.Drawing.Point(88, 227);
+            this.lblRetentionDaysText.Name = "lblRetentionDaysText";
+            this.lblRetentionDaysText.Size = new System.Drawing.Size(262, 15);
+            this.lblRetentionDaysText.TabIndex = 12;
+            this.lblRetentionDaysText.Text = "Days to retain backups (older files auto-deleted)";
+            // 
+            // lblTargetDbs
+            // 
+            this.lblTargetDbs.AutoSize = true;
+            this.lblTargetDbs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTargetDbs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblTargetDbs.Location = new System.Drawing.Point(13, 260);
+            this.lblTargetDbs.Name = "lblTargetDbs";
+            this.lblTargetDbs.Size = new System.Drawing.Size(139, 15);
+            this.lblTargetDbs.TabIndex = 13;
+            this.lblTargetDbs.Text = "Databases to Back Up:";
+            // 
+            // chkDbCustomerLoyalty
+            // 
+            this.chkDbCustomerLoyalty.AutoSize = true;
+            this.chkDbCustomerLoyalty.Checked = true;
+            this.chkDbCustomerLoyalty.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDbCustomerLoyalty.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDbCustomerLoyalty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.chkDbCustomerLoyalty.Location = new System.Drawing.Point(16, 282);
+            this.chkDbCustomerLoyalty.Name = "chkDbCustomerLoyalty";
+            this.chkDbCustomerLoyalty.Size = new System.Drawing.Size(236, 19);
+            this.chkDbCustomerLoyalty.TabIndex = 14;
+            this.chkDbCustomerLoyalty.Text = "CustomerLoyalty (Host / Points Server)";
+            this.chkDbCustomerLoyalty.UseVisualStyleBackColor = true;
+            // 
+            // chkDbTPH
+            // 
+            this.chkDbTPH.AutoSize = true;
+            this.chkDbTPH.Checked = true;
+            this.chkDbTPH.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDbTPH.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDbTPH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.chkDbTPH.Location = new System.Drawing.Point(16, 305);
+            this.chkDbTPH.Name = "chkDbTPH";
+            this.chkDbTPH.Size = new System.Drawing.Size(227, 19);
+            this.chkDbTPH.TabIndex = 15;
+            this.chkDbTPH.Text = "TPH Store (GRExtreme_PantHouseJ)";
+            this.chkDbTPH.UseVisualStyleBackColor = true;
+            // 
+            // chkDbJunior
+            // 
+            this.chkDbJunior.AutoSize = true;
+            this.chkDbJunior.Checked = true;
+            this.chkDbJunior.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDbJunior.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDbJunior.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.chkDbJunior.Location = new System.Drawing.Point(16, 328);
+            this.chkDbJunior.Name = "chkDbJunior";
+            this.chkDbJunior.Size = new System.Drawing.Size(227, 19);
+            this.chkDbJunior.TabIndex = 16;
+            this.chkDbJunior.Text = "Junior Store (GRetail_JUNIOR_New)";
+            this.chkDbJunior.UseVisualStyleBackColor = true;
+            // 
+            // btnSaveBackupSettings
+            // 
+            this.btnSaveBackupSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.btnSaveBackupSettings.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSaveBackupSettings.FlatAppearance.BorderSize = 0;
+            this.btnSaveBackupSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSaveBackupSettings.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveBackupSettings.ForeColor = System.Drawing.Color.White;
+            this.btnSaveBackupSettings.Location = new System.Drawing.Point(16, 365);
+            this.btnSaveBackupSettings.Name = "btnSaveBackupSettings";
+            this.btnSaveBackupSettings.Size = new System.Drawing.Size(160, 34);
+            this.btnSaveBackupSettings.TabIndex = 17;
+            this.btnSaveBackupSettings.Text = "💾 Save Settings";
+            this.btnSaveBackupSettings.UseVisualStyleBackColor = false;
+            this.btnSaveBackupSettings.Click += new System.EventHandler(this.btnSaveBackupSettings_Click);
+            // 
+            // btnBackupNow
+            // 
+            this.btnBackupNow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
+            this.btnBackupNow.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBackupNow.FlatAppearance.BorderSize = 0;
+            this.btnBackupNow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBackupNow.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBackupNow.ForeColor = System.Drawing.Color.White;
+            this.btnBackupNow.Location = new System.Drawing.Point(16, 415);
+            this.btnBackupNow.Name = "btnBackupNow";
+            this.btnBackupNow.Size = new System.Drawing.Size(260, 42);
+            this.btnBackupNow.TabIndex = 18;
+            this.btnBackupNow.Text = "⚡ Backup All Databases Now";
+            this.btnBackupNow.UseVisualStyleBackColor = false;
+            this.btnBackupNow.Click += new System.EventHandler(this.btnBackupNow_Click);
+            // 
+            // lblBackupProgress
+            // 
+            this.lblBackupProgress.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBackupProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.lblBackupProgress.Location = new System.Drawing.Point(16, 468);
+            this.lblBackupProgress.Name = "lblBackupProgress";
+            this.lblBackupProgress.Size = new System.Drawing.Size(380, 95);
+            this.lblBackupProgress.TabIndex = 19;
+            this.lblBackupProgress.Text = "Ready for scheduled or on-demand backup.";
+            // 
+            // panelBackupRight
+            // 
+            this.panelBackupRight.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelBackupRight.BackColor = System.Drawing.Color.White;
+            this.panelBackupRight.Controls.Add(this.panelLastBackup);
+            this.panelBackupRight.Controls.Add(this.panelNextBackup);
+            this.panelBackupRight.Controls.Add(this.panelCloudStorage);
+            this.panelBackupRight.Controls.Add(this.lblBackupHistoryTitle);
+            this.panelBackupRight.Controls.Add(this.btnRefreshBackupStatus);
+            this.panelBackupRight.Controls.Add(this.backupHistoryDataGrid);
+            this.panelBackupRight.Location = new System.Drawing.Point(470, 14);
+            this.panelBackupRight.Name = "panelBackupRight";
+            this.panelBackupRight.Size = new System.Drawing.Size(870, 612);
+            this.panelBackupRight.TabIndex = 1;
+            // 
+            // panelLastBackup
+            // 
+            this.panelLastBackup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelLastBackup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelLastBackup.Controls.Add(this.lblLastBackupTitle);
+            this.panelLastBackup.Controls.Add(this.lblLastBackupVal);
+            this.panelLastBackup.Controls.Add(this.lblLastBackupStatus);
+            this.panelLastBackup.Location = new System.Drawing.Point(0, 0);
+            this.panelLastBackup.Name = "panelLastBackup";
+            this.panelLastBackup.Size = new System.Drawing.Size(275, 75);
+            this.panelLastBackup.TabIndex = 0;
+            // 
+            // lblLastBackupTitle
+            // 
+            this.lblLastBackupTitle.AutoSize = true;
+            this.lblLastBackupTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLastBackupTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblLastBackupTitle.Location = new System.Drawing.Point(10, 6);
+            this.lblLastBackupTitle.Name = "lblLastBackupTitle";
+            this.lblLastBackupTitle.Size = new System.Drawing.Size(126, 12);
+            this.lblLastBackupTitle.TabIndex = 0;
+            this.lblLastBackupTitle.Text = "LAST BACKUP EXECUTION";
+            // 
+            // lblLastBackupVal
+            // 
+            this.lblLastBackupVal.AutoSize = true;
+            this.lblLastBackupVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLastBackupVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.lblLastBackupVal.Location = new System.Drawing.Point(10, 24);
+            this.lblLastBackupVal.Name = "lblLastBackupVal";
+            this.lblLastBackupVal.Size = new System.Drawing.Size(139, 20);
+            this.lblLastBackupVal.TabIndex = 1;
+            this.lblLastBackupVal.Text = "23-Aug 03:45 PM";
+            // 
+            // lblLastBackupStatus
+            // 
+            this.lblLastBackupStatus.AutoSize = true;
+            this.lblLastBackupStatus.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLastBackupStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
+            this.lblLastBackupStatus.Location = new System.Drawing.Point(10, 48);
+            this.lblLastBackupStatus.Name = "lblLastBackupStatus";
+            this.lblLastBackupStatus.Size = new System.Drawing.Size(107, 15);
+            this.lblLastBackupStatus.TabIndex = 2;
+            this.lblLastBackupStatus.Text = "3/3 Succeeded ✓";
+            // 
+            // panelNextBackup
+            // 
+            this.panelNextBackup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelNextBackup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelNextBackup.Controls.Add(this.lblNextBackupTitle);
+            this.panelNextBackup.Controls.Add(this.lblNextBackupVal);
+            this.panelNextBackup.Controls.Add(this.lblNextBackupSub);
+            this.panelNextBackup.Location = new System.Drawing.Point(290, 0);
+            this.panelNextBackup.Name = "panelNextBackup";
+            this.panelNextBackup.Size = new System.Drawing.Size(275, 75);
+            this.panelNextBackup.TabIndex = 1;
+            // 
+            // lblNextBackupTitle
+            // 
+            this.lblNextBackupTitle.AutoSize = true;
+            this.lblNextBackupTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNextBackupTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblNextBackupTitle.Location = new System.Drawing.Point(10, 6);
+            this.lblNextBackupTitle.Name = "lblNextBackupTitle";
+            this.lblNextBackupTitle.Size = new System.Drawing.Size(138, 12);
+            this.lblNextBackupTitle.TabIndex = 0;
+            this.lblNextBackupTitle.Text = "NEXT SCHEDULED BACKUP";
+            // 
+            // lblNextBackupVal
+            // 
+            this.lblNextBackupVal.AutoSize = true;
+            this.lblNextBackupVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNextBackupVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(135)))), ((int)(((byte)(84)))));
+            this.lblNextBackupVal.Location = new System.Drawing.Point(10, 24);
+            this.lblNextBackupVal.Name = "lblNextBackupVal";
+            this.lblNextBackupVal.Size = new System.Drawing.Size(142, 20);
+            this.lblNextBackupVal.TabIndex = 1;
+            this.lblNextBackupVal.Text = "Today at 08:00 PM";
+            // 
+            // lblNextBackupSub
+            // 
+            this.lblNextBackupSub.AutoSize = true;
+            this.lblNextBackupSub.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNextBackupSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblNextBackupSub.Location = new System.Drawing.Point(10, 48);
+            this.lblNextBackupSub.Name = "lblNextBackupSub";
+            this.lblNextBackupSub.Size = new System.Drawing.Size(140, 13);
+            this.lblNextBackupSub.TabIndex = 2;
+            this.lblNextBackupSub.Text = "(Auto catch-up enabled)";
+            // 
+            // panelCloudStorage
+            // 
+            this.panelCloudStorage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(249)))), ((int)(((byte)(252)))));
+            this.panelCloudStorage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCloudStorage.Controls.Add(this.lblCloudStorageTitle);
+            this.panelCloudStorage.Controls.Add(this.lblCloudStorageVal);
+            this.panelCloudStorage.Controls.Add(this.lblCloudStorageSub);
+            this.panelCloudStorage.Location = new System.Drawing.Point(580, 0);
+            this.panelCloudStorage.Name = "panelCloudStorage";
+            this.panelCloudStorage.Size = new System.Drawing.Size(285, 75);
+            this.panelCloudStorage.TabIndex = 2;
+            // 
+            // lblCloudStorageTitle
+            // 
+            this.lblCloudStorageTitle.AutoSize = true;
+            this.lblCloudStorageTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCloudStorageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.lblCloudStorageTitle.Location = new System.Drawing.Point(10, 6);
+            this.lblCloudStorageTitle.Name = "lblCloudStorageTitle";
+            this.lblCloudStorageTitle.Size = new System.Drawing.Size(155, 12);
+            this.lblCloudStorageTitle.TabIndex = 0;
+            this.lblCloudStorageTitle.Text = "CLOUD STORAGE DESTINATION";
+            // 
+            // lblCloudStorageVal
+            // 
+            this.lblCloudStorageVal.AutoSize = true;
+            this.lblCloudStorageVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCloudStorageVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.lblCloudStorageVal.Location = new System.Drawing.Point(10, 24);
+            this.lblCloudStorageVal.Name = "lblCloudStorageVal";
+            this.lblCloudStorageVal.Size = new System.Drawing.Size(130, 20);
+            this.lblCloudStorageVal.TabIndex = 1;
+            this.lblCloudStorageVal.Text = "Google Drive (G:)";
+            // 
+            // lblCloudStorageSub
+            // 
+            this.lblCloudStorageSub.AutoSize = true;
+            this.lblCloudStorageSub.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCloudStorageSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(135)))), ((int)(((byte)(84)))));
+            this.lblCloudStorageSub.Location = new System.Drawing.Point(10, 48);
+            this.lblCloudStorageSub.Name = "lblCloudStorageSub";
+            this.lblCloudStorageSub.Size = new System.Drawing.Size(117, 15);
+            this.lblCloudStorageSub.TabIndex = 2;
+            this.lblCloudStorageSub.Text = "14.9 GB Free Space";
+            // 
+            // lblBackupHistoryTitle
+            // 
+            this.lblBackupHistoryTitle.AutoSize = true;
+            this.lblBackupHistoryTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBackupHistoryTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblBackupHistoryTitle.Location = new System.Drawing.Point(0, 92);
+            this.lblBackupHistoryTitle.Name = "lblBackupHistoryTitle";
+            this.lblBackupHistoryTitle.Size = new System.Drawing.Size(193, 19);
+            this.lblBackupHistoryTitle.TabIndex = 3;
+            this.lblBackupHistoryTitle.Text = "📋 Execution History & Logs";
+            // 
+            // btnRefreshBackupStatus
+            // 
+            this.btnRefreshBackupStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefreshBackupStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
+            this.btnRefreshBackupStatus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRefreshBackupStatus.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(212)))), ((int)(((byte)(218)))));
+            this.btnRefreshBackupStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefreshBackupStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefreshBackupStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.btnRefreshBackupStatus.Location = new System.Drawing.Point(735, 87);
+            this.btnRefreshBackupStatus.Name = "btnRefreshBackupStatus";
+            this.btnRefreshBackupStatus.Size = new System.Drawing.Size(130, 28);
+            this.btnRefreshBackupStatus.TabIndex = 4;
+            this.btnRefreshBackupStatus.Text = "🔄 Refresh Status";
+            this.btnRefreshBackupStatus.UseVisualStyleBackColor = false;
+            this.btnRefreshBackupStatus.Click += new System.EventHandler(this.btnRefreshBackupStatus_Click);
+            // 
+            // backupHistoryDataGrid
+            // 
+            this.backupHistoryDataGrid.AllowUserToAddRows = false;
+            this.backupHistoryDataGrid.AllowUserToDeleteRows = false;
+            this.backupHistoryDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.backupHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
+            this.backupHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.backupHistoryDataGrid.Location = new System.Drawing.Point(0, 122);
+            this.backupHistoryDataGrid.Name = "backupHistoryDataGrid";
+            this.backupHistoryDataGrid.ReadOnly = true;
+            this.backupHistoryDataGrid.RowHeadersVisible = false;
+            this.backupHistoryDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.backupHistoryDataGrid.Size = new System.Drawing.Size(865, 485);
+            this.backupHistoryDataGrid.TabIndex = 5;
+            // 
             // prevDateButton
             // 
             this.prevDateButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(239)))));
@@ -2706,6 +3251,45 @@ namespace Customer_Loyalty_Portal
         private System.Windows.Forms.Button prevDateButton;
         private System.Windows.Forms.Button nextDateButton;
         private System.Windows.Forms.Button whatsNewButton;
+        private System.Windows.Forms.TabPage backupTab;
+        private System.Windows.Forms.Panel panelBackupLeft;
+        private System.Windows.Forms.GroupBox groupBoxBackupConfig;
+        private System.Windows.Forms.CheckBox chkBackupEnabled;
+        private System.Windows.Forms.Label lblBackupDir;
+        private System.Windows.Forms.TextBox txtBackupDir;
+        private System.Windows.Forms.Button btnBrowseBackupDir;
+        private System.Windows.Forms.Button btnOpenBackupFolder;
+        private System.Windows.Forms.Label lblSchedule;
+        private System.Windows.Forms.CheckBox chkSlot1;
+        private System.Windows.Forms.DateTimePicker dtpSlot1;
+        private System.Windows.Forms.CheckBox chkSlot2;
+        private System.Windows.Forms.DateTimePicker dtpSlot2;
+        private System.Windows.Forms.Label lblRetention;
+        private System.Windows.Forms.NumericUpDown numRetentionDays;
+        private System.Windows.Forms.Label lblRetentionDaysText;
+        private System.Windows.Forms.Label lblTargetDbs;
+        private System.Windows.Forms.CheckBox chkDbCustomerLoyalty;
+        private System.Windows.Forms.CheckBox chkDbTPH;
+        private System.Windows.Forms.CheckBox chkDbJunior;
+        private System.Windows.Forms.Button btnSaveBackupSettings;
+        private System.Windows.Forms.Button btnBackupNow;
+        private System.Windows.Forms.Label lblBackupProgress;
+        private System.Windows.Forms.Panel panelBackupRight;
+        private System.Windows.Forms.Panel panelLastBackup;
+        private System.Windows.Forms.Label lblLastBackupTitle;
+        private System.Windows.Forms.Label lblLastBackupVal;
+        private System.Windows.Forms.Label lblLastBackupStatus;
+        private System.Windows.Forms.Panel panelNextBackup;
+        private System.Windows.Forms.Label lblNextBackupTitle;
+        private System.Windows.Forms.Label lblNextBackupVal;
+        private System.Windows.Forms.Label lblNextBackupSub;
+        private System.Windows.Forms.Panel panelCloudStorage;
+        private System.Windows.Forms.Label lblCloudStorageTitle;
+        private System.Windows.Forms.Label lblCloudStorageVal;
+        private System.Windows.Forms.Label lblCloudStorageSub;
+        private System.Windows.Forms.Label lblBackupHistoryTitle;
+        private System.Windows.Forms.Button btnRefreshBackupStatus;
+        private System.Windows.Forms.DataGridView backupHistoryDataGrid;
     }
 }
 
