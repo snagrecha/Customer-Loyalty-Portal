@@ -855,11 +855,16 @@ namespace Customer_Loyalty_Portal
             log.LogWrite("Initialized BackupManager automated background scheduler");
 
             SetupBackupTab();
+
+            LoadCustomerNameAutoComplete();
+            log.LogWrite("Loaded Customer Name Autocomplete");
         }
+
+        private bool isUpdatingSearchFields = false;
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            String mobile = textBox1.Text.ToString();
+            String mobile = textBox1.Text.ToString().Trim();
             //float balance = 0;
             String name = "";
             remove3.Enabled = false;
@@ -893,6 +898,10 @@ namespace Customer_Loyalty_Portal
                     UpdateHomeGrid(mobile);
                     nameLabel.Text = name;
                     balanceLabel.Text = balance.ToString();
+                    if (!isUpdatingSearchFields && nameSearchTextBox != null)
+                    {
+                        nameSearchTextBox.Text = name;
+                    }
                 }
 
                 else
@@ -1531,13 +1540,194 @@ namespace Customer_Loyalty_Portal
                 VerifyBalance();
                 textBox1.Text = newMobile;
                 //UpdateHomeGrid(newMobile);
+                LoadCustomerNameAutoComplete();
                 MessageBox.Show("Bills Transferred to new number Successflly!");
+            }
+        }
+
+        public void LoadCustomerNameAutoComplete()
+        {
+            try
+            {
+                DataTable dt = DBHandler.SelectQueryOnTable("Overview", "Mobile, Name", "WHERE LEN(Mobile) = 10 AND Name IS NOT NULL AND Name <> '' ORDER BY Name");
+                AutoCompleteStringCollection col = new AutoCompleteStringCollection();
+                HashSet<string> addedEntries = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string name = row["Name"].ToString().Trim();
+                    string mobile = row["Mobile"].ToString().Trim();
+                    if (name.Length > 0 && mobile.Length == 10)
+                    {
+                        string entry = name + " - " + mobile;
+                        if (!addedEntries.Contains(entry))
+                        {
+                            addedEntries.Add(entry);
+                            col.Add(entry);
+                        }
+                    }
+                }
+
+                if (nameSearchTextBox != null)
+                {
+                    if (nameSearchTextBox.InvokeRequired)
+                    {
+                        nameSearchTextBox.Invoke(new Action(() => {
+                            nameSearchTextBox.AutoCompleteCustomSource = col;
+                        }));
+                    }
+                    else
+                    {
+                        nameSearchTextBox.AutoCompleteCustomSource = col;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogWriter log = new LogWriter("Error loading customer name autocomplete: " + ex.Message);
+            }
+        }
+
+        public void PerformNameSearch(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText) || searchText.Trim().Equals("Search by Name...", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Please enter a customer name to search.", "Search Customer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (nameSearchTextBox != null) nameSearchTextBox.Focus();
+                return;
+            }
+
+            string query = searchText.Trim();
+
+            // Check if input contains a 10-digit mobile number (e.g. from AutoComplete format "Name - Mobile")
+            System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(query, @"\b\d{10}\b");
+            if (match.Success)
+            {
+                string mobileFromText = match.Value;
+                isUpdatingSearchFields = true;
+                textBox1.Text = mobileFromText;
+                isUpdatingSearchFields = false;
+                return;
+            }
+
+            try
+            {
+                string escapedQuery = query.Replace("'", "''");
+                DataTable dt = DBHandler.SelectQueryOnTable("Overview", "Name, Mobile, Balance", "WHERE Name LIKE '%" + escapedQuery + "%' AND LEN(Mobile) = 10 ORDER BY Name");
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("No customer found matching '" + query + "'.", "Customer Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (nameSearchTextBox != null)
+                    {
+                        nameSearchTextBox.SelectAll();
+                        nameSearchTextBox.Focus();
+                    }
+                }
+                else if (dt.Rows.Count == 1)
+                {
+                    string mobile = dt.Rows[0]["Mobile"].ToString();
+                    string name = dt.Rows[0]["Name"].ToString();
+                    isUpdatingSearchFields = true;
+                    if (nameSearchTextBox != null) nameSearchTextBox.Text = name;
+                    textBox1.Text = mobile;
+                    isUpdatingSearchFields = false;
+                }
+                else
+                {
+                    using (CustomerSearchDialog searchDialog = new CustomerSearchDialog(dt, query))
+                    {
+                        if (searchDialog.ShowDialog(this) == DialogResult.OK)
+                        {
+                            if (!string.IsNullOrEmpty(searchDialog.SelectedMobile))
+                            {
+                                isUpdatingSearchFields = true;
+                                if (nameSearchTextBox != null) nameSearchTextBox.Text = searchDialog.SelectedName;
+                                textBox1.Text = searchDialog.SelectedMobile;
+                                isUpdatingSearchFields = false;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error searching customer by name: " + ex.Message, "Search Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void searchByNameButton_Click(object sender, EventArgs e)
+        {
+            PerformNameSearch(nameSearchTextBox != null ? nameSearchTextBox.Text : "");
+        }
+
+        private void nameSearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                PerformNameSearch(nameSearchTextBox != null ? nameSearchTextBox.Text : "");
+            }
+        }
+
+        private void nameSearchTextBox_Enter(object sender, EventArgs e)
+        {
+            if (nameSearchTextBox.Text == "Search by Name...")
+            {
+                nameSearchTextBox.Text = "";
+            }
+        }
+
+        private void nameSearchTextBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(nameSearchTextBox.Text))
+            {
+                nameSearchTextBox.Text = "Search by Name...";
+            }
+        }
+
+        private void textBox1_Enter(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "Enter Mobile No")
+            {
+                textBox1.Text = "";
+            }
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBox1.Text))
+            {
+                textBox1.Text = "Enter Mobile No";
+            }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                checkBalance_Click(sender, e);
             }
         }
 
         private void checkBalance_Click(object sender, EventArgs e)
         {
-
+            string mobile = textBox1.Text.Trim();
+            if (mobile.Length == 10)
+            {
+                textBox1_TextChanged(sender, e);
+            }
+            else if (!string.IsNullOrWhiteSpace(mobile) && mobile != "Enter Mobile No")
+            {
+                MessageBox.Show("Please enter a valid 10-digit mobile number.", "Invalid Mobile Number", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show("Please enter a 10-digit mobile number or search by name.", "Check Balance", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         /*private void label12_MouseHover(object sender, EventArgs e)
@@ -1817,6 +2007,7 @@ namespace Customer_Loyalty_Portal
             UpdateListOfBills(mobile, "401", billNo, source, points.ToString(), "0", year, bagsGiven, billDate, name, pointsRedeemed.ToString(), finYearID, "NA");
             UpdateBalance();
             DBHandler.UpdateBagsGiven(mobile, "401", billNo, source, year, bagsGiven, pointsRedeemed.ToString());
+            LoadCustomerNameAutoComplete();
 
             lastBillAddedLabel.Text = $"Last Bill Added: {mobile} - {billNo} - {billDate} - {points} - {source} on {DateTime.Now}";
             //RESET FIELDS AFTER ADDING A BILL

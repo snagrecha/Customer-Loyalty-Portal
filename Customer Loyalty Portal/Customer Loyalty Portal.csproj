@@ -57,13 +57,12 @@
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisualBasic.PowerPacks.Vs.1.0.0\lib\Microsoft.VisualBasic.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\Microsoft.VisualBasic.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisualBasic.PowerPacks.Vs.1.0.0\lib\Microsoft.VisualBasic.PowerPacks.Vs.dll</HintPath>
+      <HintPath>..\Microsoft.VisualBasic.PowerPacks.Vs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -97,6 +96,12 @@
     </Compile>
     <Compile Include="ChangelogDialog.Designer.cs">
       <DependentUpon>ChangelogDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerSearchDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomerSearchDialog.Designer.cs">
+      <DependentUpon>CustomerSearchDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomerLoyaltyDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -165,6 +170,9 @@
     <Compile Include="WriteToExcel.cs" />
     <EmbeddedResource Include="BillDetailDialog.resx">
       <DependentUpon>BillDetailDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomerSearchDialog.resx">
+      <DependentUpon>CustomerSearchDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Home.resx">
       <DependentUpon>Home.cs</DependentUpon>

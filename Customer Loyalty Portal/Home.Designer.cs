@@ -224,6 +224,8 @@ namespace Customer_Loyalty_Portal
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.checkBalance = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.nameSearchTextBox = new System.Windows.Forms.TextBox();
+            this.searchByNameButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.commissionTab = new System.Windows.Forms.TabPage();
             this.prevCommissionDateButton = new System.Windows.Forms.Button();
@@ -1591,6 +1593,8 @@ namespace Customer_Loyalty_Portal
             this.homeTab.Controls.Add(this.dataGridView1);
             this.homeTab.Controls.Add(this.checkBalance);
             this.homeTab.Controls.Add(this.textBox1);
+            this.homeTab.Controls.Add(this.nameSearchTextBox);
+            this.homeTab.Controls.Add(this.searchByNameButton);
             this.homeTab.Location = new System.Drawing.Point(4, 22);
             this.homeTab.Name = "homeTab";
             this.homeTab.Padding = new System.Windows.Forms.Padding(3);
@@ -1617,9 +1621,9 @@ namespace Customer_Loyalty_Portal
             this.updateMobileButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.updateMobileButton.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.updateMobileButton.ForeColor = System.Drawing.Color.White;
-            this.updateMobileButton.Location = new System.Drawing.Point(490, 47);
+            this.updateMobileButton.Location = new System.Drawing.Point(402, 41);
             this.updateMobileButton.Name = "updateMobileButton";
-            this.updateMobileButton.Size = new System.Drawing.Size(125, 29);
+            this.updateMobileButton.Size = new System.Drawing.Size(120, 29);
             this.updateMobileButton.TabIndex = 69;
             this.updateMobileButton.Text = "Update Mobile";
             this.updateMobileButton.UseVisualStyleBackColor = false;
@@ -2127,9 +2131,9 @@ namespace Customer_Loyalty_Portal
             this.checkBalance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.checkBalance.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBalance.ForeColor = System.Drawing.Color.White;
-            this.checkBalance.Location = new System.Drawing.Point(355, 47);
+            this.checkBalance.Location = new System.Drawing.Point(274, 41);
             this.checkBalance.Name = "checkBalance";
-            this.checkBalance.Size = new System.Drawing.Size(125, 29);
+            this.checkBalance.Size = new System.Drawing.Size(120, 29);
             this.checkBalance.TabIndex = 39;
             this.checkBalance.Text = "Check Balance";
             this.checkBalance.UseVisualStyleBackColor = false;
@@ -2140,13 +2144,48 @@ namespace Customer_Loyalty_Portal
             this.textBox1.BackColor = System.Drawing.SystemColors.Window;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(160, 48);
+            this.textBox1.Location = new System.Drawing.Point(71, 42);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(185, 27);
+            this.textBox1.Size = new System.Drawing.Size(195, 27);
             this.textBox1.TabIndex = 38;
             this.textBox1.Text = "Enter Mobile No";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.Enter += new System.EventHandler(this.textBox1_Enter);
+            this.textBox1.Leave += new System.EventHandler(this.textBox1_Leave);
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            // 
+            // nameSearchTextBox
+            // 
+            this.nameSearchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.nameSearchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.nameSearchTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.nameSearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nameSearchTextBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nameSearchTextBox.Location = new System.Drawing.Point(71, 78);
+            this.nameSearchTextBox.Name = "nameSearchTextBox";
+            this.nameSearchTextBox.Size = new System.Drawing.Size(323, 27);
+            this.nameSearchTextBox.TabIndex = 41;
+            this.nameSearchTextBox.Text = "Search by Name...";
+            this.nameSearchTextBox.Enter += new System.EventHandler(this.nameSearchTextBox_Enter);
+            this.nameSearchTextBox.Leave += new System.EventHandler(this.nameSearchTextBox_Leave);
+            this.nameSearchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameSearchTextBox_KeyDown);
+            // 
+            // searchByNameButton
+            // 
+            this.searchByNameButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(110)))), ((int)(((byte)(253)))));
+            this.searchByNameButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.searchByNameButton.FlatAppearance.BorderSize = 0;
+            this.searchByNameButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.searchByNameButton.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchByNameButton.ForeColor = System.Drawing.Color.White;
+            this.searchByNameButton.Location = new System.Drawing.Point(402, 77);
+            this.searchByNameButton.Name = "searchByNameButton";
+            this.searchByNameButton.Size = new System.Drawing.Size(120, 29);
+            this.searchByNameButton.TabIndex = 42;
+            this.searchByNameButton.Text = "Search Name";
+            this.searchByNameButton.UseVisualStyleBackColor = false;
+            this.searchByNameButton.Click += new System.EventHandler(this.searchByNameButton_Click);
             // 
             // tabControl1
             // 
@@ -3223,6 +3262,8 @@ namespace Customer_Loyalty_Portal
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button checkBalance;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox nameSearchTextBox;
+        private System.Windows.Forms.Button searchByNameButton;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage commissionTab;
         private System.Windows.Forms.DateTimePicker comissionDateTimePicker;
