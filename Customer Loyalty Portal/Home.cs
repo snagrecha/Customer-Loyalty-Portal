@@ -2575,9 +2575,10 @@ namespace Customer_Loyalty_Portal
             string titleText = $"{machine} Commission Report";
             string dateText = $"Date: {comissionDateTimePicker.Value.ToString("dd-MM-yyyy")} ({comissionDateTimePicker.Value.ToString("dddd")})";
 
-            graphics.DrawString(titleText, titleFont, Brushes.Black, 20, y);
+            int tableX = 24;
+            graphics.DrawString(titleText, titleFont, Brushes.Black, tableX, y);
             y += 24;
-            graphics.DrawString(dateText, subTitleFont, Brushes.Black, 20, y);
+            graphics.DrawString(dateText, subTitleFont, Brushes.Black, tableX, y);
             y += 25;
 
             // Print Table Header
@@ -2587,25 +2588,24 @@ namespace Customer_Loyalty_Portal
             Pen borderPen = new Pen(Color.Black, 1);
 
             int cellHeight = 22;
-            int tableX = 20;
-            // Columns: No (40), Salesman (185), Net Qty (60), Commission (105), Incentive (95), Total (95) -> Total = 580
-            int[] columnWidths = { 40, 185, 60, 105, 95, 95 };
+            // Columns: No (35), Salesman (155), Net Qty (55), Commission (100), Incentive (95), Total (95) -> Total = 535 (fits A5 width 583 with 24px margins)
+            int[] columnWidths = { 35, 155, 55, 100, 95, 95 };
+            int[] colX = new int[columnWidths.Length + 1];
+            colX[0] = tableX;
+            for (int i = 0; i < columnWidths.Length; i++)
+            {
+                colX[i + 1] = colX[i] + columnWidths[i];
+            }
+
             StringFormat leftFormat = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
             StringFormat centerFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             StringFormat rightFormat = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
 
             // Header Background & Borders
-            Rectangle[] headerRects = {
-                new Rectangle(tableX, y, columnWidths[0], cellHeight),
-                new Rectangle(tableX + columnWidths[0], y, columnWidths[1], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
-            };
-
-            for (int i = 0; i < headerRects.Length; i++)
+            Rectangle[] headerRects = new Rectangle[columnWidths.Length];
+            for (int i = 0; i < columnWidths.Length; i++)
             {
+                headerRects[i] = new Rectangle(colX[i], y, columnWidths[i], cellHeight);
                 graphics.FillRectangle(Brushes.LightGray, headerRects[i]);
                 graphics.DrawRectangle(borderPen, headerRects[i]);
             }
@@ -2627,17 +2627,10 @@ namespace Customer_Loyalty_Portal
             // Print Data Rows
             foreach (DataRow row in dt_combined.Rows)
             {
-                Rectangle[] rowRects = {
-                    new Rectangle(tableX, y, columnWidths[0], cellHeight),
-                    new Rectangle(tableX + columnWidths[0], y, columnWidths[1], cellHeight),
-                    new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
-                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
-                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
-                    new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
-                };
-
-                for (int i = 0; i < rowRects.Length; i++)
+                Rectangle[] rowRects = new Rectangle[columnWidths.Length];
+                for (int i = 0; i < columnWidths.Length; i++)
                 {
+                    rowRects[i] = new Rectangle(colX[i], y, columnWidths[i], cellHeight);
                     graphics.DrawRectangle(borderPen, rowRects[i]);
                 }
 
@@ -2665,11 +2658,11 @@ namespace Customer_Loyalty_Portal
 
             // Print Grand Total Row
             Rectangle[] totalRects = {
-                new Rectangle(tableX, y, columnWidths[0] + columnWidths[1], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1], y, columnWidths[2], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2], y, columnWidths[3], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], y, columnWidths[4], cellHeight),
-                new Rectangle(tableX + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3] + columnWidths[4], y, columnWidths[5], cellHeight)
+                new Rectangle(colX[0], y, columnWidths[0] + columnWidths[1], cellHeight),
+                new Rectangle(colX[2], y, columnWidths[2], cellHeight),
+                new Rectangle(colX[3], y, columnWidths[3], cellHeight),
+                new Rectangle(colX[4], y, columnWidths[4], cellHeight),
+                new Rectangle(colX[5], y, columnWidths[5], cellHeight)
             };
 
             for (int i = 0; i < totalRects.Length; i++)
@@ -2688,7 +2681,7 @@ namespace Customer_Loyalty_Portal
 
             // Print summary timestamp
             Font footerFont = new Font("Arial", 8, FontStyle.Italic);
-            graphics.DrawString($"Report generated on: {DateTime.Now.ToString("dd-MM-yyyy hh:mm tt")}", footerFont, Brushes.Gray, 20, y);
+            graphics.DrawString($"Report generated on: {DateTime.Now.ToString("dd-MM-yyyy hh:mm tt")}", footerFont, Brushes.Gray, tableX, y);
 
             e.HasMorePages = false; // Indicate no more pages
         }
