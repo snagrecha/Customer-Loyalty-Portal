@@ -2567,29 +2567,34 @@ namespace Customer_Loyalty_Portal
             }
 
             Graphics graphics = e.Graphics;
-            int y = 20; // Start printing at top with nice margin
+            int y = 25; // Start printing at top with nice margin
+
+            // Total table width: 440 (leaves ~71 units / 0.71" safety margin on each side for A5 width 583)
+            int[] columnWidths = { 30, 130, 45, 80, 75, 80 };
+            int totalTableWidth = 0;
+            for (int i = 0; i < columnWidths.Length; i++) totalTableWidth += columnWidths[i];
+
+            int pageWidth = e.PageBounds.Width > 0 ? e.PageBounds.Width : 583;
+            int tableX = Math.Max(25, (pageWidth - totalTableWidth) / 2);
 
             // Print Title Header
-            Font titleFont = new Font("Arial", 13, FontStyle.Bold);
-            Font subTitleFont = new Font("Arial", 9, FontStyle.Regular);
+            Font titleFont = new Font("Arial", 12, FontStyle.Bold);
+            Font subTitleFont = new Font("Arial", 8.5F, FontStyle.Regular);
             string titleText = $"{machine} Commission Report";
             string dateText = $"Date: {comissionDateTimePicker.Value.ToString("dd-MM-yyyy")} ({comissionDateTimePicker.Value.ToString("dddd")})";
 
-            int tableX = 24;
             graphics.DrawString(titleText, titleFont, Brushes.Black, tableX, y);
-            y += 24;
+            y += 22;
             graphics.DrawString(dateText, subTitleFont, Brushes.Black, tableX, y);
-            y += 25;
+            y += 22;
 
             // Print Table Header
-            Font headerFont = new Font("Arial", 9, FontStyle.Bold);
-            Font rowFont = new Font("Arial", 9, FontStyle.Regular);
-            Font totalFont = new Font("Arial", 9, FontStyle.Bold);
+            Font headerFont = new Font("Arial", 8.5F, FontStyle.Bold);
+            Font rowFont = new Font("Arial", 8.5F, FontStyle.Regular);
+            Font totalFont = new Font("Arial", 8.5F, FontStyle.Bold);
             Pen borderPen = new Pen(Color.Black, 1);
 
             int cellHeight = 22;
-            // Columns: No (35), Salesman (155), Net Qty (55), Commission (100), Incentive (95), Total (95) -> Total = 535 (fits A5 width 583 with 24px margins)
-            int[] columnWidths = { 35, 155, 55, 100, 95, 95 };
             int[] colX = new int[columnWidths.Length + 1];
             colX[0] = tableX;
             for (int i = 0; i < columnWidths.Length; i++)
@@ -2612,10 +2617,10 @@ namespace Customer_Loyalty_Portal
 
             graphics.DrawString("No.", headerFont, Brushes.Black, headerRects[0], centerFormat);
             graphics.DrawString("Salesman Name", headerFont, Brushes.Black, new Rectangle(headerRects[1].X + 4, headerRects[1].Y, headerRects[1].Width - 8, headerRects[1].Height), leftFormat);
-            graphics.DrawString("Net Qty", headerFont, Brushes.Black, new Rectangle(headerRects[2].X + 4, headerRects[2].Y, headerRects[2].Width - 8, headerRects[2].Height), rightFormat);
-            graphics.DrawString("Commission (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[3].X + 4, headerRects[3].Y, headerRects[3].Width - 8, headerRects[3].Height), rightFormat);
-            graphics.DrawString("Incentive (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[4].X + 4, headerRects[4].Y, headerRects[4].Width - 8, headerRects[4].Height), rightFormat);
-            graphics.DrawString("Total (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[5].X + 4, headerRects[5].Y, headerRects[5].Width - 8, headerRects[5].Height), rightFormat);
+            graphics.DrawString("Net Qty", headerFont, Brushes.Black, new Rectangle(headerRects[2].X + 2, headerRects[2].Y, headerRects[2].Width - 4, headerRects[2].Height), rightFormat);
+            graphics.DrawString("Commission (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[3].X + 2, headerRects[3].Y, headerRects[3].Width - 4, headerRects[3].Height), rightFormat);
+            graphics.DrawString("Incentive (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[4].X + 2, headerRects[4].Y, headerRects[4].Width - 4, headerRects[4].Height), rightFormat);
+            graphics.DrawString("Total (₹)", headerFont, Brushes.Black, new Rectangle(headerRects[5].X + 2, headerRects[5].Y, headerRects[5].Width - 4, headerRects[5].Height), rightFormat);
 
             y += cellHeight;
 
@@ -2648,10 +2653,10 @@ namespace Customer_Loyalty_Portal
 
                 graphics.DrawString(sNo, rowFont, Brushes.Black, rowRects[0], centerFormat);
                 graphics.DrawString(sName, rowFont, Brushes.Black, new Rectangle(rowRects[1].X + 4, rowRects[1].Y, rowRects[1].Width - 8, rowRects[1].Height), leftFormat);
-                graphics.DrawString(qty.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[2].X + 4, rowRects[2].Y, rowRects[2].Width - 8, rowRects[2].Height), rightFormat);
-                graphics.DrawString(comm.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[3].X + 4, rowRects[3].Y, rowRects[3].Width - 8, rowRects[3].Height), rightFormat);
-                graphics.DrawString(inc.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[4].X + 4, rowRects[4].Y, rowRects[4].Width - 8, rowRects[4].Height), rightFormat);
-                graphics.DrawString(tot.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[5].X + 4, rowRects[5].Y, rowRects[5].Width - 8, rowRects[5].Height), rightFormat);
+                graphics.DrawString(qty.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[2].X + 2, rowRects[2].Y, rowRects[2].Width - 4, rowRects[2].Height), rightFormat);
+                graphics.DrawString(comm.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[3].X + 2, rowRects[3].Y, rowRects[3].Width - 4, rowRects[3].Height), rightFormat);
+                graphics.DrawString(inc.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[4].X + 2, rowRects[4].Y, rowRects[4].Width - 4, rowRects[4].Height), rightFormat);
+                graphics.DrawString(tot.ToString("N0"), rowFont, Brushes.Black, new Rectangle(rowRects[5].X + 2, rowRects[5].Y, rowRects[5].Width - 4, rowRects[5].Height), rightFormat);
 
                 y += cellHeight;
             }
@@ -2671,11 +2676,11 @@ namespace Customer_Loyalty_Portal
                 graphics.DrawRectangle(borderPen, totalRects[i]);
             }
 
-            graphics.DrawString("TOTAL", totalFont, Brushes.Black, new Rectangle(totalRects[0].X + 8, totalRects[0].Y, totalRects[0].Width - 16, totalRects[0].Height), leftFormat);
-            graphics.DrawString(totalQty.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[1].X + 4, totalRects[1].Y, totalRects[1].Width - 8, totalRects[1].Height), rightFormat);
-            graphics.DrawString(totalCommission.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[2].X + 4, totalRects[2].Y, totalRects[2].Width - 8, totalRects[2].Height), rightFormat);
-            graphics.DrawString(totalIncentive.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[3].X + 4, totalRects[3].Y, totalRects[3].Width - 8, totalRects[3].Height), rightFormat);
-            graphics.DrawString(totalPayable.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[4].X + 4, totalRects[4].Y, totalRects[4].Width - 8, totalRects[4].Height), rightFormat);
+            graphics.DrawString("TOTAL", totalFont, Brushes.Black, new Rectangle(totalRects[0].X + 6, totalRects[0].Y, totalRects[0].Width - 12, totalRects[0].Height), leftFormat);
+            graphics.DrawString(totalQty.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[1].X + 2, totalRects[1].Y, totalRects[1].Width - 4, totalRects[1].Height), rightFormat);
+            graphics.DrawString(totalCommission.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[2].X + 2, totalRects[2].Y, totalRects[2].Width - 4, totalRects[2].Height), rightFormat);
+            graphics.DrawString(totalIncentive.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[3].X + 2, totalRects[3].Y, totalRects[3].Width - 4, totalRects[3].Height), rightFormat);
+            graphics.DrawString(totalPayable.ToString("N0"), totalFont, Brushes.Black, new Rectangle(totalRects[4].X + 2, totalRects[4].Y, totalRects[4].Width - 4, totalRects[4].Height), rightFormat);
 
             y += cellHeight + 15;
 
